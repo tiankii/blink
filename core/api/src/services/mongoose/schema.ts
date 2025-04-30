@@ -576,19 +576,28 @@ export const WalletOnChainPendingReceive =
 
 const ContactSchema = new Schema<ContactRecord>(
   {
+    id: {
+      type: String,
+      index: true,
+      unique: true,
+      sparse: true,
+      required: true,
+      default: () => crypto.randomUUID(),
+    },
     accountId: {
       type: String,
       ref: "Account",
       index: true,
       required: true,
     },
-    contactId: {
-      type: String,
-      required: true,
-    },
     type: {
       type: String,
       enum: Object.values(ContactType),
+      required: false,
+      default: ContactType.IntraLedger,
+    },
+    identifier: {
+      type: String,
       required: true,
     },
     alias: {
@@ -607,6 +616,6 @@ const ContactSchema = new Schema<ContactRecord>(
   { id: false },
 )
 
-ContactSchema.index({ accountId: 1, contactId: 1 }, { unique: true })
+ContactSchema.index({ accountId: 1, identifier: 1, type: 1 }, { unique: true })
 
 export const Contact = mongoose.model<ContactRecord>("Contact", ContactSchema)

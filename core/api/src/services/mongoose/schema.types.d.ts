@@ -214,9 +214,10 @@ type WalletOnChainPendingReceiveRecord = {
 }
 
 interface ContactRecord {
+  id: string
   accountId: string
-  contactId: string
   type: string
+  identifier: string
   alias?: string
   transactionsCount: number
   createdAt: Date
