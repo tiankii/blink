@@ -2,18 +2,24 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'chore: correct references to the blink repo (#71)'
-      sha: 8cb8cefc08a1187fb9f1b5a7356980efb20d2560
+      commitTitle: 'ci: update codeql-actions to v2 (#73)'
+      sha: 7c1d412c3193b93f27ced63b9d91aa8aa4a41bfa
+      tags:
+      - 0.21.43-2-g7c1d412c3
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'chore: correct references to the blink repo (#71)'
-      sha: 8cb8cefc08a1187fb9f1b5a7356980efb20d2560
+      commitTitle: 'ci: update codeql-actions to v2 (#73)'
+      sha: 7c1d412c3193b93f27ced63b9d91aa8aa4a41bfa
+      tags:
+      - 0.21.43-2-g7c1d412c3
     path: schemas
   - git:
-      commitTitle: 'chore: correct references to the blink repo (#71)'
-      sha: 8cb8cefc08a1187fb9f1b5a7356980efb20d2560
+      commitTitle: 'ci: update codeql-actions to v2 (#73)'
+      sha: 7c1d412c3193b93f27ced63b9d91aa8aa4a41bfa
+      tags:
+      - 0.21.43-2-g7c1d412c3
     path: gql
   path: graphql
 kind: LockConfig
