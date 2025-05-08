@@ -143,10 +143,10 @@ is_contact() {
   local contact_identifier
 
   if [[ -f "${CACHE_DIR}/${other_token_or_identifier}.username" ]]; then
-    # It's a user token (e.g. "bob")
+    # It's a user token
     contact_identifier=$(read_value "$other_token_or_identifier.username")
   else
-    # It's a raw identifier (e.g. "esauvalle@ibi.me")
+    # It's a raw identifier
     contact_identifier="$other_token_or_identifier"
   fi
 
