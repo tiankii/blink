@@ -11,7 +11,7 @@ setup_file() {
   user_update_username "$BOB"
 }
 
-@test "contact-upsert: add intraledger contact and verify" {
+@test "contact: add intraledger contact and verify" {
   local identifier="$(read_value "$BOB.username")"
   local alias="Intraledger Username"
 
@@ -23,7 +23,7 @@ setup_file() {
   )
 
   # Call GraphQL mutation
-  exec_graphql "$ALICE" "account-contact-upsert" "$variables"
+  exec_graphql "$ALICE" "contact-create" "$variables"
 
   # Validate GraphQL response
   contact_id="$(graphql_output '.data.contactCreate.contact.id')"
@@ -37,7 +37,7 @@ setup_file() {
   [[ "$status" == 0 ]] || fail "Contact not found"
 }
 
-@test "contact-upsert: add lnaddress contact and verify" {
+@test "contact: add lnaddress contact and verify" {
   local identifier="lnaddress@example.com"
   local alias="ln contact alias"
 
@@ -49,7 +49,7 @@ setup_file() {
   )
 
   # Call GraphQL mutation
-  exec_graphql "$ALICE" "account-contact-upsert" "$variables"
+  exec_graphql "$ALICE" "contact-create" "$variables"
 
   # Validate GraphQL response
   contact_id="$(graphql_output '.data.contactCreate.contact.id')"
