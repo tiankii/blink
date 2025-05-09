@@ -139,12 +139,6 @@ export type AccountWalletByIdArgs = {
   walletId: Scalars['WalletId']['input'];
 };
 
-export type AccountContactUpsertInput = {
-  readonly alias?: InputMaybe<Scalars['ContactAlias']['input']>;
-  readonly identifier?: InputMaybe<Scalars['Identifier']['input']>;
-  readonly type: ContactType;
-};
-
 export type AccountDeletePayload = {
   readonly __typename: 'AccountDeletePayload';
   readonly errors: ReadonlyArray<Error>;
@@ -441,6 +435,12 @@ export type Contact = {
   /** Total number of transactions with this contact. */
   readonly transactionsCount: Scalars['Int']['output'];
   /** Type of the contact (intraledger, lnaddress, etc.). */
+  readonly type: ContactType;
+};
+
+export type ContactCreateInput = {
+  readonly alias?: InputMaybe<Scalars['ContactAlias']['input']>;
+  readonly identifier?: InputMaybe<Scalars['Identifier']['input']>;
   readonly type: ContactType;
 };
 
@@ -927,7 +927,6 @@ export type MobileVersions = {
 
 export type Mutation = {
   readonly __typename: 'Mutation';
-  readonly accountContactUpsert: ContactUpdateOrCreatePayload;
   readonly accountDelete: AccountDeletePayload;
   readonly accountDisableNotificationCategory: AccountUpdateNotificationSettingsPayload;
   readonly accountDisableNotificationChannel: AccountUpdateNotificationSettingsPayload;
@@ -939,6 +938,7 @@ export type Mutation = {
   readonly callbackEndpointDelete: SuccessPayload;
   readonly captchaCreateChallenge: CaptchaCreateChallengePayload;
   readonly captchaRequestAuthCode: SuccessPayload;
+  readonly contactCreate: ContactUpdateOrCreatePayload;
   readonly deviceNotificationTokenCreate: SuccessPayload;
   readonly feedbackSubmit: SuccessPayload;
   /**
@@ -1056,11 +1056,6 @@ export type Mutation = {
 };
 
 
-export type MutationAccountContactUpsertArgs = {
-  input: AccountContactUpsertInput;
-};
-
-
 export type MutationAccountDisableNotificationCategoryArgs = {
   input: AccountDisableNotificationCategoryInput;
 };
@@ -1103,6 +1098,11 @@ export type MutationCallbackEndpointDeleteArgs = {
 
 export type MutationCaptchaRequestAuthCodeArgs = {
   input: CaptchaRequestAuthCodeInput;
+};
+
+
+export type MutationContactCreateArgs = {
+  input: ContactCreateInput;
 };
 
 
