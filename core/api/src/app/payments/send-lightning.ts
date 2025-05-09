@@ -66,7 +66,7 @@ import {
   checkTradeIntraAccountLimits,
   checkWithdrawalLimits,
 } from "@/app/accounts"
-import { upsertIntraledgerContacts } from "@/app/contacts"
+import { IntraledgerContactCreate } from "@/app/contacts"
 import { getCurrentPriceAsDisplayPriceRatio } from "@/app/prices"
 import {
   getTransactionForWalletByJournalId,
@@ -148,7 +148,7 @@ export const payInvoiceByWalletId = async ({
   if (paymentSendResult instanceof Error) return paymentSendResult
 
   if (senderAccount.id !== recipientAccount.id) {
-    const addContactResult = await upsertIntraledgerContacts({
+    const addContactResult = await IntraledgerContactCreate({
       senderAccount,
       recipientAccount,
     })
@@ -232,7 +232,7 @@ const payNoAmountInvoiceByWalletId = async ({
   if (paymentSendResult instanceof Error) return paymentSendResult
 
   if (senderAccount.id !== recipientAccount.id) {
-    const addContactResult = await upsertIntraledgerContacts({
+    const addContactResult = await IntraledgerContactCreate({
       senderAccount,
       recipientAccount,
     })

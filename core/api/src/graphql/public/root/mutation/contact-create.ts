@@ -1,4 +1,4 @@
-import ContactCreatePayload from "@/graphql/public/types/payload/account-contact-upsert"
+import ContactCreatePayload from "@/graphql/public/types/payload/contact-create"
 import ContactIdentifier from "@/graphql/shared/types/scalar/contact-identifier"
 import ContactAlias from "@/graphql/public/types/scalar/contact-alias"
 import ContactType from "@/graphql/shared/types/scalar/contact-type"
@@ -35,7 +35,7 @@ const ContactCreateMutation = GT.Field({
       return { errors: [{ message: alias.message }] }
     }
 
-    const result = await Contacts.upserContact({
+    const result = await Contacts.contactCreate({
       accountId: domainAccount.id,
       identifier,
       alias,
