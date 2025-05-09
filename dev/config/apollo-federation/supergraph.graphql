@@ -68,14 +68,6 @@ interface Account
   wallets: [Wallet!]!
 }
 
-input AccountContactUpsertInput
-  @join__type(graph: PUBLIC)
-{
-  alias: ContactAlias
-  identifier: Identifier
-  type: ContactType!
-}
-
 type AccountDeletePayload
   @join__type(graph: PUBLIC)
 {
@@ -474,6 +466,14 @@ An alias name that a user can set for a wallet (with which they have transaction
 """
 scalar ContactAlias
   @join__type(graph: PUBLIC)
+
+input ContactCreateInput
+  @join__type(graph: PUBLIC)
+{
+  alias: ContactAlias
+  identifier: Identifier
+  type: ContactType!
+}
 
 """Unique identifier of a contact"""
 scalar ContactId
@@ -1269,7 +1269,6 @@ type Mutation
   apiKeyCreate(input: ApiKeyCreateInput!): ApiKeyCreatePayload! @join__field(graph: API_KEYS)
   apiKeyRevoke(input: ApiKeyRevokeInput!): ApiKeyRevokePayload! @join__field(graph: API_KEYS)
   statefulNotificationAcknowledge(input: StatefulNotificationAcknowledgeInput!): StatefulNotificationAcknowledgePayload! @join__field(graph: NOTIFICATIONS)
-  accountContactUpsert(input: AccountContactUpsertInput!): ContactUpdateOrCreatePayload! @join__field(graph: PUBLIC)
   accountDelete: AccountDeletePayload! @join__field(graph: PUBLIC)
   accountDisableNotificationCategory(input: AccountDisableNotificationCategoryInput!): AccountUpdateNotificationSettingsPayload! @join__field(graph: PUBLIC)
   accountDisableNotificationChannel(input: AccountDisableNotificationChannelInput!): AccountUpdateNotificationSettingsPayload! @join__field(graph: PUBLIC)
@@ -1281,6 +1280,7 @@ type Mutation
   callbackEndpointDelete(input: CallbackEndpointDeleteInput!): SuccessPayload! @join__field(graph: PUBLIC)
   captchaCreateChallenge: CaptchaCreateChallengePayload! @join__field(graph: PUBLIC)
   captchaRequestAuthCode(input: CaptchaRequestAuthCodeInput!): SuccessPayload! @join__field(graph: PUBLIC)
+  contactCreate(input: ContactCreateInput!): ContactUpdateOrCreatePayload! @join__field(graph: PUBLIC)
   deviceNotificationTokenCreate(input: DeviceNotificationTokenCreateInput!): SuccessPayload! @join__field(graph: PUBLIC)
   feedbackSubmit(input: FeedbackSubmitInput!): SuccessPayload! @join__field(graph: PUBLIC)
 

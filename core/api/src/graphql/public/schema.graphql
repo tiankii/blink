@@ -43,12 +43,6 @@ interface Account {
   wallets: [Wallet!]!
 }
 
-input AccountContactUpsertInput {
-  alias: ContactAlias
-  identifier: Identifier
-  type: ContactType!
-}
-
 type AccountDeletePayload {
   errors: [Error!]!
   success: Boolean!
@@ -347,6 +341,12 @@ type Contact {
 An alias name that a user can set for a wallet (with which they have transactions)
 """
 scalar ContactAlias
+
+input ContactCreateInput {
+  alias: ContactAlias
+  identifier: Identifier
+  type: ContactType!
+}
 
 """Unique identifier of a contact"""
 scalar ContactId
@@ -917,7 +917,6 @@ type MobileVersions {
 }
 
 type Mutation {
-  accountContactUpsert(input: AccountContactUpsertInput!): ContactUpdateOrCreatePayload!
   accountDelete: AccountDeletePayload!
   accountDisableNotificationCategory(input: AccountDisableNotificationCategoryInput!): AccountUpdateNotificationSettingsPayload!
   accountDisableNotificationChannel(input: AccountDisableNotificationChannelInput!): AccountUpdateNotificationSettingsPayload!
@@ -929,6 +928,7 @@ type Mutation {
   callbackEndpointDelete(input: CallbackEndpointDeleteInput!): SuccessPayload!
   captchaCreateChallenge: CaptchaCreateChallengePayload!
   captchaRequestAuthCode(input: CaptchaRequestAuthCodeInput!): SuccessPayload!
+  contactCreate(input: ContactCreateInput!): ContactUpdateOrCreatePayload!
   deviceNotificationTokenCreate(input: DeviceNotificationTokenCreateInput!): SuccessPayload!
   feedbackSubmit(input: FeedbackSubmitInput!): SuccessPayload!
 

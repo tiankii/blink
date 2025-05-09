@@ -145,12 +145,6 @@ export type AccountWalletByIdArgs = {
   walletId: Scalars['WalletId']['input'];
 };
 
-export type AccountContactUpsertInput = {
-  readonly alias?: InputMaybe<Scalars['ContactAlias']['input']>;
-  readonly identifier?: InputMaybe<Scalars['Identifier']['input']>;
-  readonly type: ContactType;
-};
-
 export type AccountDeletePayload = {
   readonly __typename: 'AccountDeletePayload';
   readonly errors: ReadonlyArray<Error>;
@@ -481,6 +475,12 @@ export type Contact = {
   /** Total number of transactions with this contact. */
   readonly transactionsCount: Scalars['Int']['output'];
   /** Type of the contact (intraledger, lnaddress, etc.). */
+  readonly type: ContactType;
+};
+
+export type ContactCreateInput = {
+  readonly alias?: InputMaybe<Scalars['ContactAlias']['input']>;
+  readonly identifier?: InputMaybe<Scalars['Identifier']['input']>;
   readonly type: ContactType;
 };
 
@@ -1020,7 +1020,6 @@ export type MobileVersions = {
 
 export type Mutation = {
   readonly __typename: 'Mutation';
-  readonly accountContactUpsert: ContactUpdateOrCreatePayload;
   readonly accountDelete: AccountDeletePayload;
   readonly accountDisableNotificationCategory: AccountUpdateNotificationSettingsPayload;
   readonly accountDisableNotificationChannel: AccountUpdateNotificationSettingsPayload;
@@ -1034,6 +1033,7 @@ export type Mutation = {
   readonly callbackEndpointDelete: SuccessPayload;
   readonly captchaCreateChallenge: CaptchaCreateChallengePayload;
   readonly captchaRequestAuthCode: SuccessPayload;
+  readonly contactCreate: ContactUpdateOrCreatePayload;
   readonly deviceNotificationTokenCreate: SuccessPayload;
   readonly feedbackSubmit: SuccessPayload;
   /**
@@ -1152,11 +1152,6 @@ export type Mutation = {
 };
 
 
-export type MutationAccountContactUpsertArgs = {
-  input: AccountContactUpsertInput;
-};
-
-
 export type MutationAccountDisableNotificationCategoryArgs = {
   input: AccountDisableNotificationCategoryInput;
 };
@@ -1209,6 +1204,11 @@ export type MutationCallbackEndpointDeleteArgs = {
 
 export type MutationCaptchaRequestAuthCodeArgs = {
   input: CaptchaRequestAuthCodeInput;
+};
+
+
+export type MutationContactCreateArgs = {
+  input: ContactCreateInput;
 };
 
 
@@ -3554,7 +3554,6 @@ export type ResolversTypes = {
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
-  AccountContactUpsertInput: AccountContactUpsertInput;
   AccountDeletePayload: ResolverTypeWrapper<AccountDeletePayload>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   AccountDisableNotificationCategoryInput: AccountDisableNotificationCategoryInput;
@@ -3591,6 +3590,7 @@ export type ResolversTypes = {
   ConsumerAccount: ResolverTypeWrapper<ConsumerAccount>;
   Contact: ResolverTypeWrapper<Contact>;
   ContactAlias: ResolverTypeWrapper<Scalars['ContactAlias']['output']>;
+  ContactCreateInput: ContactCreateInput;
   ContactId: ResolverTypeWrapper<Scalars['ContactId']['output']>;
   ContactType: ContactType;
   ContactUpdateOrCreatePayload: ResolverTypeWrapper<ContactUpdateOrCreatePayload>;
@@ -3792,7 +3792,6 @@ export type ResolversParentTypes = {
   String: Scalars['String']['output'];
   ID: Scalars['ID']['output'];
   Int: Scalars['Int']['output'];
-  AccountContactUpsertInput: AccountContactUpsertInput;
   AccountDeletePayload: AccountDeletePayload;
   Boolean: Scalars['Boolean']['output'];
   AccountDisableNotificationCategoryInput: AccountDisableNotificationCategoryInput;
@@ -3828,6 +3827,7 @@ export type ResolversParentTypes = {
   ConsumerAccount: ConsumerAccount;
   Contact: Contact;
   ContactAlias: Scalars['ContactAlias']['output'];
+  ContactCreateInput: ContactCreateInput;
   ContactId: Scalars['ContactId']['output'];
   ContactUpdateOrCreatePayload: ContactUpdateOrCreatePayload;
   Coordinates: Coordinates;
@@ -4543,7 +4543,6 @@ export type MobileVersionsResolvers<ContextType = any, ParentType extends Resolv
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  accountContactUpsert?: Resolver<ResolversTypes['ContactUpdateOrCreatePayload'], ParentType, ContextType, RequireFields<MutationAccountContactUpsertArgs, 'input'>>;
   accountDelete?: Resolver<ResolversTypes['AccountDeletePayload'], ParentType, ContextType>;
   accountDisableNotificationCategory?: Resolver<ResolversTypes['AccountUpdateNotificationSettingsPayload'], ParentType, ContextType, RequireFields<MutationAccountDisableNotificationCategoryArgs, 'input'>>;
   accountDisableNotificationChannel?: Resolver<ResolversTypes['AccountUpdateNotificationSettingsPayload'], ParentType, ContextType, RequireFields<MutationAccountDisableNotificationChannelArgs, 'input'>>;
@@ -4557,6 +4556,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   callbackEndpointDelete?: Resolver<ResolversTypes['SuccessPayload'], ParentType, ContextType, RequireFields<MutationCallbackEndpointDeleteArgs, 'input'>>;
   captchaCreateChallenge?: Resolver<ResolversTypes['CaptchaCreateChallengePayload'], ParentType, ContextType>;
   captchaRequestAuthCode?: Resolver<ResolversTypes['SuccessPayload'], ParentType, ContextType, RequireFields<MutationCaptchaRequestAuthCodeArgs, 'input'>>;
+  contactCreate?: Resolver<ResolversTypes['ContactUpdateOrCreatePayload'], ParentType, ContextType, RequireFields<MutationContactCreateArgs, 'input'>>;
   deviceNotificationTokenCreate?: Resolver<ResolversTypes['SuccessPayload'], ParentType, ContextType, RequireFields<MutationDeviceNotificationTokenCreateArgs, 'input'>>;
   feedbackSubmit?: Resolver<ResolversTypes['SuccessPayload'], ParentType, ContextType, RequireFields<MutationFeedbackSubmitArgs, 'input'>>;
   intraLedgerPaymentSend?: Resolver<ResolversTypes['PaymentSendPayload'], ParentType, ContextType, RequireFields<MutationIntraLedgerPaymentSendArgs, 'input'>>;
