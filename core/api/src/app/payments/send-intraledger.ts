@@ -3,7 +3,7 @@ import { getPriceRatioForLimits } from "./helpers"
 import { getValuesToSkipProbe } from "@/config"
 
 import { checkIntraledgerLimits, checkTradeIntraAccountLimits } from "@/app/accounts"
-import { upsertIntraledgerContacts } from "@/app/contacts"
+import { IntraledgerContactCreate } from "@/app/contacts"
 import {
   btcFromUsdMidPriceFn,
   getCurrentPriceAsDisplayPriceRatio,
@@ -129,7 +129,7 @@ const intraledgerPaymentSendWalletId = async ({
   if (paymentSendResult instanceof Error) return paymentSendResult
 
   if (senderAccount.id !== recipientAccount.id) {
-    const addContactResult = await upsertIntraledgerContacts({
+    const addContactResult = await IntraledgerContactCreate({
       senderAccount,
       recipientAccount,
     })
