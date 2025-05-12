@@ -22,6 +22,8 @@ interface IContactsRepository {
     identifier?: string
   }): Promise<Contact | RepositoryError>
 
+  getContactsByAccountId(accountId: string): Promise<Contact[] | RepositoryError>
+
   persistNew(contact: NewContactInput): Promise<Contact | RepositoryError>
 
   update(contact: Contact): Promise<Contact | RepositoryError>

@@ -41,6 +41,17 @@ export const ContactsRepository = (): IContactsRepository => {
     }
   }
 
+  const getContactsByAccountId = async (
+    accountId: string,
+  ): Promise<Contact[] | RepositoryError> => {
+    try {
+      const results = await Contact.find({ accountId })
+      return results.map(contactFromRaw)
+    } catch (err) {
+      return parseRepositoryError(err)
+    }
+  }
+
   const update = async (contact: Contact): Promise<Contact | RepositoryError> => {
     try {
       const result = await Contact.findOneAndUpdate(
@@ -57,6 +68,7 @@ export const ContactsRepository = (): IContactsRepository => {
   }
 
   return {
+    getContactsByAccountId,
     findContact,
     persistNew,
     update,
