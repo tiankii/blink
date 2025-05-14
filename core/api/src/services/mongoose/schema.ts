@@ -220,25 +220,6 @@ const AccountSchema = new Schema<AccountRecord>(
       type: Boolean,
       default: true,
     },
-    contacts: {
-      type: [
-        {
-          id: {
-            type: String,
-            collation: { locale: "en", strength: 2 },
-          },
-          name: {
-            type: String,
-            // TODO: add constraint here
-          },
-          transactionsCount: {
-            type: Number,
-            default: 1,
-          },
-        },
-      ],
-      default: [],
-    },
 
     statusHistory: {
       type: [

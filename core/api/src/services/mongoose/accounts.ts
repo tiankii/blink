@@ -62,7 +62,6 @@ export const AccountsRepository = (): IAccountsRepository => {
     level,
     statusHistory,
     contactEnabled,
-    contacts,
     username,
     defaultWalletId,
     withdrawFee,
@@ -78,13 +77,6 @@ export const AccountsRepository = (): IAccountsRepository => {
           statusHistory,
           username,
           contactEnabled,
-          contacts: contacts.map(
-            ({ username, alias, transactionsCount }: AccountContact) => ({
-              id: username,
-              name: alias,
-              transactionsCount,
-            }),
-          ),
           defaultWalletId,
           withdrawFee,
           kratosUserId,
@@ -155,7 +147,7 @@ const translateToAccount = async (result: AccountRecord): Promise<Account> => {
     status: result.statusHistory.slice(-1)[0].status,
     statusHistory: (result.statusHistory || []) as AccountStatusHistory,
     contactEnabled: !!result.contactEnabled,
-    contacts: contacts.map((contact) => ({
+    contacts: contacts.map((contact: ContactRecord) => ({
       id: contact.identifier as Username,
       username: contact.identifier as Username,
       alias: contact.alias as ContactAlias,
