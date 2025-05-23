@@ -2,24 +2,24 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'ci: update codeql-actions to v2 (#73)'
-      sha: 7c1d412c3193b93f27ced63b9d91aa8aa4a41bfa
+      commitTitle: 'feat: add update email to admin api (#93)...'
+      sha: 2013230d7419ddcb4fb98f9fd893490bd5c7db29
       tags:
-      - 0.21.43-2-g7c1d412c3
+      - 0.21.44-3-g2013230d7
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'ci: update codeql-actions to v2 (#73)'
-      sha: 7c1d412c3193b93f27ced63b9d91aa8aa4a41bfa
+      commitTitle: 'feat: add update email to admin api (#93)...'
+      sha: 2013230d7419ddcb4fb98f9fd893490bd5c7db29
       tags:
-      - 0.21.43-2-g7c1d412c3
+      - 0.21.45
     path: schemas
   - git:
-      commitTitle: 'ci: update codeql-actions to v2 (#73)'
-      sha: 7c1d412c3193b93f27ced63b9d91aa8aa4a41bfa
+      commitTitle: 'feat: add update email to admin api (#93)...'
+      sha: 2013230d7419ddcb4fb98f9fd893490bd5c7db29
       tags:
-      - 0.21.43-2-g7c1d412c3
+      - 0.21.45
     path: gql
   path: graphql
 kind: LockConfig
