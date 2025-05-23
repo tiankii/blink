@@ -4,6 +4,8 @@ load "../../helpers/_common.bash"
 load "../../helpers/user.bash"
 load "../../helpers/admin.bash"
 
+KRATOS_PG_CON="postgres://dbuser:secret@localhost:5432/default?sslmode=disable"
+
 setup_file() {
   clear_cache
 
@@ -13,6 +15,24 @@ setup_file() {
   create_user 'tester2'
 
   login_admin
+}
+
+getEmailCode() {
+  local email="$1"
+  local query="SELECT body FROM courier_messages WHERE recipient='${email}' ORDER BY created_at DESC LIMIT 1;"
+
+  local result=$(psql $KRATOS_PG_CON -t -c "${query}")
+
+  # If no result is found, exit with an error
+  if [[ -z "$result" ]]; then
+    echo "No message for email ${email}" >&2
+    exit 1
+  fi
+
+  # Extract the code from the body
+  local code=$(echo "$result" | grep -Eo '[0-9]{6}' | head -n1)
+
+  echo "$code"
 }
 
 @test "admin: can query account details by phone" {
@@ -51,6 +71,51 @@ setup_file() {
   exec_admin_graphql "$admin_token" 'account-details-by-user-phone' "$variables"
   refetched_id="$(graphql_output '.data.accountDetailsByUserPhone.id')"
   [[ "$refetched_id" == "$id" ]] || exit 1
+}
+
+@test "admin: can update user email" {
+  email="$(read_value tester.username)@blink.sv"
+  cache_value "tester.email" "$email"
+
+  variables="{\"input\": {\"email\": \"$email\"}}"
+  exec_graphql 'tester' 'user-email-registration-initiate' "$variables"
+  emailRegistrationId="$(graphql_output '.data.userEmailRegistrationInitiate.emailRegistrationId')"
+
+  code=$(getEmailCode "$email")
+  echo "The code is: $code"
+
+  variables="{\"input\": {\"code\": \"$code\", \"emailRegistrationId\": \"$emailRegistrationId\"}}"
+  exec_graphql 'tester' 'user-email-registration-validate' "$variables"
+  [[ "$(graphql_output '.data.userEmailRegistrationValidate.me.email.address')" == "$email" ]] || exit 1
+  [[ "$(graphql_output '.data.userEmailRegistrationValidate.me.email.verified')" == "true" ]] || exit 1
+
+  admin_token="$(read_value 'admin.token')"
+  id="$(read_value 'tester.id')"
+  new_email="$(read_value 'tester.username')_updated@blink.sv"
+  variables=$(
+    jq -n \
+    --arg email "$new_email" \
+    --arg accountId "$id" \
+    '{input: {email: $email, accountId:$accountId}}'
+  )
+
+  exec_admin_graphql $admin_token 'user-update-email' "$variables"
+  num_errors="$(graphql_output '.data.userUpdateEmail.errors | length')"
+  [[ "$num_errors" == "0" ]] || exit 1
+
+  variables=$(
+    jq -n \
+    --arg accountId "$id" \
+    '{accountId: $accountId}'
+  )
+  exec_admin_graphql "$admin_token" 'account-details-by-account-id' "$variables"
+  refetched_id="$(graphql_output '.data.accountDetailsByAccountId.id')"
+  [[ "$refetched_id" == "$id" ]] || exit 1
+
+  # Verify the email was updated
+  updated_email="$(graphql_output '.data.accountDetailsByAccountId.owner.email.address')"
+  [[ "$updated_email" == "$new_email" ]] || exit 1
+  [[ "$(graphql_output '.data.accountDetailsByAccountId.owner.email.verified')" == "true" ]] || exit 1
 }
 
 @test "admin: can query account details by username" {
