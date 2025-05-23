@@ -2,24 +2,24 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'feat: add update email to admin api (#93)...'
-      sha: 2013230d7419ddcb4fb98f9fd893490bd5c7db29
+      commitTitle: 'fix(admin): show account details for invited account (#94)'
+      sha: d5c84141898aba60790412f7b8ced2d8161c2237
       tags:
-      - 0.21.44-3-g2013230d7
+      - 0.21.45-2-gd5c841418
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'feat: add update email to admin api (#93)...'
-      sha: 2013230d7419ddcb4fb98f9fd893490bd5c7db29
+      commitTitle: 'fix(admin): show account details for invited account (#94)'
+      sha: d5c84141898aba60790412f7b8ced2d8161c2237
       tags:
-      - 0.21.45
+      - 0.21.45-2-gd5c841418
     path: schemas
   - git:
-      commitTitle: 'feat: add update email to admin api (#93)...'
-      sha: 2013230d7419ddcb4fb98f9fd893490bd5c7db29
+      commitTitle: 'fix(admin): show account details for invited account (#94)'
+      sha: d5c84141898aba60790412f7b8ced2d8161c2237
       tags:
-      - 0.21.45
+      - 0.21.45-2-gd5c841418
     path: gql
   path: graphql
 kind: LockConfig
