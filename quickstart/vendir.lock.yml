@@ -2,24 +2,24 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'fix(admin): show account details for invited account (#94)'
-      sha: d5c84141898aba60790412f7b8ced2d8161c2237
+      commitTitle: 'fix: handle JournalAlreadyVoidedError error (#96)'
+      sha: b52ed54df7fa02d11d4075339f49ae360714aa81
       tags:
-      - 0.21.45-2-gd5c841418
+      - 0.21.46-2-gb52ed54df
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'fix(admin): show account details for invited account (#94)'
-      sha: d5c84141898aba60790412f7b8ced2d8161c2237
+      commitTitle: 'fix: handle JournalAlreadyVoidedError error (#96)'
+      sha: b52ed54df7fa02d11d4075339f49ae360714aa81
       tags:
-      - 0.21.45-2-gd5c841418
+      - 0.21.46-2-gb52ed54df
     path: schemas
   - git:
-      commitTitle: 'fix(admin): show account details for invited account (#94)'
-      sha: d5c84141898aba60790412f7b8ced2d8161c2237
+      commitTitle: 'fix: handle JournalAlreadyVoidedError error (#96)'
+      sha: b52ed54df7fa02d11d4075339f49ae360714aa81
       tags:
-      - 0.21.45-2-gd5c841418
+      - 0.21.46-2-gb52ed54df
     path: gql
   path: graphql
 kind: LockConfig
