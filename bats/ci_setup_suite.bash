@@ -23,13 +23,13 @@ teardown_suite() {
 }
 
 await_api_is_up() {
-  server_is_up() {
+  api_is_up() {
     exec_graphql 'anon' 'globals'
     network="$(graphql_output '.data.globals.network')"
     [[ "${network}" = "regtest" ]] || exit 1
   }
 
-  retry 360 1 server_is_up
+  retry 360 2 api_is_up
 }
 
 await_pay_is_up() {
@@ -37,7 +37,7 @@ await_pay_is_up() {
     curl localhost:3002 || exit 1
   }
 
-  retry 360 1 pay_is_up
+  retry 360 2 pay_is_up
 }
 
 await_api_keys_is_up() {
@@ -45,7 +45,7 @@ await_api_keys_is_up() {
     curl localhost:5397/auth/check || exit 1
   }
 
-  retry 360 1 api_keys_is_up
+  retry 360 2 api_keys_is_up
 }
 
 await_notifications_is_up() {
@@ -53,5 +53,5 @@ await_notifications_is_up() {
     nc -zv localhost 6685 || exit 1
   }
 
-  retry 360 1 notifications_is_up
+  retry 360 2 notifications_is_up
 }

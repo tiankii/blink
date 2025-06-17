@@ -3,7 +3,7 @@ import fs from "fs"
 import path from "path"
 
 import Ajv from "ajv"
-import yaml from "js-yaml"
+import * as yaml from "js-yaml"
 
 import mergeWith from "lodash.mergewith"
 
@@ -131,6 +131,10 @@ export const getFeesConfig = (feesConfig = yamlConfig.fees): FeesConfig => {
       ? 0n
       : BigInt(feesConfig.withdraw.ratioAsBasisPoints)
 
+  const merchantDepositRatioAsBasisPoints = BigInt(
+    feesConfig.merchantDeposit.ratioAsBasisPoints,
+  ) as DepositFeeRatioAsBasisPoints
+
   return {
     depositDefaultMin: {
       amount: BigInt(feesConfig.deposit.defaultMin),
@@ -141,6 +145,15 @@ export const getFeesConfig = (feesConfig = yamlConfig.fees): FeesConfig => {
       currency: WalletCurrency.Btc,
     },
     depositRatioAsBasisPoints,
+    merchantDepositDefaultMin: {
+      amount: BigInt(feesConfig.merchantDeposit.defaultMin),
+      currency: WalletCurrency.Btc,
+    },
+    merchantDepositThreshold: {
+      amount: BigInt(feesConfig.merchantDeposit.threshold),
+      currency: WalletCurrency.Btc,
+    },
+    merchantDepositRatioAsBasisPoints,
     withdrawMethod: method,
     withdrawRatioAsBasisPoints,
     withdrawThreshold: toSats(feesConfig.withdraw.threshold),
@@ -180,6 +193,12 @@ export const getRequestCodePerPhoneNumberLimits = () =>
 
 export const getRequestCodePerIpLimits = () =>
   getRateLimits(yamlConfig.rateLimits.requestCodePerIp)
+
+export const getRequestTelegramPassportNoncePerPhoneNumberLimits = () =>
+  getRateLimits(yamlConfig.rateLimits.requestTelegramPassportNoncePerPhoneNumber)
+
+export const getRequestTelegramPassportNoncePerIpLimits = () =>
+  getRateLimits(yamlConfig.rateLimits.requestTelegramPassportNoncePerIp)
 
 export const getLoginAttemptPerLoginIdentifierLimits = () =>
   getRateLimits(yamlConfig.rateLimits.loginAttemptPerLoginIdentifier)
@@ -324,4 +343,8 @@ export const getSmsAuthUnsupportedCountries = (): CountryCode[] => {
 
 export const getWhatsAppAuthUnsupportedCountries = (): CountryCode[] => {
   return yamlConfig.whatsAppAuthUnsupportedCountries as CountryCode[]
+}
+
+export const getTelegramAuthUnsupportedCountries = (): CountryCode[] => {
+  return yamlConfig.telegramAuthUnsupportedCountries as CountryCode[]
 }

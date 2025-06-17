@@ -1,20 +1,31 @@
+import { randomUUID } from "crypto"
+
 import { EmailCodeInvalidError } from "./errors"
 
+import { CacheKeys } from "@/domain/cache"
+import { UuidRegex } from "@/domain/shared"
+import { InvalidTelegramPassportNonceError } from "@/domain/errors"
 import { ChannelType, PhoneCodeInvalidError } from "@/domain/phone-provider"
 
 export const getSupportedCountries = ({
   allCountries,
   unsupportedSmsCountries,
   unsupportedWhatsAppCountries,
+  unsupportedTelegramCountries,
 }: {
   allCountries: CountryCode[]
   unsupportedSmsCountries: CountryCode[]
   unsupportedWhatsAppCountries: CountryCode[]
+  unsupportedTelegramCountries: CountryCode[]
 }): Country[] => {
   const countries: Country[] = []
 
   for (const country of allCountries) {
     const supportedAuthMethods: ChannelType[] = []
+
+    if (!unsupportedTelegramCountries.includes(country)) {
+      supportedAuthMethods.push(ChannelType.Telegram)
+    }
 
     if (!unsupportedSmsCountries.includes(country)) {
       supportedAuthMethods.push(ChannelType.Sms)
@@ -46,3 +57,22 @@ export const validOneTimeAuthCodeValue = (code: string) => {
   }
   return new PhoneCodeInvalidError({ message: "Invalid value for OneTimeAuthCode" })
 }
+
+export const createTelegramPassportNonce = (): TelegramPassportNonce => {
+  return randomUUID() as TelegramPassportNonce
+}
+
+export const checkedToTelegramPassportNonce = (
+  nonce: string,
+): TelegramPassportNonce | ValidationError => {
+  if (!nonce.match(UuidRegex)) {
+    return new InvalidTelegramPassportNonceError(nonce)
+  }
+  return nonce as TelegramPassportNonce
+}
+
+export const telegramPassportRequestKey = (nonce: TelegramPassportNonce) =>
+  `${CacheKeys.TelegramPassportNonce}:request:${nonce}`
+
+export const telegramPassportLoginKey = (nonce: TelegramPassportNonce) =>
+  `${CacheKeys.TelegramPassportNonce}:login:${nonce}`

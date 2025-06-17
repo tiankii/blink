@@ -24,6 +24,9 @@ export const env = createEnv({
       .pipe(z.coerce.boolean())
       .default(false),
 
+    TELEGRAM_BOT_API_TOKEN: z.string().optional(),
+    TELEGRAM_PASSPORT_PRIVATE_KEY: z.string().optional(),
+
     EXPORTER_PORT: z.number().or(z.string()).pipe(z.coerce.number()).default(3000),
     TRIGGER_PORT: z.number().or(z.string()).pipe(z.coerce.number()).default(8888),
     WEBSOCKET_PORT: z.number().or(z.string()).pipe(z.coerce.number()).default(4000),
@@ -40,6 +43,8 @@ export const env = createEnv({
     TWILIO_ACCOUNT_SID: z.string().min(1),
     TWILIO_AUTH_TOKEN: z.string().min(1),
     TWILIO_VERIFY_SERVICE_ID: z.string().min(1),
+    TWILIO_MESSAGING_SERVICE_ID: z.string().min(1).optional(),
+    TWILIO_WELCOME_CONTENT_SID: z.string().min(1).optional(),
 
     KRATOS_PUBLIC_API: z.string().url(),
     KRATOS_ADMIN_API: z.string().url(),
@@ -153,6 +158,9 @@ export const env = createEnv({
     UNSECURE_DEFAULT_LOGIN_CODE: process.env.UNSECURE_DEFAULT_LOGIN_CODE,
     UNSECURE_IP_FROM_REQUEST_OBJECT: process.env.UNSECURE_IP_FROM_REQUEST_OBJECT,
 
+    TELEGRAM_BOT_API_TOKEN: process.env.TELEGRAM_BOT_API_TOKEN,
+    TELEGRAM_PASSPORT_PRIVATE_KEY: process.env.TELEGRAM_PASSPORT_PRIVATE_KEY,
+
     EXPORTER_PORT: process.env.EXPORTER_PORT,
     TRIGGER_PORT: process.env.TRIGGER_PORT,
     WEBSOCKET_PORT: process.env.WEBSOCKET_PORT,
@@ -171,6 +179,8 @@ export const env = createEnv({
     TWILIO_ACCOUNT_SID: process.env.TWILIO_ACCOUNT_SID,
     TWILIO_AUTH_TOKEN: process.env.TWILIO_AUTH_TOKEN,
     TWILIO_VERIFY_SERVICE_ID: process.env.TWILIO_VERIFY_SERVICE_ID,
+    TWILIO_MESSAGING_SERVICE_ID: process.env.TWILIO_MESSAGING_SERVICE_ID,
+    TWILIO_WELCOME_CONTENT_SID: process.env.TWILIO_WELCOME_CONTENT_SID,
 
     KRATOS_PUBLIC_API: process.env.KRATOS_PUBLIC_API,
     KRATOS_ADMIN_API: process.env.KRATOS_ADMIN_API,

@@ -59,6 +59,14 @@ rateLimits:
     points: 16
     duration: 3600
     blockDuration: 86400
+  requestTelegramPassportNoncePerPhoneNumber:
+    points: 5
+    duration: 3600
+    blockDuration: 86400
+  requestTelegramPassportNoncePerIp:
+    points: 25
+    duration: 300
+    blockDuration: 3600
   loginAttemptPerLoginIdentifier:
     points: 6
     duration: 3600
@@ -147,6 +155,10 @@ fees:
     defaultMin: 3000
     threshold: 1000000
     ratioAsBasisPoints: 30
+  merchantDeposit:
+    defaultMin: 3000
+    threshold: 1000000
+    ratioAsBasisPoints: 30
 onChainWallet:
   dustThreshold: 5000
   minConfirmations: 2
@@ -163,3 +175,4 @@ skipFeeProbeConfig:
   chanId: []
 smsAuthUnsupportedCountries: []
 whatsAppAuthUnsupportedCountries: []
+telegramAuthUnsupportedCountries: []

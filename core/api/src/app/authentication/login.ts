@@ -4,61 +4,70 @@ import {
   rewardFailedLoginAttemptPerIpLimits,
 } from "./ratelimits"
 
+import { activateInvitedAccount } from "./activate-invited-account"
+import { getPhoneMetadata } from "./get-phone-metadata"
+
+import { upgradeAccountFromDeviceToPhone } from "@/app/accounts"
+
 import {
   createAccountForDeviceAccount,
   createAccountWithPhoneIdentifier,
 } from "@/app/accounts/create-account"
+import {
+  checkedToEmailCode,
+  telegramPassportLoginKey,
+  telegramPassportRequestKey,
+} from "@/domain/authentication"
+
+import { getAccountsOnboardConfig, getDefaultAccountsConfig } from "@/config"
 
 import {
   EmailUnverifiedError,
   IdentifierNotFoundError,
+  InvalidNoncePhoneTelegramPassportError,
+  InvalidNonceTelegramPassportError,
+  WaitingDataTelegramPassportError,
 } from "@/domain/authentication/errors"
-
+import { ChannelType, checkedToChannel } from "@/domain/phone-provider"
 import {
   checkedToDeviceId,
   checkedToIdentityPassword,
   checkedToIdentityUsername,
-  PhoneMetadataAuthorizer,
 } from "@/domain/users"
+
 import {
   AuthWithEmailPasswordlessService,
   AuthWithPhonePasswordlessService,
   AuthWithUsernamePasswordDeviceIdService,
   IdentityRepository,
 } from "@/services/kratos"
-
 import { LedgerService } from "@/services/ledger"
 import { WalletsRepository } from "@/services/mongoose"
 import {
   addAttributesToCurrentSpan,
   recordExceptionInCurrentSpan,
 } from "@/services/tracing"
-
-import { upgradeAccountFromDeviceToPhone } from "@/app/accounts"
-import { checkedToEmailCode } from "@/domain/authentication"
-import { isPhoneCodeValid, TwilioClient } from "@/services/twilio-service"
+import { isPhoneCodeValid } from "@/services/twilio-service"
 
 import { IPMetadataAuthorizer } from "@/domain/accounts-ips/ip-metadata-authorizer"
-
-import { getAccountsOnboardConfig, getDefaultAccountsConfig } from "@/config"
 
 import {
   InvalidIpMetadataError,
   MissingIPMetadataError,
   UnauthorizedIPForOnboardingError,
 } from "@/domain/errors"
-import {
-  InvalidPhoneForOnboardingError,
-  InvalidPhoneMetadataForOnboardingError,
-} from "@/domain/users/errors"
 import { IpFetcher } from "@/services/ipfetcher"
 
 import { IpFetcherServiceError } from "@/domain/ipfetcher"
+import { PhoneAccountAlreadyExistsNeedToSweepFundsError } from "@/domain/kratos"
 import { RateLimitConfig } from "@/domain/rate-limit"
 import { RateLimiterExceededError } from "@/domain/rate-limit/errors"
 import { ErrorLevel } from "@/domain/shared"
 import { consumeLimiter } from "@/services/rate-limit"
-import { PhoneAccountAlreadyExistsNeedToSweepFundsError } from "@/domain/kratos"
+
+import { RedisCacheService } from "@/services/cache"
+
+const redisCache = RedisCacheService()
 
 export const loginWithPhoneToken = async ({
   phone,
@@ -133,6 +142,9 @@ export const loginWithPhoneToken = async ({
   }
 
   if (userId instanceof Error) return userId
+
+  const activeAccount = await activateInvitedAccount(userId)
+  if (activeAccount instanceof Error) return activeAccount
 
   const kratosResult = await authService.loginToken({ phone })
   if (kratosResult instanceof Error) return kratosResult
@@ -261,6 +273,112 @@ export const loginDeviceUpgradeWithPhone = async ({
   return { success: true, authToken: kratosResult.authToken }
 }
 
+export const loginTelegramPassportNonceWithPhone = async ({
+  phone,
+  nonce,
+  ip,
+}: {
+  phone: PhoneNumber
+  nonce: TelegramPassportNonce
+  ip: IpAddress
+}): Promise<LoginWithPhoneTokenResult | ApplicationError> => {
+  const isValidPhoneForChannel = checkedToChannel(phone, ChannelType.Telegram)
+  if (isValidPhoneForChannel instanceof Error) return isValidPhoneForChannel
+
+  {
+    const limitOk = await checkFailedLoginAttemptPerIpLimits(ip)
+    if (limitOk instanceof Error) return limitOk
+  }
+
+  {
+    const limitOk = await checkLoginAttemptPerLoginIdentifierLimits(phone)
+    if (limitOk instanceof Error) return limitOk
+  }
+
+  const loginKey = telegramPassportLoginKey(nonce)
+  const phoneNumberFromNonce = await redisCache.get<PhoneNumber>({ key: loginKey })
+  if (phoneNumberFromNonce instanceof Error) {
+    // if it is valid telegram has not sent data to the webhook
+    const requestKey = telegramPassportRequestKey(nonce)
+    const validRequestNonce = await redisCache.get<PhoneNumber>({ key: requestKey })
+    if (validRequestNonce instanceof Error)
+      return new InvalidNonceTelegramPassportError(nonce)
+
+    return new WaitingDataTelegramPassportError(nonce)
+  }
+
+  if (phoneNumberFromNonce !== phone) {
+    return new InvalidNoncePhoneTelegramPassportError(nonce)
+  }
+
+  // invalidate login with the same nonce
+  await redisCache.clear({ key: loginKey })
+
+  await rewardFailedLoginAttemptPerIpLimits(ip)
+
+  const authService = AuthWithPhonePasswordlessService()
+
+  const identities = IdentityRepository()
+  const userId = await identities.getUserIdFromIdentifier(phone)
+
+  if (userId instanceof IdentifierNotFoundError) {
+    // user is a new user
+    // this branch exists because we currently make no difference between a registration and login
+    addAttributesToCurrentSpan({ "login.newAccount": true })
+
+    const phoneMetadata = await isAllowedToOnboard({ ip, phone })
+    if (phoneMetadata instanceof Error) return phoneMetadata
+
+    const kratosResult = await authService.createIdentityWithSession({
+      phone,
+      phoneMetadata,
+    })
+    if (kratosResult instanceof Error) return kratosResult
+    const { kratosUserId } = kratosResult
+
+    const account = await createAccountWithPhoneIdentifier({
+      newAccountInfo: { phone, kratosUserId },
+      config: getDefaultAccountsConfig(),
+      phoneMetadata,
+    })
+    if (account instanceof Error) {
+      recordExceptionInCurrentSpan({
+        error: account,
+        level: ErrorLevel.Critical,
+        attributes: {
+          userId: kratosUserId,
+          phone,
+        },
+      })
+      return account
+    }
+
+    return {
+      authToken: kratosResult.authToken,
+      totpRequired: false,
+      id: kratosResult.kratosUserId,
+    }
+  }
+
+  if (userId instanceof Error) return userId
+
+  const activeAccount = await activateInvitedAccount(userId)
+  if (activeAccount instanceof Error) return activeAccount
+
+  const kratosResult = await authService.loginToken({ phone })
+  if (kratosResult instanceof Error) return kratosResult
+
+  // if kratosUserId is not returned, it means that 2fa is required
+  const totpRequired = !kratosResult.kratosUserId
+  const id = kratosResult.kratosUserId as UserId
+
+  return {
+    authToken: kratosResult.authToken,
+    totpRequired,
+    id,
+  }
+}
+
 export const loginWithDevice = async ({
   username: usernameRaw,
   password: passwordRaw,
@@ -383,32 +501,7 @@ const isAllowedToOnboard = async ({
     }
   }
 
-  const newPhoneMetadata = await TwilioClient().getCarrier(phone)
-  if (newPhoneMetadata instanceof Error) {
-    if (!phoneMetadataValidationSettings.enabled) {
-      return undefined
-    }
-
-    return new InvalidPhoneMetadataForOnboardingError()
-  }
-
-  const phoneMetadata = newPhoneMetadata
-
-  if (phoneMetadataValidationSettings.enabled) {
-    const authorizedPhoneMetadata = PhoneMetadataAuthorizer(
-      phoneMetadataValidationSettings,
-    ).authorize(phoneMetadata)
-
-    addAttributesToCurrentSpan({
-      "login.phoneMetadata": JSON.stringify(phoneMetadata),
-    })
-
-    if (authorizedPhoneMetadata instanceof Error) {
-      return new InvalidPhoneForOnboardingError(authorizedPhoneMetadata.name)
-    }
-  }
-
-  return phoneMetadata
+  return getPhoneMetadata({ phone })
 }
 
 const checkDeviceLoginAttemptPerAppcheckJtiLimits = async (

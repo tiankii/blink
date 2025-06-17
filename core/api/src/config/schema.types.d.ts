@@ -74,6 +74,8 @@ type YamlSchema = {
     requestCodePerEmail: RateLimitInput
     requestCodePerPhoneNumber: RateLimitInput
     requestCodePerIp: RateLimitInput
+    requestTelegramPassportNoncePerPhoneNumber: RateLimitInput
+    requestTelegramPassportNoncePerIp: RateLimitInput
     loginAttemptPerLoginIdentifier: RateLimitInput
     failedLoginAttemptPerIp: RateLimitInput
     invoiceCreateAttempt: RateLimitInput
@@ -119,6 +121,11 @@ type YamlSchema = {
       threshold: number
       ratioAsBasisPoints: number
     }
+    merchantDeposit: {
+      defaultMin: number
+      threshold: number
+      ratioAsBasisPoints: number
+    }
     withdraw: {
       method: string
       ratioAsBasisPoints: number
@@ -144,4 +151,5 @@ type YamlSchema = {
   skipFeeProbeConfig: { pubkey: string[]; chanId: string[] }
   smsAuthUnsupportedCountries: string[]
   whatsAppAuthUnsupportedCountries: string[]
+  telegramAuthUnsupportedCountries: string[]
 }

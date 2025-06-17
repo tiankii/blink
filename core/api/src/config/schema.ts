@@ -260,6 +260,8 @@ export const configSchema = {
         requestCodePerEmail: rateLimitConfigSchema,
         requestCodePerPhoneNumber: rateLimitConfigSchema,
         requestCodePerIp: rateLimitConfigSchema,
+        requestTelegramPassportNoncePerPhoneNumber: rateLimitConfigSchema,
+        requestTelegramPassportNoncePerIp: rateLimitConfigSchema,
         loginAttemptPerLoginIdentifier: rateLimitConfigSchema,
         failedLoginAttemptPerIp: rateLimitConfigSchema,
         invoiceCreateAttempt: rateLimitConfigSchema,
@@ -274,6 +276,8 @@ export const configSchema = {
         "requestCodePerEmail",
         "requestCodePerPhoneNumber",
         "requestCodePerIp",
+        "requestTelegramPassportNoncePerPhoneNumber",
+        "requestTelegramPassportNoncePerIp",
         "loginAttemptPerLoginIdentifier",
         "failedLoginAttemptPerIp",
         "invoiceCreateAttempt",
@@ -300,6 +304,16 @@ export const configSchema = {
           points: 16,
           duration: 3600,
           blockDuration: 86400,
+        },
+        requestTelegramPassportNoncePerPhoneNumber: {
+          points: 5,
+          duration: 3600,
+          blockDuration: 86400,
+        },
+        requestTelegramPassportNoncePerIp: {
+          points: 25,
+          duration: 300,
+          blockDuration: 3600,
         },
         loginAttemptPerLoginIdentifier: {
           points: 6,
@@ -508,6 +522,17 @@ export const configSchema = {
           additionalProperties: false,
           default: { defaultMin: 3000, threshold: 1000000, ratioAsBasisPoints: 30 },
         },
+        merchantDeposit: {
+          type: "object",
+          properties: {
+            defaultMin: { type: "integer" },
+            threshold: { type: "integer" },
+            ratioAsBasisPoints: { type: "integer" },
+          },
+          required: ["defaultMin", "threshold", "ratioAsBasisPoints"],
+          additionalProperties: false,
+          default: { defaultMin: 3000, threshold: 1000000, ratioAsBasisPoints: 30 },
+        },
         withdraw: {
           type: "object",
           properties: {
@@ -626,6 +651,11 @@ export const configSchema = {
       items: { type: "string" },
       default: [],
     },
+    telegramAuthUnsupportedCountries: {
+      type: "array",
+      items: { type: "string" },
+      default: [],
+    },
   },
   required: [
     "lightningAddressDomain",
@@ -655,6 +685,7 @@ export const configSchema = {
     "skipFeeProbeConfig",
     "smsAuthUnsupportedCountries",
     "whatsAppAuthUnsupportedCountries",
+    "telegramAuthUnsupportedCountries",
   ],
   additionalProperties: false,
 } as const

@@ -1,7 +1,7 @@
 import { testData } from "../support/test-config"
 
-describe("Account ID Test", () => {
-  it("Login Phone Test", () => {
+describe("Login Phone", () => {
+  it("should be able to login via SMS", () => {
     cy.flushRedis()
     cy.visit(testData.AUTHORIZATION_URL)
     cy.location("search").should((search) => {
@@ -24,6 +24,12 @@ describe("Account ID Test", () => {
       .should("be.visible")
       .should("not.be.disabled")
       .type(testData.PHONE_NUMBER)
+
+    cy.get("[data-testid=phone_number_channel_select]")
+      .should("exist")
+      .should("be.visible")
+      .should("not.be.disabled")
+      .select("SMS")
 
     cy.get("[data-testid=phone_login_next_btn]")
       .should("exist")
