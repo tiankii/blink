@@ -1,5 +1,5 @@
 // @ts-nocheck
-const { randomUUID } = require("crypto")
+const { randomUUID: generateUUID } = require("crypto")
 
 const BATCH_SIZE = 1000
 
@@ -26,7 +26,7 @@ module.exports = {
           for (const contact of contacts) {
             contactInserts.push({
               _id: contact._id,
-              id: randomUUID(),
+              id: generateUUID(),
               accountId,
               type: "intraledger",
               identifier: contact.id,
