@@ -15,6 +15,7 @@ import {
   newAddress,
   submitPayout,
   subscribeAll,
+  listPayoutQueues,
 } from "./grpc-client"
 
 import {
@@ -26,6 +27,8 @@ import {
   BriaEvent as RawBriaEvent,
   SubmitPayoutRequest,
   SubscribeAllRequest,
+  ListPayoutQueuesRequest,
+  PayoutQueue,
 } from "./proto/bria_pb"
 
 import { BRIA_API_KEY, getBriaConfig } from "@/config"
@@ -258,6 +261,25 @@ export const OnChainService = (): IOnChainService => {
     }
   }
 
+  const getPayoutQueues = async (): Promise<PayoutQueueInfo[] | OnChainServiceError> => {
+    try {
+      const request = new ListPayoutQueuesRequest()
+      const response = await listPayoutQueues(request, metadata)
+
+      const payoutQueues = response.getPayoutQueuesList()
+      if (!payoutQueues || payoutQueues.length === 0) {
+        return []
+      }
+
+      return payoutQueues.map((queue: PayoutQueue) => ({
+        id: queue.getId(),
+        name: queue.getName(),
+      }))
+    } catch (error) {
+      return new UnknownOnChainServiceError(error)
+    }
+  }
+
   const queuePayoutToAddress = async ({
     walletDescriptor,
     address,
@@ -370,6 +392,7 @@ export const OnChainService = (): IOnChainService => {
       queuePayoutToAddress,
       rebalanceToColdWallet,
       estimateFeeForPayout,
+      getPayoutQueues,
     },
   })
 }

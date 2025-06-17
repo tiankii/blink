@@ -16,6 +16,11 @@ type PayoutMetadata = {
   }
 }
 
+type PayoutQueueInfo = {
+  id: string
+  name: string
+}
+
 type PayoutAugmentation = {
   id: PayoutId
   externalId: string
