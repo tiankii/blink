@@ -1565,6 +1565,8 @@ enum PayoutSpeed
   @join__type(graph: PUBLIC)
 {
   FAST @join__enumValue(graph: PUBLIC)
+  MEDIUM @join__enumValue(graph: PUBLIC)
+  SLOW @join__enumValue(graph: PUBLIC)
 }
 
 """Phone number which includes country code"""

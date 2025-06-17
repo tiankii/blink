@@ -1158,6 +1158,8 @@ enum PaymentSendResult {
 
 enum PayoutSpeed {
   FAST
+  MEDIUM
+  SLOW
 }
 
 """Phone number which includes country code"""
