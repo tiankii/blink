@@ -186,11 +186,15 @@ export const configSchema = {
           type: "object",
           properties: {
             fast: { type: "string" },
+            medium: { type: "string" },
+            low: { type: "string" },
           },
           required: ["fast"],
           additionalProperties: false,
           default: {
             fast: "dev-queue",
+            medium: "medium-priority",
+            low: "low-priority",
           },
         },
         coldStorage: {

@@ -55,6 +55,8 @@ type YamlSchema = {
     hotWalletName: string
     queueNames: {
       fast: string
+      medium: string
+      slow: string
     }
     coldStorage: {
       walletName: string
