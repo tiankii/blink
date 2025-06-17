@@ -182,19 +182,58 @@ export const configSchema = {
       type: "object",
       properties: {
         hotWalletName: { type: "string" },
-        queueNames: {
+        payoutQueues: {
           type: "object",
           properties: {
-            fast: { type: "string" },
-            medium: { type: "string" },
-            low: { type: "string" },
+            fast: {
+              type: "object",
+              properties: {
+                queueName: { type: "string" },
+                label: { type: "string" },
+                description: { type: "string" },
+              },
+              required: ["queueName", "label", "description"],
+              additionalProperties: false,
+            },
+            medium: {
+              type: "object",
+              properties: {
+                queueName: { type: "string" },
+                label: { type: "string" },
+                description: { type: "string" },
+              },
+              required: ["queueName", "label", "description"],
+              additionalProperties: false,
+            },
+            slow: {
+              type: "object",
+              properties: {
+                queueName: { type: "string" },
+                label: { type: "string" },
+                description: { type: "string" },
+              },
+              required: ["queueName", "label", "description"],
+              additionalProperties: false,
+            },
           },
-          required: ["fast"],
+          required: ["fast", "medium", "slow"],
           additionalProperties: false,
           default: {
-            fast: "dev-queue",
-            medium: "medium-priority",
-            low: "low-priority",
+            fast: {
+              queueName: "dev-fast-queue",
+              label: "Priority",
+              description: "Estimated delivery ~10 minutes",
+            },
+            medium: {
+              queueName: "dev-medium-queue",
+              label: "Standard",
+              description: "Estimated delivery ~1 hour",
+            },
+            slow: {
+              queueName: "dev-slow-queue",
+              label: "Flexible",
+              description: "Estimated delivery ~24 hours",
+            },
           },
         },
         coldStorage: {
@@ -210,7 +249,7 @@ export const configSchema = {
           },
         },
       },
-      required: ["hotWalletName", "queueNames", "coldStorage"],
+      required: ["hotWalletName", "payoutQueues", "coldStorage"],
       additionalProperties: false,
       default: {
         hotWalletName: "dev-wallet",

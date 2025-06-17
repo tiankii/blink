@@ -15,7 +15,6 @@ import {
   newAddress,
   submitPayout,
   subscribeAll,
-  listPayoutQueues,
 } from "./grpc-client"
 
 import {
@@ -27,8 +26,6 @@ import {
   BriaEvent as RawBriaEvent,
   SubmitPayoutRequest,
   SubscribeAllRequest,
-  ListPayoutQueuesRequest,
-  PayoutQueue,
 } from "./proto/bria_pb"
 
 import { BRIA_API_KEY, getBriaConfig } from "@/config"
@@ -110,7 +107,8 @@ export const BriaSubscriber = () => {
   }
 }
 
-const queueNameForSpeed = (speed: PayoutSpeed): string => briaConfig.queueNames[speed]
+const queueNameForSpeed = (speed: PayoutSpeed): string =>
+  briaConfig.payoutQueues[speed].queueName
 
 export const OnChainService = (): IOnChainService => {
   const metadata = new Metadata()
@@ -261,23 +259,11 @@ export const OnChainService = (): IOnChainService => {
     }
   }
 
-  const getPayoutQueues = async (): Promise<PayoutQueueInfo[] | OnChainServiceError> => {
-    try {
-      const request = new ListPayoutQueuesRequest()
-      const response = await listPayoutQueues(request, metadata)
-
-      const payoutQueues = response.getPayoutQueuesList()
-      if (!payoutQueues || payoutQueues.length === 0) {
-        return []
-      }
-
-      return payoutQueues.map((queue: PayoutQueue) => ({
-        id: queue.getId(),
-        name: queue.getName(),
-      }))
-    } catch (error) {
-      return new UnknownOnChainServiceError(error)
-    }
+  const getPayoutQueues = (): PayoutQueueInfo[] => {
+    return Object.entries(briaConfig.payoutQueues).map(([speed, config]) => ({
+      speed: speed as PayoutSpeed,
+      ...config,
+    }))
   }
 
   const queuePayoutToAddress = async ({
