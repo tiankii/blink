@@ -1162,6 +1162,12 @@ enum PayoutSpeed {
   SLOW
 }
 
+type PayoutSpeeds {
+  description: String!
+  displayName: String!
+  speed: PayoutSpeed!
+}
+
 """Phone number which includes country code"""
 scalar Phone
 
@@ -1277,6 +1283,9 @@ type Query {
   onChainTxFee(address: OnChainAddress!, amount: SatAmount!, speed: PayoutSpeed! = FAST, walletId: WalletId!): OnChainTxFee!
   onChainUsdTxFee(address: OnChainAddress!, amount: CentAmount!, speed: PayoutSpeed! = FAST, walletId: WalletId!): OnChainUsdTxFee!
   onChainUsdTxFeeAsBtcDenominated(address: OnChainAddress!, amount: SatAmount!, speed: PayoutSpeed! = FAST, walletId: WalletId!): OnChainUsdTxFee!
+
+  """Returns the list of available payout queues for on-chain payouts"""
+  payoutSpeeds: [PayoutSpeeds!]!
 
   """
   Returns 1 Sat and 1 Usd Cent price for the given currency in minor unit
