@@ -17,12 +17,11 @@ type AccountLimitsConfig = {
   }
 }
 
-type PayoutQueuesConfig = {
-  [key in PayoutSpeed]: {
-    queueName: string
-    label: string
-    description: string
-  }
+type PayoutQueuesConfigItem = {
+  speed: PayoutSpeed
+  queueName: string
+  label: string
+  description: string
 }
 
 type YamlSchema = {
@@ -61,7 +60,7 @@ type YamlSchema = {
   }
   bria: {
     hotWalletName: string
-    payoutQueues: PayoutQueuesConfig
+    payoutQueues: PayoutQueuesConfigItem[]
     coldStorage: {
       walletName: string
       hotToColdRebalanceQueueName: string
