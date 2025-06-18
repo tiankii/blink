@@ -107,8 +107,10 @@ export const BriaSubscriber = () => {
   }
 }
 
-const queueNameForSpeed = (speed: PayoutSpeed): string =>
-  briaConfig.payoutQueues[speed].queueName
+const queueNameForSpeed = (speed: PayoutSpeed): string => {
+  const queue = briaConfig.payoutQueues.find((queue) => queue.speed === speed)
+  return queue!.queueName
+}
 
 export const OnChainService = (): IOnChainService => {
   const metadata = new Metadata()
@@ -260,10 +262,7 @@ export const OnChainService = (): IOnChainService => {
   }
 
   const getPayoutQueues = (): PayoutQueueInfo[] => {
-    return Object.entries(briaConfig.payoutQueues).map(([speed, config]) => ({
-      speed: speed as PayoutSpeed,
-      ...config,
-    }))
+    return briaConfig.payoutQueues
   }
 
   const queuePayoutToAddress = async ({

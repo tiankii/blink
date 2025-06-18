@@ -33,15 +33,15 @@ coldStorage:
 bria:
   hotWalletName: dev-wallet
   payoutQueues:
-    fast:
+    - speed: fast
       queueName: dev-fast-queue
       label: "Priority"
       description: "Estimated delivery ~10 minutes"
-    medium:
+    - speed: medium
       queueName: dev-medium-queue
       label: "Standard"
       description: "Estimated delivery ~1 hour"
-    slow:
+    - speed: slow
       queueName: dev-slow-queue
       label: "Flexible"
       description: "Estimated delivery ~24 hours"

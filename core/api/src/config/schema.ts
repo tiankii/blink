@@ -183,58 +183,41 @@ export const configSchema = {
       properties: {
         hotWalletName: { type: "string" },
         payoutQueues: {
-          type: "object",
-          properties: {
-            fast: {
-              type: "object",
-              properties: {
-                queueName: { type: "string" },
-                label: { type: "string" },
-                description: { type: "string" },
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              speed: {
+                type: "string",
+                enum: ["fast", "medium", "slow"],
               },
-              required: ["queueName", "label", "description"],
-              additionalProperties: false,
+              queueName: { type: "string" },
+              label: { type: "string" },
+              description: { type: "string" },
             },
-            medium: {
-              type: "object",
-              properties: {
-                queueName: { type: "string" },
-                label: { type: "string" },
-                description: { type: "string" },
-              },
-              required: ["queueName", "label", "description"],
-              additionalProperties: false,
-            },
-            slow: {
-              type: "object",
-              properties: {
-                queueName: { type: "string" },
-                label: { type: "string" },
-                description: { type: "string" },
-              },
-              required: ["queueName", "label", "description"],
-              additionalProperties: false,
-            },
+            required: ["speed", "queueName", "label", "description"],
+            additionalProperties: false,
           },
-          required: ["fast", "medium", "slow"],
-          additionalProperties: false,
-          default: {
-            fast: {
+          default: [
+            {
+              speed: "fast",
               queueName: "dev-fast-queue",
               label: "Priority",
               description: "Estimated delivery ~10 minutes",
             },
-            medium: {
+            {
+              speed: "medium",
               queueName: "dev-medium-queue",
               label: "Standard",
               description: "Estimated delivery ~1 hour",
             },
-            slow: {
+            {
+              speed: "slow",
               queueName: "dev-slow-queue",
               label: "Flexible",
               description: "Estimated delivery ~24 hours",
             },
-          },
+          ],
         },
         coldStorage: {
           type: "object",
