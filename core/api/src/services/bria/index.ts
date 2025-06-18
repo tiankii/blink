@@ -261,7 +261,7 @@ export const OnChainService = (): IOnChainService => {
     }
   }
 
-  const getPayoutQueues = (): PayoutQueueInfo[] => {
+  const getPayoutSpeeds = (): PayoutSpeedRes[] => {
     return briaConfig.payoutQueues
   }
 
@@ -377,7 +377,7 @@ export const OnChainService = (): IOnChainService => {
       queuePayoutToAddress,
       rebalanceToColdWallet,
       estimateFeeForPayout,
-      getPayoutQueues,
+      getPayoutSpeeds,
     },
   })
 }

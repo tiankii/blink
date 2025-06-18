@@ -20,7 +20,7 @@ type AccountLimitsConfig = {
 type PayoutQueuesConfigItem = {
   speed: PayoutSpeed
   queueName: string
-  label: string
+  displayName: string
   description: string
 }
 

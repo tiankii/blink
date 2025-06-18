@@ -16,10 +16,10 @@ type PayoutMetadata = {
   }
 }
 
-type PayoutQueueInfo = {
+type PayoutSpeedRes = {
   speed: PayoutSpeed
   queueName: string
-  label: string
+  displayName: string
   description: string
 }
 
