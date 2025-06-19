@@ -5,9 +5,9 @@ mutation contactCreate($input: ContactCreateInput!) {
     }
     contact {
       id
-      identifier
+      handle
       type
-      alias
+      displayName
       transactionsCount
       createdAt
     }

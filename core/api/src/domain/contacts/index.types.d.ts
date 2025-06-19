@@ -6,20 +6,21 @@ type Contact = {
   readonly createdAt: Date
   accountId: AccountId
   type: ContactType
-  identifier: string
-  alias: string
+  handle: string
+  displayName: string
   transactionsCount: number
+  updatedAt?: Date
 }
 
-type NewContactInput = Omit<Contact, "id" | "createdAt">
+type NewContactInput = Omit<Contact, "id" | "createdAt" | "updatedAt">
 
 interface IContactsRepository {
   findContact({
     accountId,
-    identifier,
+    handle,
   }: {
     accountId: AccountId
-    identifier?: string
+    handle?: string
   }): Promise<Contact | RepositoryError>
 
   getContactsByAccountId(accountId: string): Promise<Contact[] | RepositoryError>

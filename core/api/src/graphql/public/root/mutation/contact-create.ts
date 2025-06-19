@@ -1,6 +1,6 @@
 import ContactCreatePayload from "@/graphql/public/types/payload/contact-create"
-import ContactIdentifier from "@/graphql/shared/types/scalar/contact-identifier"
-import ContactAlias from "@/graphql/public/types/scalar/contact-alias"
+import ContactHandle from "@/graphql/shared/types/scalar/contact-handle"
+import ContactDisplayName from "@/graphql/public/types/scalar/contact-alias"
 import ContactType from "@/graphql/shared/types/scalar/contact-type"
 import { mapAndParseErrorForGqlResponse } from "@/graphql/error-map"
 import { GT } from "@/graphql/index"
@@ -10,8 +10,8 @@ import { Contacts } from "@/app"
 const ContactCreateInput = GT.Input({
   name: "ContactCreateInput",
   fields: () => ({
-    identifier: { type: ContactIdentifier },
-    alias: { type: ContactAlias },
+    handle: { type: ContactHandle },
+    displayName: { type: ContactDisplayName },
     type: { type: GT.NonNull(ContactType) },
   }),
 })
@@ -25,20 +25,20 @@ const ContactCreateMutation = GT.Field({
     input: { type: GT.NonNull(ContactCreateInput) },
   },
   resolve: async (_, args, { domainAccount }: { domainAccount: Account }) => {
-    const { identifier, alias, type } = args.input
+    const { handle, displayName, type } = args.input
 
     if (type instanceof Error) {
       return { errors: [{ message: type.message }] }
     }
 
-    if (alias instanceof Error) {
-      return { errors: [{ message: alias.message }] }
+    if (displayName instanceof Error) {
+      return { errors: [{ message: displayName.message }] }
     }
 
     const result = await Contacts.contactCreate({
       accountId: domainAccount.id,
-      identifier,
-      alias,
+      handle,
+      displayName,
       type,
     })
 

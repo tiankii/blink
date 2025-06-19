@@ -148,9 +148,9 @@ const translateToAccount = async (result: AccountRecord): Promise<Account> => {
     statusHistory: (result.statusHistory || []) as AccountStatusHistory,
     contactEnabled: !!result.contactEnabled,
     contacts: contacts.map((contact: ContactRecord) => ({
-      id: contact.identifier as Username,
-      username: contact.identifier as Username,
-      alias: contact.alias as ContactAlias,
+      id: contact.handle as Username,
+      username: contact.handle as Username,
+      alias: contact.displayName as ContactAlias,
       transactionsCount: contact.transactionsCount,
     })),
     withdrawFee: result.withdrawFee as Satoshis,
