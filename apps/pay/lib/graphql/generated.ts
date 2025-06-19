@@ -23,6 +23,10 @@ export type Scalars = {
   CentAmount: { input: number; output: number; }
   /** An alias name that a user can set for a wallet (with which they have transactions) */
   ContactAlias: { input: string; output: string; }
+  /** A display name that a user can assign to a contact */
+  ContactDisplayName: { input: string; output: string; }
+  /** Unique handle used to identify a contact (e.g., username or lnAddress) */
+  ContactHandle: { input: string; output: string; }
   /** Unique identifier of a contact */
   ContactId: { input: string; output: string; }
   /** A CCA2 country code (ex US, FR, etc) */
@@ -40,8 +44,6 @@ export type Scalars = {
   Feedback: { input: string; output: string; }
   /** Hex-encoded string of 32 bytes */
   Hex32Bytes: { input: string; output: string; }
-  /** Unique value used to identify a contact (e.g., username or lnAddress) */
-  Identifier: { input: string; output: string; }
   Language: { input: string; output: string; }
   LnPaymentPreImage: { input: string; output: string; }
   /** BOLT11 lightning invoice payment request with the amount included */
@@ -425,14 +427,14 @@ export type ConsumerAccountWalletByIdArgs = {
 
 export type Contact = {
   readonly __typename: 'Contact';
-  /** Alias name the user assigns to the contact. */
-  readonly alias?: Maybe<Scalars['ContactAlias']['output']>;
   /** Unix timestamp (number of seconds elapsed since January 1, 1970 00:00:00 UTC) */
   readonly createdAt: Scalars['Timestamp']['output'];
-  /** ID of the contact user or external identifier. */
-  readonly id: Scalars['ContactId']['output'];
+  /** DisplayName name the user assigns to the contact. */
+  readonly displayName?: Maybe<Scalars['ContactDisplayName']['output']>;
   /** Username or lnAddress that identifies the contact. */
-  readonly identifier: Scalars['Identifier']['output'];
+  readonly handle: Scalars['ContactHandle']['output'];
+  /** ID of the contact user or external handle. */
+  readonly id: Scalars['ContactId']['output'];
   /** Total number of transactions with this contact. */
   readonly transactionsCount: Scalars['Int']['output'];
   /** Type of the contact (intraledger, lnaddress, etc.). */
@@ -440,8 +442,8 @@ export type Contact = {
 };
 
 export type ContactCreateInput = {
-  readonly alias?: InputMaybe<Scalars['ContactAlias']['input']>;
-  readonly identifier?: InputMaybe<Scalars['Identifier']['input']>;
+  readonly displayName?: InputMaybe<Scalars['ContactAlias']['input']>;
+  readonly handle?: InputMaybe<Scalars['ContactHandle']['input']>;
   readonly type: ContactType;
 };
 

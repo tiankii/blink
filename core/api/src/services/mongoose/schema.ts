@@ -577,11 +577,11 @@ const ContactSchema = new Schema<ContactRecord>(
       required: false,
       default: ContactType.IntraLedger,
     },
-    identifier: {
+    handle: {
       type: String,
       required: true,
     },
-    alias: {
+    displayName: {
       type: String,
       required: false,
     },
@@ -593,10 +593,15 @@ const ContactSchema = new Schema<ContactRecord>(
       type: Date,
       default: Date.now,
     },
+    updatedAt: {
+      type: Date,
+      default: Date.now,
+      required: true,
+    },
   },
   { id: false },
 )
 
-ContactSchema.index({ accountId: 1, identifier: 1, type: 1 }, { unique: true })
+ContactSchema.index({ accountId: 1, handle: 1, type: 1 }, { unique: true })
 
 export const Contact = mongoose.model<ContactRecord>("Contact", ContactSchema)

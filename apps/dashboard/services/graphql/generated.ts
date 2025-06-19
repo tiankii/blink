@@ -26,6 +26,10 @@ export type Scalars = {
   CentAmount: { input: number; output: number; }
   /** An alias name that a user can set for a wallet (with which they have transactions) */
   ContactAlias: { input: string; output: string; }
+  /** A display name that a user can assign to a contact */
+  ContactDisplayName: { input: string; output: string; }
+  /** Unique handle used to identify a contact (e.g., username or lnAddress) */
+  ContactHandle: { input: string; output: string; }
   /** Unique identifier of a contact */
   ContactId: { input: string; output: string; }
   /** A CCA2 country code (ex US, FR, etc) */
@@ -43,8 +47,6 @@ export type Scalars = {
   Feedback: { input: string; output: string; }
   /** Hex-encoded string of 32 bytes */
   Hex32Bytes: { input: string; output: string; }
-  /** Unique value used to identify a contact (e.g., username or lnAddress) */
-  Identifier: { input: string; output: string; }
   Language: { input: string; output: string; }
   LnPaymentPreImage: { input: string; output: string; }
   /** BOLT11 lightning invoice payment request with the amount included */
@@ -464,14 +466,14 @@ export type ConsumerAccountWalletByIdArgs = {
 
 export type Contact = {
   readonly __typename: 'Contact';
-  /** Alias name the user assigns to the contact. */
-  readonly alias?: Maybe<Scalars['ContactAlias']['output']>;
   /** Unix timestamp (number of seconds elapsed since January 1, 1970 00:00:00 UTC) */
   readonly createdAt: Scalars['Timestamp']['output'];
-  /** ID of the contact user or external identifier. */
-  readonly id: Scalars['ContactId']['output'];
+  /** DisplayName name the user assigns to the contact. */
+  readonly displayName?: Maybe<Scalars['ContactDisplayName']['output']>;
   /** Username or lnAddress that identifies the contact. */
-  readonly identifier: Scalars['Identifier']['output'];
+  readonly handle: Scalars['ContactHandle']['output'];
+  /** ID of the contact user or external handle. */
+  readonly id: Scalars['ContactId']['output'];
   /** Total number of transactions with this contact. */
   readonly transactionsCount: Scalars['Int']['output'];
   /** Type of the contact (intraledger, lnaddress, etc.). */
@@ -479,8 +481,8 @@ export type Contact = {
 };
 
 export type ContactCreateInput = {
-  readonly alias?: InputMaybe<Scalars['ContactAlias']['input']>;
-  readonly identifier?: InputMaybe<Scalars['Identifier']['input']>;
+  readonly displayName?: InputMaybe<Scalars['ContactAlias']['input']>;
+  readonly handle?: InputMaybe<Scalars['ContactHandle']['input']>;
   readonly type: ContactType;
 };
 
@@ -3605,6 +3607,8 @@ export type ResolversTypes = {
   Contact: ResolverTypeWrapper<Contact>;
   ContactAlias: ResolverTypeWrapper<Scalars['ContactAlias']['output']>;
   ContactCreateInput: ContactCreateInput;
+  ContactDisplayName: ResolverTypeWrapper<Scalars['ContactDisplayName']['output']>;
+  ContactHandle: ResolverTypeWrapper<Scalars['ContactHandle']['output']>;
   ContactId: ResolverTypeWrapper<Scalars['ContactId']['output']>;
   ContactType: ContactType;
   ContactUpdateOrCreatePayload: ResolverTypeWrapper<ContactUpdateOrCreatePayload>;
@@ -3631,7 +3635,6 @@ export type ResolversTypes = {
   GraphQLApplicationError: ResolverTypeWrapper<GraphQlApplicationError>;
   Hex32Bytes: ResolverTypeWrapper<Scalars['Hex32Bytes']['output']>;
   Icon: Icon;
-  Identifier: ResolverTypeWrapper<Scalars['Identifier']['output']>;
   InitiationVia: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['InitiationVia']>;
   InitiationViaIntraLedger: ResolverTypeWrapper<InitiationViaIntraLedger>;
   InitiationViaLn: ResolverTypeWrapper<InitiationViaLn>;
@@ -3843,6 +3846,8 @@ export type ResolversParentTypes = {
   Contact: Contact;
   ContactAlias: Scalars['ContactAlias']['output'];
   ContactCreateInput: ContactCreateInput;
+  ContactDisplayName: Scalars['ContactDisplayName']['output'];
+  ContactHandle: Scalars['ContactHandle']['output'];
   ContactId: Scalars['ContactId']['output'];
   ContactUpdateOrCreatePayload: ContactUpdateOrCreatePayload;
   Coordinates: Coordinates;
@@ -3866,7 +3871,6 @@ export type ResolversParentTypes = {
   Globals: Globals;
   GraphQLApplicationError: GraphQlApplicationError;
   Hex32Bytes: Scalars['Hex32Bytes']['output'];
-  Identifier: Scalars['Identifier']['output'];
   InitiationVia: ResolversUnionTypes<ResolversParentTypes>['InitiationVia'];
   InitiationViaIntraLedger: InitiationViaIntraLedger;
   InitiationViaLn: InitiationViaLn;
@@ -4259,10 +4263,10 @@ export type ConsumerAccountResolvers<ContextType = any, ParentType extends Resol
 };
 
 export type ContactResolvers<ContextType = any, ParentType extends ResolversParentTypes['Contact'] = ResolversParentTypes['Contact']> = {
-  alias?: Resolver<Maybe<ResolversTypes['ContactAlias']>, ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['Timestamp'], ParentType, ContextType>;
+  displayName?: Resolver<Maybe<ResolversTypes['ContactDisplayName']>, ParentType, ContextType>;
+  handle?: Resolver<ResolversTypes['ContactHandle'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ContactId'], ParentType, ContextType>;
-  identifier?: Resolver<ResolversTypes['Identifier'], ParentType, ContextType>;
   transactionsCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   type?: Resolver<ResolversTypes['ContactType'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -4270,6 +4274,14 @@ export type ContactResolvers<ContextType = any, ParentType extends ResolversPare
 
 export interface ContactAliasScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['ContactAlias'], any> {
   name: 'ContactAlias';
+}
+
+export interface ContactDisplayNameScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['ContactDisplayName'], any> {
+  name: 'ContactDisplayName';
+}
+
+export interface ContactHandleScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['ContactHandle'], any> {
+  name: 'ContactHandle';
 }
 
 export interface ContactIdScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['ContactId'], any> {
@@ -4384,10 +4396,6 @@ export type GraphQlApplicationErrorResolvers<ContextType = any, ParentType exten
 
 export interface Hex32BytesScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Hex32Bytes'], any> {
   name: 'Hex32Bytes';
-}
-
-export interface IdentifierScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Identifier'], any> {
-  name: 'Identifier';
 }
 
 export type InitiationViaResolvers<ContextType = any, ParentType extends ResolversParentTypes['InitiationVia'] = ResolversParentTypes['InitiationVia']> = {
@@ -5190,6 +5198,8 @@ export type Resolvers<ContextType = any> = {
   ConsumerAccount?: ConsumerAccountResolvers<ContextType>;
   Contact?: ContactResolvers<ContextType>;
   ContactAlias?: GraphQLScalarType;
+  ContactDisplayName?: GraphQLScalarType;
+  ContactHandle?: GraphQLScalarType;
   ContactId?: GraphQLScalarType;
   ContactUpdateOrCreatePayload?: ContactUpdateOrCreatePayloadResolvers<ContextType>;
   Coordinates?: CoordinatesResolvers<ContextType>;
@@ -5210,7 +5220,6 @@ export type Resolvers<ContextType = any> = {
   Globals?: GlobalsResolvers<ContextType>;
   GraphQLApplicationError?: GraphQlApplicationErrorResolvers<ContextType>;
   Hex32Bytes?: GraphQLScalarType;
-  Identifier?: GraphQLScalarType;
   InitiationVia?: InitiationViaResolvers<ContextType>;
   InitiationViaIntraLedger?: InitiationViaIntraLedgerResolvers<ContextType>;
   InitiationViaLn?: InitiationViaLnResolvers<ContextType>;

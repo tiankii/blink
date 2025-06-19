@@ -1,4 +1,4 @@
-import { InvalidContactIdError, InvalidIdentifierError } from "./errors"
+import { InvalidContactIdError, InvalidHandleError } from "./errors"
 
 import { UuidRegex } from "@/domain/shared"
 
@@ -14,10 +14,8 @@ export const checkedToContactId = (
   return new InvalidContactIdError(contactId)
 }
 
-export const checkedToIdentifier = (
-  identifier: string,
-): string | InvalidIdentifierError => {
-  const trimmed = identifier.trim()
+export const checkedToHandle = (handle: string): string | InvalidHandleError => {
+  const trimmed = handle.trim()
 
   if (
     typeof trimmed !== "string" ||
@@ -25,8 +23,16 @@ export const checkedToIdentifier = (
     trimmed.length > 256 ||
     /\s/.test(trimmed)
   ) {
-    return new InvalidIdentifierError(identifier)
+    return new InvalidHandleError(handle)
   }
 
   return trimmed
+}
+
+export const checkedToDisplayName = (value: string) => {
+  if (value.match(/^[\p{Alpha}][\p{Alpha} -]{3,}/u)) {
+    return value
+  }
+
+  return new InvalidHandleError(value)
 }

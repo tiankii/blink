@@ -316,19 +316,19 @@ type ConsumerAccount implements Account {
 }
 
 type Contact {
-  """Alias name the user assigns to the contact."""
-  alias: ContactAlias
-
   """
   Unix timestamp (number of seconds elapsed since January 1, 1970 00:00:00 UTC)
   """
   createdAt: Timestamp!
 
-  """ID of the contact user or external identifier."""
-  id: ContactId!
+  """DisplayName name the user assigns to the contact."""
+  displayName: ContactDisplayName
 
   """Username or lnAddress that identifies the contact."""
-  identifier: Identifier!
+  handle: ContactHandle!
+
+  """ID of the contact user or external handle."""
+  id: ContactId!
 
   """Total number of transactions with this contact."""
   transactionsCount: Int!
@@ -343,10 +343,16 @@ An alias name that a user can set for a wallet (with which they have transaction
 scalar ContactAlias
 
 input ContactCreateInput {
-  alias: ContactAlias
-  identifier: Identifier
+  displayName: ContactAlias
+  handle: ContactHandle
   type: ContactType!
 }
+
+"""A display name that a user can assign to a contact"""
+scalar ContactDisplayName
+
+"""Unique handle used to identify a contact (e.g., username or lnAddress)"""
+scalar ContactHandle
 
 """Unique identifier of a contact"""
 scalar ContactId
@@ -489,9 +495,6 @@ type GraphQLApplicationError implements Error {
 
 """Hex-encoded string of 32 bytes"""
 scalar Hex32Bytes
-
-"""Unique value used to identify a contact (e.g., username or lnAddress)"""
-scalar Identifier
 
 union InitiationVia = InitiationViaIntraLedger | InitiationViaLn | InitiationViaOnChain
 
