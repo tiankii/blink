@@ -29,10 +29,11 @@ module.exports = {
               id: generateUUID(),
               accountId,
               type: "intraledger",
-              identifier: contact.id,
-              alias: contact.name,
+              handle: contact.id,
+              displayName: contact.name,
               transactionsCount: contact.transactionsCount,
               createdAt: new Date(),
+              updatedAt: new Date(),
             })
           }
 
@@ -93,8 +94,8 @@ module.exports = {
 
         accountUpdatesMap[accountId].push({
           _id: contact._id,
-          id: contact.identifier,
-          name: contact.alias,
+          id: contact.handle,
+          name: contact.displayName,
           transactionsCount: contact.transactionsCount || 1,
         })
 

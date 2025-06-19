@@ -10,13 +10,13 @@ import {
 export const ContactsRepository = (): IContactsRepository => {
   const findContact = async ({
     accountId,
-    identifier,
+    handle,
   }: {
     accountId: AccountId
-    identifier: string
+    handle: string
   }): Promise<Contact | RepositoryError> => {
     try {
-      const result = await Contact.findOne({ accountId, identifier })
+      const result = await Contact.findOne({ accountId, handle })
       if (!result) {
         return new CouldNotFindContactFromAccountIdError(accountId)
       }
@@ -78,9 +78,9 @@ export const ContactsRepository = (): IContactsRepository => {
 const contactFromRaw = (result: ContactRecord): Contact => ({
   id: result.id as ContactId,
   accountId: result.accountId as AccountId,
-  identifier: result.identifier,
+  handle: result.handle,
   type: result.type as ContactType,
-  alias: result.alias ?? "",
+  displayName: result.displayName ?? "",
   transactionsCount: result.transactionsCount,
   createdAt: result.createdAt,
 })
@@ -88,9 +88,9 @@ const contactFromRaw = (result: ContactRecord): Contact => ({
 const contactToRaw = (contact: Contact): ContactRecord => ({
   id: contact.id,
   accountId: contact.accountId,
-  identifier: contact.identifier,
+  handle: contact.handle,
   type: contact.type,
-  alias: contact.alias,
+  displayName: contact.displayName,
   transactionsCount: contact.transactionsCount,
   createdAt: contact.createdAt,
 })

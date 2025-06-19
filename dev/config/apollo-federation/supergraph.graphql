@@ -440,19 +440,19 @@ type ConsumerAccount implements Account
 type Contact
   @join__type(graph: PUBLIC)
 {
-  """Alias name the user assigns to the contact."""
-  alias: ContactAlias
-
   """
   Unix timestamp (number of seconds elapsed since January 1, 1970 00:00:00 UTC)
   """
   createdAt: Timestamp!
 
-  """ID of the contact user or external identifier."""
-  id: ContactId!
+  """DisplayName name the user assigns to the contact."""
+  displayName: ContactDisplayName
 
   """Username or lnAddress that identifies the contact."""
-  identifier: Identifier!
+  handle: ContactHandle!
+
+  """ID of the contact user or external handle."""
+  id: ContactId!
 
   """Total number of transactions with this contact."""
   transactionsCount: Int!
@@ -470,10 +470,18 @@ scalar ContactAlias
 input ContactCreateInput
   @join__type(graph: PUBLIC)
 {
-  alias: ContactAlias
-  identifier: Identifier
+  displayName: ContactAlias
+  handle: ContactHandle
   type: ContactType!
 }
+
+"""A display name that a user can assign to a contact"""
+scalar ContactDisplayName
+  @join__type(graph: PUBLIC)
+
+"""Unique handle used to identify a contact (e.g., username or lnAddress)"""
+scalar ContactHandle
+  @join__type(graph: PUBLIC)
 
 """Unique identifier of a contact"""
 scalar ContactId
@@ -712,10 +720,6 @@ enum Icon
   BELL @join__enumValue(graph: NOTIFICATIONS)
   REFRESH @join__enumValue(graph: NOTIFICATIONS)
 }
-
-"""Unique value used to identify a contact (e.g., username or lnAddress)"""
-scalar Identifier
-  @join__type(graph: PUBLIC)
 
 union InitiationVia
   @join__type(graph: PUBLIC)

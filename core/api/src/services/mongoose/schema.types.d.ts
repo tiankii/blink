@@ -216,8 +216,9 @@ interface ContactRecord {
   id: string
   accountId: string
   type: string
-  identifier: string
-  alias?: string
+  handle: string
+  displayName?: string
   transactionsCount: number
   createdAt: Date
+  updatedAt?: Date
 }

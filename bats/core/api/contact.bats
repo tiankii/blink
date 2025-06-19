@@ -12,14 +12,14 @@ setup_file() {
 }
 
 @test "contact: add intraledger contact and verify" {
-  local identifier="$(read_value "$BOB.username")"
-  local alias="Intraledger Username"
+  local handle="$(read_value "$BOB.username")"
+  local displayName="Intraledger Username"
 
   variables=$(jq -n \
-    --arg identifier "$identifier" \
+    --arg handle "$handle" \
     --arg type "INTRALEDGER" \
-    --arg alias "$alias" \
-    '{input: {identifier: $identifier, type: $type, alias: $alias}}'
+    --arg displayName "$displayName" \
+    '{input: {handle: $handle, type: $type, displayName: $displayName}}'
   )
 
   # Call GraphQL mutation
@@ -29,8 +29,8 @@ setup_file() {
   contact_id="$(graphql_output '.data.contactCreate.contact.id')"
   [[ -n "$contact_id" ]] || fail "Expected contact to be created"
 
-  contact_alias="$(graphql_output '.data.contactCreate.contact.alias')"
-  [[ "$contact_alias" == "$alias" ]] || fail "Expected identifier to be $alias"
+  contact_display_name="$(graphql_output '.data.contactCreate.contact.displayName')"
+  [[ "$contact_display_name" == "$displayName" ]] || fail "Expected handle to be $displayName"
 
   # Validate contains the contact
   run is_contact "$ALICE" "$BOB"
@@ -38,14 +38,14 @@ setup_file() {
 }
 
 @test "contact: add lnaddress contact and verify" {
-  local identifier="lnaddress@example.com"
-  local alias="ln contact alias"
+  local handle="lnaddress@example.com"
+  local displayName="ln contact displayName"
 
   variables=$(jq -n \
-    --arg identifier "$identifier" \
+    --arg handle "$handle" \
     --arg type "LNADDRESS" \
-    --arg alias "$alias" \
-    '{input: {identifier: $identifier, type: $type, alias: $alias}}'
+    --arg displayName "$displayName" \
+    '{input: {handle: $handle, type: $type, displayName: $displayName}}'
   )
 
   # Call GraphQL mutation
@@ -55,10 +55,10 @@ setup_file() {
   contact_id="$(graphql_output '.data.contactCreate.contact.id')"
   [[ -n "$contact_id" ]] || fail "Expected contact to be created"
 
-  contact_alias="$(graphql_output '.data.contactCreate.contact.alias')"
-  [[ "$contact_alias" == "$alias" ]] || fail "Expected type to be $alias"
+  contact_display_name="$(graphql_output '.data.contactCreate.contact.displayName')"
+  [[ "$contact_display_name" == "$displayName" ]] || fail "Expected type to be $displayName"
 
   # Verify contact is persisted
-  run is_contact "$ALICE" "$identifier"
+  run is_contact "$ALICE" "$handle"
   [[ "$status" == "0" ]] || fail "Contact not found"
 }

@@ -134,28 +134,28 @@ ensure_username_is_present() {
 
 is_contact() {
   local owner_token_name="$1"
-  local other_token_or_identifier="$2"
+  local other_token_or_handle="$2"
 
   local owner_account_id
   owner_account_id=$(read_value "$owner_token_name.account_id")
   [[ -n "$owner_account_id" ]] || return 1
 
-  local contact_identifier
+  local contact_handle
 
-  if [[ -f "${CACHE_DIR}/${other_token_or_identifier}.username" ]]; then
+  if [[ -f "${CACHE_DIR}/${other_token_or_handle}.username" ]]; then
     # It's a user token
-    contact_identifier=$(read_value "$other_token_or_identifier.username")
+    contact_handle=$(read_value "$other_token_or_handle.username")
   else
-    # It's a raw identifier
-    contact_identifier="$other_token_or_identifier"
+    # It's a raw handle
+    contact_handle="$other_token_or_handle"
   fi
 
-  [[ -n "$contact_identifier" ]] || return 1
+  [[ -n "$contact_handle" ]] || return 1
 
   local mongo_query
   mongo_query=$(echo "db.contacts.findOne({
     accountId: \"$owner_account_id\",
-    identifier: \"$contact_identifier\"
+    handle: \"$contact_handle\"
   });" | tr -d '[:space:]')
 
   local result
