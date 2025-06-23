@@ -1,4 +1,4 @@
-import ContactCreatePayload from "@/graphql/public/types/payload/contact-create"
+import ContactPayload from "@/graphql/public/types/payload/contact"
 import ContactHandle from "@/graphql/shared/types/scalar/contact-handle"
 import ContactDisplayName from "@/graphql/public/types/scalar/contact-alias"
 import ContactType from "@/graphql/shared/types/scalar/contact-type"
@@ -20,7 +20,7 @@ const ContactCreateMutation = GT.Field({
   extensions: {
     complexity: 120,
   },
-  type: GT.NonNull(ContactCreatePayload),
+  type: GT.NonNull(ContactPayload),
   args: {
     input: { type: GT.NonNull(ContactCreateInput) },
   },
