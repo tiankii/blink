@@ -447,18 +447,18 @@ export type ContactCreateInput = {
   readonly type: ContactType;
 };
 
+export type ContactPayload = {
+  readonly __typename: 'ContactPayload';
+  readonly contact?: Maybe<Contact>;
+  readonly errors: ReadonlyArray<Error>;
+};
+
 export const ContactType = {
   Intraledger: 'INTRALEDGER',
   Lnaddress: 'LNADDRESS'
 } as const;
 
 export type ContactType = typeof ContactType[keyof typeof ContactType];
-export type ContactUpdateOrCreatePayload = {
-  readonly __typename: 'ContactUpdateOrCreatePayload';
-  readonly contact?: Maybe<Contact>;
-  readonly errors: ReadonlyArray<Error>;
-};
-
 export type Coordinates = {
   readonly __typename: 'Coordinates';
   readonly latitude: Scalars['Float']['output'];
@@ -941,7 +941,7 @@ export type Mutation = {
   readonly callbackEndpointDelete: SuccessPayload;
   readonly captchaCreateChallenge: CaptchaCreateChallengePayload;
   readonly captchaRequestAuthCode: SuccessPayload;
-  readonly contactCreate: ContactUpdateOrCreatePayload;
+  readonly contactCreate: ContactPayload;
   readonly deviceNotificationTokenCreate: SuccessPayload;
   readonly feedbackSubmit: SuccessPayload;
   /**
