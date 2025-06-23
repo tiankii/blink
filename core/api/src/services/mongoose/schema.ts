@@ -546,7 +546,6 @@ const ContactSchema = new Schema<ContactRecord>(
       type: String,
       index: true,
       unique: true,
-      sparse: true,
       required: true,
       default: () => crypto.randomUUID(),
     },
@@ -559,7 +558,7 @@ const ContactSchema = new Schema<ContactRecord>(
     type: {
       type: String,
       enum: Object.values(ContactType),
-      required: false,
+      required: true,
       default: ContactType.IntraLedger,
     },
     handle: {
