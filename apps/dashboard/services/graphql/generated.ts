@@ -486,18 +486,18 @@ export type ContactCreateInput = {
   readonly type: ContactType;
 };
 
+export type ContactPayload = {
+  readonly __typename: 'ContactPayload';
+  readonly contact?: Maybe<Contact>;
+  readonly errors: ReadonlyArray<Error>;
+};
+
 export const ContactType = {
   Intraledger: 'INTRALEDGER',
   Lnaddress: 'LNADDRESS'
 } as const;
 
 export type ContactType = typeof ContactType[keyof typeof ContactType];
-export type ContactUpdateOrCreatePayload = {
-  readonly __typename: 'ContactUpdateOrCreatePayload';
-  readonly contact?: Maybe<Contact>;
-  readonly errors: ReadonlyArray<Error>;
-};
-
 export type Coordinates = {
   readonly __typename: 'Coordinates';
   readonly latitude: Scalars['Float']['output'];
@@ -1035,7 +1035,7 @@ export type Mutation = {
   readonly callbackEndpointDelete: SuccessPayload;
   readonly captchaCreateChallenge: CaptchaCreateChallengePayload;
   readonly captchaRequestAuthCode: SuccessPayload;
-  readonly contactCreate: ContactUpdateOrCreatePayload;
+  readonly contactCreate: ContactPayload;
   readonly deviceNotificationTokenCreate: SuccessPayload;
   readonly feedbackSubmit: SuccessPayload;
   /**
@@ -3596,8 +3596,8 @@ export type ResolversTypes = {
   ContactDisplayName: ResolverTypeWrapper<Scalars['ContactDisplayName']['output']>;
   ContactHandle: ResolverTypeWrapper<Scalars['ContactHandle']['output']>;
   ContactId: ResolverTypeWrapper<Scalars['ContactId']['output']>;
+  ContactPayload: ResolverTypeWrapper<ContactPayload>;
   ContactType: ContactType;
-  ContactUpdateOrCreatePayload: ResolverTypeWrapper<ContactUpdateOrCreatePayload>;
   Coordinates: ResolverTypeWrapper<Coordinates>;
   Float: ResolverTypeWrapper<Scalars['Float']['output']>;
   Country: ResolverTypeWrapper<Country>;
@@ -3834,7 +3834,7 @@ export type ResolversParentTypes = {
   ContactDisplayName: Scalars['ContactDisplayName']['output'];
   ContactHandle: Scalars['ContactHandle']['output'];
   ContactId: Scalars['ContactId']['output'];
-  ContactUpdateOrCreatePayload: ContactUpdateOrCreatePayload;
+  ContactPayload: ContactPayload;
   Coordinates: Coordinates;
   Float: Scalars['Float']['output'];
   Country: Country;
@@ -4272,7 +4272,7 @@ export interface ContactIdScalarConfig extends GraphQLScalarTypeConfig<Resolvers
   name: 'ContactId';
 }
 
-export type ContactUpdateOrCreatePayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['ContactUpdateOrCreatePayload'] = ResolversParentTypes['ContactUpdateOrCreatePayload']> = {
+export type ContactPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['ContactPayload'] = ResolversParentTypes['ContactPayload']> = {
   contact?: Resolver<Maybe<ResolversTypes['Contact']>, ParentType, ContextType>;
   errors?: Resolver<ReadonlyArray<ResolversTypes['Error']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -4564,7 +4564,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   callbackEndpointDelete?: Resolver<ResolversTypes['SuccessPayload'], ParentType, ContextType, RequireFields<MutationCallbackEndpointDeleteArgs, 'input'>>;
   captchaCreateChallenge?: Resolver<ResolversTypes['CaptchaCreateChallengePayload'], ParentType, ContextType>;
   captchaRequestAuthCode?: Resolver<ResolversTypes['SuccessPayload'], ParentType, ContextType, RequireFields<MutationCaptchaRequestAuthCodeArgs, 'input'>>;
-  contactCreate?: Resolver<ResolversTypes['ContactUpdateOrCreatePayload'], ParentType, ContextType, RequireFields<MutationContactCreateArgs, 'input'>>;
+  contactCreate?: Resolver<ResolversTypes['ContactPayload'], ParentType, ContextType, RequireFields<MutationContactCreateArgs, 'input'>>;
   deviceNotificationTokenCreate?: Resolver<ResolversTypes['SuccessPayload'], ParentType, ContextType, RequireFields<MutationDeviceNotificationTokenCreateArgs, 'input'>>;
   feedbackSubmit?: Resolver<ResolversTypes['SuccessPayload'], ParentType, ContextType, RequireFields<MutationFeedbackSubmitArgs, 'input'>>;
   intraLedgerPaymentSend?: Resolver<ResolversTypes['PaymentSendPayload'], ParentType, ContextType, RequireFields<MutationIntraLedgerPaymentSendArgs, 'input'>>;
@@ -5175,7 +5175,7 @@ export type Resolvers<ContextType = any> = {
   ContactDisplayName?: GraphQLScalarType;
   ContactHandle?: GraphQLScalarType;
   ContactId?: GraphQLScalarType;
-  ContactUpdateOrCreatePayload?: ContactUpdateOrCreatePayloadResolvers<ContextType>;
+  ContactPayload?: ContactPayloadResolvers<ContextType>;
   Coordinates?: CoordinatesResolvers<ContextType>;
   Country?: CountryResolvers<ContextType>;
   CountryCode?: GraphQLScalarType;

@@ -487,18 +487,18 @@ scalar ContactHandle
 scalar ContactId
   @join__type(graph: PUBLIC)
 
+type ContactPayload
+  @join__type(graph: PUBLIC)
+{
+  contact: Contact
+  errors: [Error!]!
+}
+
 enum ContactType
   @join__type(graph: PUBLIC)
 {
   INTRALEDGER @join__enumValue(graph: PUBLIC)
   LNADDRESS @join__enumValue(graph: PUBLIC)
-}
-
-type ContactUpdateOrCreatePayload
-  @join__type(graph: PUBLIC)
-{
-  contact: Contact
-  errors: [Error!]!
 }
 
 type Coordinates
@@ -1284,7 +1284,7 @@ type Mutation
   callbackEndpointDelete(input: CallbackEndpointDeleteInput!): SuccessPayload! @join__field(graph: PUBLIC)
   captchaCreateChallenge: CaptchaCreateChallengePayload! @join__field(graph: PUBLIC)
   captchaRequestAuthCode(input: CaptchaRequestAuthCodeInput!): SuccessPayload! @join__field(graph: PUBLIC)
-  contactCreate(input: ContactCreateInput!): ContactUpdateOrCreatePayload! @join__field(graph: PUBLIC)
+  contactCreate(input: ContactCreateInput!): ContactPayload! @join__field(graph: PUBLIC)
   deviceNotificationTokenCreate(input: DeviceNotificationTokenCreateInput!): SuccessPayload! @join__field(graph: PUBLIC)
   feedbackSubmit(input: FeedbackSubmitInput!): SuccessPayload! @join__field(graph: PUBLIC)
 

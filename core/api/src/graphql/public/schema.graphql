@@ -357,14 +357,14 @@ scalar ContactHandle
 """Unique identifier of a contact"""
 scalar ContactId
 
+type ContactPayload {
+  contact: Contact
+  errors: [Error!]!
+}
+
 enum ContactType {
   INTRALEDGER
   LNADDRESS
-}
-
-type ContactUpdateOrCreatePayload {
-  contact: Contact
-  errors: [Error!]!
 }
 
 type Coordinates {
@@ -931,7 +931,7 @@ type Mutation {
   callbackEndpointDelete(input: CallbackEndpointDeleteInput!): SuccessPayload!
   captchaCreateChallenge: CaptchaCreateChallengePayload!
   captchaRequestAuthCode(input: CaptchaRequestAuthCodeInput!): SuccessPayload!
-  contactCreate(input: ContactCreateInput!): ContactUpdateOrCreatePayload!
+  contactCreate(input: ContactCreateInput!): ContactPayload!
   deviceNotificationTokenCreate(input: DeviceNotificationTokenCreateInput!): SuccessPayload!
   feedbackSubmit(input: FeedbackSubmitInput!): SuccessPayload!
 
