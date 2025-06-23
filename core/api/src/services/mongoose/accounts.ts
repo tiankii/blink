@@ -135,7 +135,7 @@ export const AccountsRepository = (): IAccountsRepository => {
 }
 
 const translateToAccount = async (result: AccountRecord): Promise<Account> => {
-  const contactsRes = await ContactsRepository().getContactsByAccountId(result.id)
+  const contactsRes = await ContactsRepository().listByAccountId(result.id)
   const contacts = contactsRes instanceof Error ? [] : contactsRes
 
   return {

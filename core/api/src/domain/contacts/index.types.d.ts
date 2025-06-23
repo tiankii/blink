@@ -15,7 +15,7 @@ type Contact = {
 type NewContactInput = Omit<Contact, "id" | "createdAt" | "updatedAt">
 
 interface IContactsRepository {
-  findContact({
+  findByHandle({
     accountId,
     handle,
   }: {
@@ -23,7 +23,7 @@ interface IContactsRepository {
     handle?: string
   }): Promise<Contact | RepositoryError>
 
-  getContactsByAccountId(accountId: string): Promise<Contact[] | RepositoryError>
+  listByAccountId(accountId: string): Promise<Contact[] | RepositoryError>
 
   persistNew(contact: NewContactInput): Promise<Contact | RepositoryError>
 

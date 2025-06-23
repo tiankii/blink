@@ -8,7 +8,7 @@ import {
 } from "@/domain/errors"
 
 export const ContactsRepository = (): IContactsRepository => {
-  const findContact = async ({
+  const findByHandle = async ({
     accountId,
     handle,
   }: {
@@ -41,7 +41,7 @@ export const ContactsRepository = (): IContactsRepository => {
     }
   }
 
-  const getContactsByAccountId = async (
+  const listByAccountId = async (
     accountId: string,
   ): Promise<Contact[] | RepositoryError> => {
     try {
@@ -56,7 +56,7 @@ export const ContactsRepository = (): IContactsRepository => {
     try {
       const result = await Contact.findOneAndUpdate(
         { accountId: contact.accountId, id: contact.id },
-        contactToRaw(contact),
+        contact,
         { new: true },
       )
       if (!result) return new CouldNotUpdateContactError()
@@ -68,8 +68,8 @@ export const ContactsRepository = (): IContactsRepository => {
   }
 
   return {
-    getContactsByAccountId,
-    findContact,
+    listByAccountId,
+    findByHandle,
     persistNew,
     update,
   }
@@ -83,14 +83,4 @@ const contactFromRaw = (result: ContactRecord): Contact => ({
   displayName: result.displayName ?? "",
   transactionsCount: result.transactionsCount,
   createdAt: result.createdAt,
-})
-
-const contactToRaw = (contact: Contact): ContactRecord => ({
-  id: contact.id,
-  accountId: contact.accountId,
-  handle: contact.handle,
-  type: contact.type,
-  displayName: contact.displayName,
-  transactionsCount: contact.transactionsCount,
-  createdAt: contact.createdAt,
 })
