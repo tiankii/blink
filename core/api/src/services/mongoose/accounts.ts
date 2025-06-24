@@ -1,5 +1,4 @@
 import { parseRepositoryError } from "./utils"
-import { ContactsRepository } from "./contacts"
 
 import { AccountStatus } from "@/domain/accounts"
 import {
@@ -134,28 +133,16 @@ export const AccountsRepository = (): IAccountsRepository => {
   }
 }
 
-const translateToAccount = async (result: AccountRecord): Promise<Account> => {
-  const contactsRes = await ContactsRepository().listByAccountId(result.id)
-  const contacts = contactsRes instanceof Error ? [] : contactsRes
-
-  return {
-    id: result.id as AccountId,
-    createdAt: new Date(result.created_at),
-    defaultWalletId: result.defaultWalletId as WalletId,
-    username: result.username as Username,
-    level: result.level as AccountLevel,
-    status: result.statusHistory.slice(-1)[0].status,
-    statusHistory: (result.statusHistory || []) as AccountStatusHistory,
-    contactEnabled: !!result.contactEnabled,
-    contacts: contacts.map((contact: ContactRecord) => ({
-      id: contact.handle as Username,
-      username: contact.handle as Username,
-      alias: contact.displayName as ContactAlias,
-      transactionsCount: contact.transactionsCount,
-    })),
-    withdrawFee: result.withdrawFee as Satoshis,
-
-    kratosUserId: result.kratosUserId as UserId,
-    displayCurrency: (result.displayCurrency || UsdDisplayCurrency) as DisplayCurrency,
-  }
-}
+const translateToAccount = (result: AccountRecord): Account => ({
+  id: result.id as AccountId,
+  createdAt: new Date(result.created_at),
+  defaultWalletId: result.defaultWalletId as WalletId,
+  username: result.username as Username,
+  level: result.level as AccountLevel,
+  status: result.statusHistory.slice(-1)[0].status,
+  statusHistory: (result.statusHistory || []) as AccountStatusHistory,
+  contactEnabled: !!result.contactEnabled,
+  withdrawFee: result.withdrawFee as Satoshis,
+  kratosUserId: result.kratosUserId as UserId,
+  displayCurrency: (result.displayCurrency || UsdDisplayCurrency) as DisplayCurrency,
+})
