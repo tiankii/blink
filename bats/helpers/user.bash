@@ -142,9 +142,12 @@ is_contact() {
 
   local contact_handle
 
-  if [[ -f "${CACHE_DIR}/${other_token_or_handle}.username" ]]; then
+  local cached_username
+  cached_username=$(read_value "$other_token_or_handle.username")
+
+  if [[ -n "$cached_username" ]]; then
     # It's a user token
-    contact_handle=$(read_value "$other_token_or_handle.username")
+    contact_handle="$cached_username"
   else
     # It's a raw handle
     contact_handle="$other_token_or_handle"
@@ -159,7 +162,7 @@ is_contact() {
   });" | tr -d '[:space:]')
 
   local result
-  result=$(mongo_cli "$mongo_query" 2>&1)
+  result=$(mongo_cli "$mongo_query")
 
   [[ "$result" != "null" && -n "$result" ]]
 }
