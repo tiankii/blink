@@ -5,7 +5,7 @@ import ContactType from "@/graphql/shared/types/scalar/contact-type"
 import { mapAndParseErrorForGqlResponse } from "@/graphql/error-map"
 import { GT } from "@/graphql/index"
 
-import { Contacts } from "@/app"
+import { Accounts } from "@/app"
 
 const ContactCreateInput = GT.Input({
   name: "ContactCreateInput",
@@ -35,7 +35,7 @@ const ContactCreateMutation = GT.Field({
       return { errors: [{ message: displayName.message }] }
     }
 
-    const result = await Contacts.contactCreate({
+    const result = await Accounts.createContact({
       accountId: domainAccount.id,
       handle,
       displayName,
