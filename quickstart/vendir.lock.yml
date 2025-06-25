@@ -2,24 +2,24 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'chore: set quiz rewards to 1 for all answers (#101)'
-      sha: dcf7c030d4f702a6b1359901469eed6cf56f28a5
+      commitTitle: 'fix(core): add IP validation to request code (#104)'
+      sha: eb92ae4bb381a437af608ecb5d39b58df6abcba9
       tags:
-      - 0.21.47-3-gdcf7c030d
+      - 0.21.48-1-geb92ae4bb
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'chore: set quiz rewards to 1 for all answers (#101)'
-      sha: dcf7c030d4f702a6b1359901469eed6cf56f28a5
+      commitTitle: 'fix(core): add IP validation to request code (#104)'
+      sha: eb92ae4bb381a437af608ecb5d39b58df6abcba9
       tags:
-      - 0.21.47-3-gdcf7c030d
+      - 0.21.48-1-geb92ae4bb
     path: schemas
   - git:
-      commitTitle: 'chore: set quiz rewards to 1 for all answers (#101)'
-      sha: dcf7c030d4f702a6b1359901469eed6cf56f28a5
+      commitTitle: 'fix(core): add IP validation to request code (#104)'
+      sha: eb92ae4bb381a437af608ecb5d39b58df6abcba9
       tags:
-      - 0.21.47-3-gdcf7c030d
+      - 0.21.48-1-geb92ae4bb
     path: gql
   path: graphql
 kind: LockConfig
