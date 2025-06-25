@@ -1529,7 +1529,7 @@ export type Query = {
   readonly onChainTxFee: OnChainTxFee;
   readonly onChainUsdTxFee: OnChainUsdTxFee;
   readonly onChainUsdTxFeeAsBtcDenominated: OnChainUsdTxFee;
-  /** Returns the list of available payout queues for on-chain payouts */
+  /** Returns the list of available speeds for on-chain payments */
   readonly payoutSpeeds: ReadonlyArray<PayoutSpeeds>;
   /** Returns 1 Sat and 1 Usd Cent price for the given currency in minor unit */
   readonly realtimePrice: RealtimePrice;

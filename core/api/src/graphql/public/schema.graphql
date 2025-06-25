@@ -1284,7 +1284,7 @@ type Query {
   onChainUsdTxFee(address: OnChainAddress!, amount: CentAmount!, speed: PayoutSpeed! = FAST, walletId: WalletId!): OnChainUsdTxFee!
   onChainUsdTxFeeAsBtcDenominated(address: OnChainAddress!, amount: SatAmount!, speed: PayoutSpeed! = FAST, walletId: WalletId!): OnChainUsdTxFee!
 
-  """Returns the list of available payout queues for on-chain payouts"""
+  """Returns the list of available speeds for on-chain payments"""
   payoutSpeeds: [PayoutSpeeds!]!
 
   """
