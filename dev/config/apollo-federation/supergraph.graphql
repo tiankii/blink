@@ -1723,7 +1723,7 @@ type Query
   onChainUsdTxFee(address: OnChainAddress!, amount: CentAmount!, speed: PayoutSpeed! = FAST, walletId: WalletId!): OnChainUsdTxFee! @join__field(graph: PUBLIC)
   onChainUsdTxFeeAsBtcDenominated(address: OnChainAddress!, amount: SatAmount!, speed: PayoutSpeed! = FAST, walletId: WalletId!): OnChainUsdTxFee! @join__field(graph: PUBLIC)
 
-  """Returns the list of available payout queues for on-chain payouts"""
+  """Returns the list of available speeds for on-chain payments"""
   payoutSpeeds: [PayoutSpeeds!]! @join__field(graph: PUBLIC)
 
   """
