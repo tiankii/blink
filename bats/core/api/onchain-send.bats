@@ -535,3 +535,69 @@ wait_for_new_payout_id() {
     exit 1
   fi
 }
+
+@test "onchain-send: settle onchain with payout speed FAST" {
+  btc_wallet_name="alice.btc_wallet_id"
+  address=$(bitcoin_cli getnewaddress)
+  [[ "${address}" != "null" ]] || exit 1
+
+  variables=$(
+    jq -n \
+      --arg wallet_id "$(read_value $btc_wallet_name)" \
+      --arg address "$address" \
+      --arg amount 12345 \
+      --arg speed "FAST" \
+      '{input: {walletId: $wallet_id, address: $address, amount: $amount, speed: $speed}}'
+  )
+  exec_graphql 'alice' 'on-chain-payment-send' "$variables"
+  send_status="$(graphql_output '.data.onChainPaymentSend.status')"
+  [[ "$send_status" == "SUCCESS" ]] || exit 1
+
+  retry 10 1 check_for_outgoing_broadcast 'alice' "$address" 4
+  bitcoin_cli -generate 1
+  retry 10 1 check_for_onchain_initiated_settled 'alice' "$address" 4
+}
+
+@test "onchain-send: settle onchain with payout speed MEDIUM" {
+  btc_wallet_name="alice.btc_wallet_id"
+  address=$(bitcoin_cli getnewaddress)
+  [[ "${address}" != "null" ]] || exit 1
+
+  variables=$(
+    jq -n \
+      --arg wallet_id "$(read_value $btc_wallet_name)" \
+      --arg address "$address" \
+      --arg amount 12345 \
+      --arg speed "MEDIUM" \
+      '{input: {walletId: $wallet_id, address: $address, amount: $amount, speed: $speed}}'
+  )
+  exec_graphql 'alice' 'on-chain-payment-send' "$variables"
+  send_status="$(graphql_output '.data.onChainPaymentSend.status')"
+  [[ "$send_status" == "SUCCESS" ]] || exit 1
+
+  retry 10 1 check_for_outgoing_broadcast 'alice' "$address" 4
+  bitcoin_cli -generate 1
+  retry 10 1 check_for_onchain_initiated_settled 'alice' "$address" 4
+}
+
+@test "onchain-send: settle onchain with payout speed SLOW" {
+  btc_wallet_name="alice.btc_wallet_id"
+  address=$(bitcoin_cli getnewaddress)
+  [[ "${address}" != "null" ]] || exit 1
+
+  variables=$(
+    jq -n \
+      --arg wallet_id "$(read_value $btc_wallet_name)" \
+      --arg address "$address" \
+      --arg amount 12345 \
+      --arg speed "SLOW" \
+      '{input: {walletId: $wallet_id, address: $address, amount: $amount, speed: $speed}}'
+  )
+  exec_graphql 'alice' 'on-chain-payment-send' "$variables"
+  send_status="$(graphql_output '.data.onChainPaymentSend.status')"
+  [[ "$send_status" == "SUCCESS" ]] || exit 1
+
+  retry 10 1 check_for_outgoing_broadcast 'alice' "$address" 4
+  bitcoin_cli -generate 1
+  retry 10 1 check_for_onchain_initiated_settled 'alice' "$address" 4
+}
