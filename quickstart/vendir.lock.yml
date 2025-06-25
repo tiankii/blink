@@ -2,24 +2,24 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'fix(core): add IP validation to request code (#104)'
-      sha: eb92ae4bb381a437af608ecb5d39b58df6abcba9
+      commitTitle: 'fix(core): update username validation (#105)...'
+      sha: 9153e31a76cb564e204cf4b7d2d84a1d647dd7f8
       tags:
-      - 0.21.48-1-geb92ae4bb
+      - 0.21.49-1-g9153e31a7
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'fix(core): add IP validation to request code (#104)'
-      sha: eb92ae4bb381a437af608ecb5d39b58df6abcba9
+      commitTitle: 'fix(core): update username validation (#105)...'
+      sha: 9153e31a76cb564e204cf4b7d2d84a1d647dd7f8
       tags:
-      - 0.21.48-1-geb92ae4bb
+      - 0.21.49-1-g9153e31a7
     path: schemas
   - git:
-      commitTitle: 'fix(core): add IP validation to request code (#104)'
-      sha: eb92ae4bb381a437af608ecb5d39b58df6abcba9
+      commitTitle: 'fix(core): update username validation (#105)...'
+      sha: 9153e31a76cb564e204cf4b7d2d84a1d647dd7f8
       tags:
-      - 0.21.48-1-geb92ae4bb
+      - 0.21.50
     path: gql
   path: graphql
 kind: LockConfig
