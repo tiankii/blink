@@ -219,3 +219,11 @@ interface ContactRecord {
   createdAt: Date
   updatedAt?: Date
 }
+interface UsernameRecord {
+  accountId: string
+  walletId?: string
+  handle: string
+  isDefault: boolean
+  createdAt: Date
+  updatedAt: Date
+}
