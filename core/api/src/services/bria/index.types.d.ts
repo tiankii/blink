@@ -16,13 +16,6 @@ type PayoutMetadata = {
   }
 }
 
-type PayoutSpeedRes = {
-  speed: PayoutSpeed
-  queueName: string
-  displayName: string
-  description: string
-}
-
 type PayoutAugmentation = {
   id: PayoutId
   externalId: string
