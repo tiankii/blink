@@ -15,6 +15,7 @@ import {
   newAddress,
   submitPayout,
   subscribeAll,
+  listPayoutQueues,
 } from "./grpc-client"
 
 import {
@@ -22,6 +23,7 @@ import {
   GetAddressRequest,
   GetPayoutRequest,
   GetWalletBalanceSummaryRequest,
+  ListPayoutQueuesRequest,
   NewAddressRequest,
   BriaEvent as RawBriaEvent,
   SubmitPayoutRequest,
@@ -261,8 +263,28 @@ export const OnChainService = (): IOnChainService => {
     }
   }
 
-  const getPayoutSpeeds = (): PayoutQueue[] => {
-    return briaConfig.payoutQueues
+  const getPayoutSpeeds = async (): Promise<PayoutQueue[]> => {
+    try {
+      const request = new ListPayoutQueuesRequest()
+      const response = await listPayoutQueues(request, metadata)
+
+      const briaQueues = response.getPayoutQueuesList()
+
+      return briaConfig.payoutQueues
+        .map((configQueue) => {
+          const matched = briaQueues.find((bq) => bq.getName() === configQueue.queueName)
+          if (!matched) return null
+
+          return {
+            ...configQueue,
+            description: configQueue.description || matched.getDescription() || "",
+          }
+        })
+        .filter((queue): queue is PayoutQueue => queue !== null)
+    } catch (err) {
+      baseLogger.error({ err }, "Error listing payout queues from Bria")
+      return []
+    }
   }
 
   const queuePayoutToAddress = async ({
