@@ -36,15 +36,15 @@ bria:
     - speed: fast
       queueName: dev-queue
       displayName: "Priority"
-      description: "Estimated delivery ~10 minutes"
+      description: "Estimated broadcast ~10 minutes"
     - speed: medium
       queueName: dev-medium-queue
       displayName: "Standard"
-      description: "Estimated delivery ~1 hour"
+      description: "Estimated broadcast ~1 hour"
     - speed: slow
       queueName: dev-slow-queue
       displayName: "Flexible"
-      description: "Estimated delivery ~24 hours"
+      description: "Estimated broadcast ~24 hours"
   coldStorage:
     walletName: cold
     hotToColdRebalanceQueueName: dev-queue
