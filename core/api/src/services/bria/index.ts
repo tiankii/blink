@@ -1,7 +1,7 @@
 import { Metadata, status } from "@grpc/grpc-js"
 import { ListValue, Struct, Value } from "google-protobuf/google/protobuf/struct_pb"
 
-import { UnknownBriaEventError } from "./errors"
+import { PayoutQueueNotFoundError, UnknownBriaEventError } from "./errors"
 
 import { eventDataHandler } from "./event-handler"
 
@@ -111,7 +111,11 @@ export const BriaSubscriber = () => {
 
 const queueNameForSpeed = (speed: PayoutSpeed): string => {
   const queue = briaConfig.payoutQueues.find((queue) => queue.speed === speed)
-  return queue!.queueName
+  if (!queue) {
+    throw new PayoutQueueNotFoundError()
+  }
+
+  return queue.queueName
 }
 
 export const OnChainService = (): IOnChainService => {
