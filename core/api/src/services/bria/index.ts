@@ -140,7 +140,7 @@ export const OnChainService = (): IOnChainService => {
 
   const getColdBalance = async (): Promise<BtcPaymentAmount | OnChainServiceError> => {
     const request = new GetWalletBalanceSummaryRequest()
-    request.setWalletName(briaConfig.coldStorage.walletName)
+    request.setWalletName(briaConfig.coldWalletName)
 
     try {
       const response = await getWalletBalanceSummary(request, metadata)
@@ -339,8 +339,8 @@ export const OnChainService = (): IOnChainService => {
   ): Promise<PayoutId | OnChainServiceError> => {
     const request = new SubmitPayoutRequest()
     request.setWalletName(briaConfig.hotWalletName)
-    request.setPayoutQueueName(briaConfig.coldStorage.hotToColdRebalanceQueueName)
-    request.setDestinationWalletName(briaConfig.coldStorage.walletName)
+    request.setPayoutQueueName(briaConfig.hotToColdRebalanceQueueName)
+    request.setDestinationWalletName(briaConfig.coldWalletName)
     request.setSatoshis(Number(amount.amount))
     request.setMetadata(constructMetadata({ galoy: { rebalanceToColdWallet: true } }))
 

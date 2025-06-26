@@ -182,6 +182,8 @@ export const configSchema = {
       type: "object",
       properties: {
         hotWalletName: { type: "string" },
+        coldWalletName: { type: "string" },
+        hotToColdRebalanceQueueName: { type: "string" },
         payoutQueues: {
           type: "array",
           items: {
@@ -219,23 +221,18 @@ export const configSchema = {
             },
           ],
         },
-        coldStorage: {
-          type: "object",
-          properties: {
-            walletName: { type: "string" },
-            hotToColdRebalanceQueueName: { type: "string" },
-          },
-          required: ["walletName", "hotToColdRebalanceQueueName"],
-          default: {
-            walletName: "cold",
-            hotToColdRebalanceQueueName: "dev-queue",
-          },
-        },
       },
-      required: ["hotWalletName", "payoutQueues", "coldStorage"],
+      required: [
+        "hotWalletName",
+        "coldWalletName",
+        "hotToColdRebalanceQueueName",
+        "payoutQueues",
+      ],
       additionalProperties: false,
       default: {
         hotWalletName: "dev-wallet",
+        coldWalletName: "cold",
+        hotToColdRebalanceQueueName: "dev-queue",
       },
     },
     lndScbBackupBucketName: { type: "string", default: "lnd-static-channel-backups" },
