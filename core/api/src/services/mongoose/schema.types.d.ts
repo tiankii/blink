@@ -208,3 +208,13 @@ type WalletOnChainPendingReceiveRecord = {
   displayPriceCurrency: string
   createdAt: Date
 }
+
+interface UsernameRecord {
+  _id?: string
+  accountId: string
+  walletId?: string
+  handle: string
+  isDefault: boolean
+  createdAt: Date
+  updatedAt: Date
+}

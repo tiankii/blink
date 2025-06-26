@@ -558,3 +558,60 @@ export const WalletOnChainPendingReceive =
     "WalletOnChainPendingReceive",
     WalletOnChainPendingReceiveSchema,
   )
+
+const UsernameSchema = new Schema<UsernameRecord>(
+  {
+    accountId: {
+      type: String,
+      ref: "Account",
+      index: true,
+      required: true,
+    },
+    walletId: {
+      type: String,
+      required: false,
+      validate: {
+        validator: (v: string) => WalletIdRegex.test(v),
+      },
+    },
+    handle: {
+      type: String,
+      required: true,
+      minlength: 3,
+      maxlength: 50,
+    },
+    isDefault: {
+      type: Boolean,
+      default: false,
+      required: true,
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
+    updatedAt: {
+      type: Date,
+      default: Date.now,
+      required: true,
+    },
+  },
+  { id: false },
+)
+
+UsernameSchema.index(
+  { handle: 1 },
+  {
+    unique: true,
+    collation: { locale: "en", strength: 2 },
+  },
+)
+
+UsernameSchema.index(
+  { accountId: 1, isDefault: 1 },
+  {
+    unique: true,
+    partialFilterExpression: { isDefault: true },
+  },
+)
+
+export const Usernames = mongoose.model<UsernameRecord>("Usernames", UsernameSchema)
