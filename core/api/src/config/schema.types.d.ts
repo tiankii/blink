@@ -61,10 +61,8 @@ type YamlSchema = {
   bria: {
     hotWalletName: string
     payoutQueues: PayoutQueueConfig[]
-    coldStorage: {
-      walletName: string
-      hotToColdRebalanceQueueName: string
-    }
+    coldWalletName: string
+    hotToColdRebalanceQueueName: string
   }
   lndScbBackupBucketName: string
   admin_accounts: {

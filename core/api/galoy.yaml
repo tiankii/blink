@@ -32,6 +32,8 @@ coldStorage:
   maxHotWalletBalance: 200000000
 bria:
   hotWalletName: dev-wallet
+  coldWalletName: cold
+  hotToColdRebalanceQueueName: dev-queue
   payoutQueues:
     - speed: fast
       queueName: dev-queue
@@ -45,9 +47,6 @@ bria:
       queueName: dev-slow-queue
       displayName: "Flexible"
       description: "Estimated broadcast ~24 hours"
-  coldStorage:
-    walletName: cold
-    hotToColdRebalanceQueueName: dev-queue
 lndScbBackupBucketName: lnd-static-channel-backups
 admin_accounts:
   - role: dealer
