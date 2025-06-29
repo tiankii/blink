@@ -2,24 +2,24 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'fix(core): update username validation (#105)...'
-      sha: 9153e31a76cb564e204cf4b7d2d84a1d647dd7f8
+      commitTitle: 'feat(core): remove inactive merchants (#107)...'
+      sha: 08dd69efe4ef9fba0e3a75be3f58cf768267649f
       tags:
-      - 0.21.49-1-g9153e31a7
+      - 0.21.50-2-g08dd69efe
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'fix(core): update username validation (#105)...'
-      sha: 9153e31a76cb564e204cf4b7d2d84a1d647dd7f8
+      commitTitle: 'feat(core): remove inactive merchants (#107)...'
+      sha: 08dd69efe4ef9fba0e3a75be3f58cf768267649f
       tags:
-      - 0.21.49-1-g9153e31a7
+      - 0.21.50-2-g08dd69efe
     path: schemas
   - git:
-      commitTitle: 'fix(core): update username validation (#105)...'
-      sha: 9153e31a76cb564e204cf4b7d2d84a1d647dd7f8
+      commitTitle: 'feat(core): remove inactive merchants (#107)...'
+      sha: 08dd69efe4ef9fba0e3a75be3f58cf768267649f
       tags:
-      - 0.21.50
+      - 0.21.50-2-g08dd69efe
     path: gql
   path: graphql
 kind: LockConfig
