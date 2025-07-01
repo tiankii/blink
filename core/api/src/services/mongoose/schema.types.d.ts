@@ -219,7 +219,8 @@ interface ContactRecord {
   createdAt: Date
   updatedAt?: Date
 }
-interface UsernameRecord {
+
+interface UsernamesRecord {
   accountId: string
   walletId?: string
   handle: string

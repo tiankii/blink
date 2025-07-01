@@ -590,7 +590,7 @@ ContactSchema.index({ accountId: 1, handle: 1, type: 1 }, { unique: true })
 
 export const Contact = mongoose.model<ContactRecord>("Contact", ContactSchema)
 
-const UsernameSchema = new Schema<UsernameRecord>(
+const UsernameSchema = new Schema<UsernamesRecord>(
   {
     accountId: {
       type: String,
@@ -645,4 +645,4 @@ UsernameSchema.index(
   },
 )
 
-export const Usernames = mongoose.model<UsernameRecord>("Usernames", UsernameSchema)
+export const Usernames = mongoose.model<UsernamesRecord>("Usernames", UsernameSchema)
