@@ -559,7 +559,7 @@ export const WalletOnChainPendingReceive =
     WalletOnChainPendingReceiveSchema,
   )
 
-const UsernameSchema = new Schema<UsernameRecord>(
+const UsernameSchema = new Schema<UsernamesRecord>(
   {
     accountId: {
       type: String,
@@ -614,4 +614,4 @@ UsernameSchema.index(
   },
 )
 
-export const Usernames = mongoose.model<UsernameRecord>("Usernames", UsernameSchema)
+export const Usernames = mongoose.model<UsernamesRecord>("Usernames", UsernameSchema)

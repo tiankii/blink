@@ -209,8 +209,7 @@ type WalletOnChainPendingReceiveRecord = {
   createdAt: Date
 }
 
-interface UsernameRecord {
-  _id?: string
+interface UsernamesRecord {
   accountId: string
   walletId?: string
   handle: string

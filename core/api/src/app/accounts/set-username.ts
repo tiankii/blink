@@ -9,7 +9,7 @@ import {
 import { InvalidUsername } from "@/domain/errors"
 import { checkedToPhoneNumber } from "@/domain/users"
 
-import { AccountsRepository } from "@/services/mongoose"
+import { AccountsRepository, UsernameRepository } from "@/services/mongoose"
 
 export const setUsername = async ({
   accountId: accountIdRaw,
@@ -33,12 +33,25 @@ export const setUsername = async ({
   const accountsRepo = AccountsRepository()
   const account = await accountsRepo.findById(accountId)
   if (account instanceof Error) return account
-  if (account.username) return new UsernameIsImmutableError()
+
+  const usernamesRepo = UsernameRepository()
+  const existingUsernames = await usernamesRepo.listByAccountId(accountId)
+  if (existingUsernames instanceof Error) return existingUsernames
+
+  const alreadyHasDefault = existingUsernames.some((usr) => usr.isDefault)
+  if (alreadyHasDefault) return new UsernameIsImmutableError()
 
   const isAvailable = await usernameAvailable(checkedUsername)
   if (isAvailable instanceof Error) return isAvailable
   if (!isAvailable) return new UsernameNotAvailableError()
 
-  account.username = checkedUsername
-  return accountsRepo.update(account)
+  const result = await usernamesRepo.update({
+    accountId,
+    walletId: account.defaultWalletId,
+    handle: checkedUsername,
+    isDefault: true,
+  })
+  if (result instanceof Error) return result
+
+  return account
 }
