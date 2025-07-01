@@ -1,7 +1,7 @@
 type Usernames = {
   accountId: AccountId
   walletId?: WalletId
-  handle: string
+  handle: Username
   isDefault: boolean
   createdAt: Date
   updatedAt: Date

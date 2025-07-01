@@ -79,7 +79,7 @@ export const UsernameRepository = (): IUsernamesRepository => {
 const usernameFromRaw = (doc: UsernamesRecord): Usernames => ({
   accountId: doc.accountId as AccountId,
   walletId: doc.walletId as WalletId,
-  handle: doc.handle,
+  handle: doc.handle as Username,
   isDefault: doc.isDefault,
   createdAt: doc.createdAt,
   updatedAt: doc.updatedAt,
