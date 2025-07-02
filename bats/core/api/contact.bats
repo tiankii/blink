@@ -11,7 +11,7 @@ setup_file() {
   user_update_username "$BOB"
 }
 
-@test "contact: add intraledger contact and verify" {
+@test "contact: add intraledger contact" {
   local handle="$(read_value "$BOB.username")"
   local displayName="Intraledger Username"
 
@@ -37,7 +37,7 @@ setup_file() {
   [[ "$status" == 0 ]] || fail "Contact not found"
 }
 
-@test "contact: add lnaddress contact and verify" {
+@test "contact: add lnaddress contact" {
   local handle="lnaddress@example.com"
   local displayName="ln contact displayName"
 
