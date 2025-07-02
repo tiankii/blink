@@ -2,24 +2,24 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'feat(core): remove inactive merchants (#107)...'
-      sha: 08dd69efe4ef9fba0e3a75be3f58cf768267649f
+      commitTitle: 'chore(core): bump deps (#111)...'
+      sha: 673eafcad5d4652cabe450ca56875d95e34200e6
       tags:
-      - 0.21.50-2-g08dd69efe
+      - 0.21.51-1-g673eafcad
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'feat(core): remove inactive merchants (#107)...'
-      sha: 08dd69efe4ef9fba0e3a75be3f58cf768267649f
+      commitTitle: 'chore(core): bump deps (#111)...'
+      sha: 673eafcad5d4652cabe450ca56875d95e34200e6
       tags:
-      - 0.21.50-2-g08dd69efe
+      - 0.21.51-1-g673eafcad
     path: schemas
   - git:
-      commitTitle: 'feat(core): remove inactive merchants (#107)...'
-      sha: 08dd69efe4ef9fba0e3a75be3f58cf768267649f
+      commitTitle: 'chore(core): bump deps (#111)...'
+      sha: 673eafcad5d4652cabe450ca56875d95e34200e6
       tags:
-      - 0.21.50-2-g08dd69efe
+      - 0.21.51-1-g673eafcad
     path: gql
   path: graphql
 kind: LockConfig
