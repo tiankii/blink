@@ -2,24 +2,24 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'fix(core): add appcheck token validation (#110)...'
-      sha: ce90d9f2868f86afe8ab5e4e996cf3ace479dc85
+      commitTitle: 'Revert "fix(core): add appcheck token validation (#110)" (#115)...'
+      sha: 92c09e7abd8ec6b6b5d703ed653554f479fcf1cd
       tags:
-      - 0.21.52-2-gce90d9f28
+      - 0.21.53-1-g92c09e7ab
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'fix(core): add appcheck token validation (#110)...'
-      sha: ce90d9f2868f86afe8ab5e4e996cf3ace479dc85
+      commitTitle: 'Revert "fix(core): add appcheck token validation (#110)" (#115)...'
+      sha: 92c09e7abd8ec6b6b5d703ed653554f479fcf1cd
       tags:
-      - 0.21.52-2-gce90d9f28
+      - 0.21.53-1-g92c09e7ab
     path: schemas
   - git:
-      commitTitle: 'fix(core): add appcheck token validation (#110)...'
-      sha: ce90d9f2868f86afe8ab5e4e996cf3ace479dc85
+      commitTitle: 'Revert "fix(core): add appcheck token validation (#110)" (#115)...'
+      sha: 92c09e7abd8ec6b6b5d703ed653554f479fcf1cd
       tags:
-      - 0.21.52-2-gce90d9f28
+      - 0.21.53-1-g92c09e7ab
     path: gql
   path: graphql
 kind: LockConfig
