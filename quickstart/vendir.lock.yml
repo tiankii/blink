@@ -2,24 +2,24 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'chore(core): bump deps (#111)...'
-      sha: 673eafcad5d4652cabe450ca56875d95e34200e6
+      commitTitle: 'fix(core): add appcheck token validation (#110)...'
+      sha: ce90d9f2868f86afe8ab5e4e996cf3ace479dc85
       tags:
-      - 0.21.51-1-g673eafcad
+      - 0.21.52-2-gce90d9f28
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'chore(core): bump deps (#111)...'
-      sha: 673eafcad5d4652cabe450ca56875d95e34200e6
+      commitTitle: 'fix(core): add appcheck token validation (#110)...'
+      sha: ce90d9f2868f86afe8ab5e4e996cf3ace479dc85
       tags:
-      - 0.21.51-1-g673eafcad
+      - 0.21.52-2-gce90d9f28
     path: schemas
   - git:
-      commitTitle: 'chore(core): bump deps (#111)...'
-      sha: 673eafcad5d4652cabe450ca56875d95e34200e6
+      commitTitle: 'fix(core): add appcheck token validation (#110)...'
+      sha: ce90d9f2868f86afe8ab5e4e996cf3ace479dc85
       tags:
-      - 0.21.51-1-g673eafcad
+      - 0.21.52-2-gce90d9f28
     path: gql
   path: graphql
 kind: LockConfig
