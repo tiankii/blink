@@ -2,24 +2,24 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'Revert "fix(core): add appcheck token validation (#110)" (#115)...'
-      sha: 92c09e7abd8ec6b6b5d703ed653554f479fcf1cd
+      commitTitle: 'feat: onchain fee settings with multiple queues (#92)...'
+      sha: 5257e5bd1b40c3e61db71d38dbf369725d17c1bf
       tags:
-      - 0.21.53-1-g92c09e7ab
+      - 0.21.54-1-g5257e5bd1
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'Revert "fix(core): add appcheck token validation (#110)" (#115)...'
-      sha: 92c09e7abd8ec6b6b5d703ed653554f479fcf1cd
+      commitTitle: 'feat: onchain fee settings with multiple queues (#92)...'
+      sha: 5257e5bd1b40c3e61db71d38dbf369725d17c1bf
       tags:
-      - 0.21.53-1-g92c09e7ab
+      - 0.21.54-1-g5257e5bd1
     path: schemas
   - git:
-      commitTitle: 'Revert "fix(core): add appcheck token validation (#110)" (#115)...'
-      sha: 92c09e7abd8ec6b6b5d703ed653554f479fcf1cd
+      commitTitle: 'feat: onchain fee settings with multiple queues (#92)...'
+      sha: 5257e5bd1b40c3e61db71d38dbf369725d17c1bf
       tags:
-      - 0.21.53-1-g92c09e7ab
+      - 0.21.54-1-g5257e5bd1
     path: gql
   path: graphql
 kind: LockConfig
