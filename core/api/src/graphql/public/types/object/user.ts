@@ -81,13 +81,6 @@ const GraphQLUser = GT.Object<User, GraphQLPublicContextAuth>({
       description: dedent`Get full list of contacts.
         Can include the transactions associated with each contact.`,
       resolve: async (_source, _args, { domainAccount }) => {
-        if (!domainAccount) {
-          throw new UnknownClientError({
-            message: "Account not found",
-            logger: baseLogger,
-          })
-        }
-
         const contacts = await Accounts.getContactsByAccountId(domainAccount.id)
         if (contacts instanceof Error) throw mapError(contacts)
 

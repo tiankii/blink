@@ -1,6 +1,10 @@
-import { DomainError } from "@/domain/shared"
+import { ValidationError } from "@/domain/shared"
+import { CouldNotFindError, RepositoryError } from "@/domain/errors"
 
-export class ContactError extends DomainError {}
+export class InvalidContactIdError extends ValidationError {}
+export class InvalidHandleError extends ValidationError {}
 
-export class InvalidContactIdError extends ContactError {}
-export class InvalidHandleError extends ContactError {}
+export class CouldNotFindContactFromAccountIdError extends CouldNotFindError {}
+export class CouldNotFindContactFromContactIdError extends CouldNotFindError {}
+
+export class CouldNotUpdateContactError extends RepositoryError {}

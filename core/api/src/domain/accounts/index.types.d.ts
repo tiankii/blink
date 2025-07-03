@@ -17,6 +17,8 @@ type DepositFeeRatioAsBasisPoints = bigint & { readonly brand: unique symbol }
 
 type ContactAlias = string & { readonly brand: unique symbol }
 
+type LightningAddress = string & { readonly brand: unique symbol }
+
 type AccountLimitsArgs = {
   level: AccountLevel
   accountLimits?: {
