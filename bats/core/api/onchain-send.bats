@@ -513,8 +513,8 @@ wait_for_new_payout_id() {
   retry 10 1 grep_in_trigger_logs "sequence.*payout_cancelled.*${payout_id}"
 }
 
-@test "onchain-receive: returns list of available payout speeds using payout-speeds query" {
-  exec_graphql 'alice' 'payout-speeds'
+@test "onchain-send: returns available payout speeds" {
+  exec_graphql 'anon' 'payout-speeds'
   payout_speeds="$(graphql_output '.data.payoutSpeeds')"
 
   [[ "$(echo "$payout_speeds" | jq 'length')" -ge 3 ]] || exit 1

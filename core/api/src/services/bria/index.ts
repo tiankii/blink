@@ -15,7 +15,7 @@ import {
   newAddress,
   submitPayout,
   subscribeAll,
-  listPayoutQueues,
+  listPayoutQueues as listPayoutQueuesGrpc,
 } from "./grpc-client"
 
 import {
@@ -109,10 +109,10 @@ export const BriaSubscriber = () => {
   }
 }
 
-const queueNameForSpeed = (speed: PayoutSpeed): string => {
+const queueNameForSpeed = (speed: PayoutSpeed): string | PayoutQueueNotFoundError => {
   const queue = briaConfig.payoutQueues.find((queue) => queue.speed === speed)
   if (!queue) {
-    throw new PayoutQueueNotFoundError()
+    return new PayoutQueueNotFoundError()
   }
 
   return queue.queueName
@@ -267,27 +267,27 @@ export const OnChainService = (): IOnChainService => {
     }
   }
 
-  const getPayoutSpeeds = async (): Promise<PayoutQueue[]> => {
+  const listPayoutQueues = async (): Promise<PayoutQueue[] | OnChainServiceError> => {
     try {
       const request = new ListPayoutQueuesRequest()
-      const response = await listPayoutQueues(request, metadata)
+      const response = await listPayoutQueuesGrpc(request, metadata)
 
       const briaQueues = response.getPayoutQueuesList()
 
-      return briaConfig.payoutQueues
-        .map((configQueue) => {
-          const matched = briaQueues.find((bq) => bq.getName() === configQueue.queueName)
-          if (!matched) return null
+      return briaConfig.payoutQueues.reduce<PayoutQueue[]>((queues, configQueue) => {
+        const matched = briaQueues.find((bq) => bq.getName() === configQueue.queueName)
+        if (!matched) return queues
 
-          return {
-            ...configQueue,
-            description: configQueue.description || matched.getDescription() || "",
-          }
+        queues.push({
+          ...configQueue,
+          description: configQueue.description || matched.getDescription() || "",
         })
-        .filter((queue): queue is PayoutQueue => queue !== null)
+
+        return queues
+      }, [])
     } catch (err) {
-      baseLogger.error({ err }, "Error listing payout queues from Bria")
-      return []
+      const errMsg = parseErrorMessageFromUnknown(err)
+      return new UnknownOnChainServiceError(errMsg)
     }
   }
 
@@ -299,9 +299,12 @@ export const OnChainService = (): IOnChainService => {
     journalId,
   }: QueuePayoutToAddressArgs): Promise<OnChainPayout | OnChainServiceError> => {
     try {
+      const queueName = queueNameForSpeed(speed)
+      if (queueName instanceof Error) return queueName
+
       const request = new SubmitPayoutRequest()
       request.setWalletName(briaConfig.hotWalletName)
-      request.setPayoutQueueName(queueNameForSpeed(speed))
+      request.setPayoutQueueName(queueName)
       request.setOnchainAddress(address)
       request.setSatoshis(Number(amount.amount))
       request.setExternalId(journalId)
@@ -369,9 +372,12 @@ export const OnChainService = (): IOnChainService => {
       amount: BtcPaymentAmount
     }): Promise<BtcPaymentAmount | BriaEventError> => {
       try {
+        const queueName = queueNameForSpeed(speed)
+        if (queueName instanceof Error) return queueName
+
         const request = new EstimatePayoutFeeRequest()
         request.setWalletName(briaConfig.hotWalletName)
-        request.setPayoutQueueName(queueNameForSpeed(speed))
+        request.setPayoutQueueName(queueName)
         request.setOnchainAddress(address)
         request.setSatoshis(Number(amount.amount))
 
@@ -403,7 +409,7 @@ export const OnChainService = (): IOnChainService => {
       queuePayoutToAddress,
       rebalanceToColdWallet,
       estimateFeeForPayout,
-      getPayoutSpeeds,
+      listPayoutQueues,
     },
   })
 }

@@ -128,7 +128,7 @@ interface IOnChainService {
   estimateFeeForPayout(
     args: EstimatePayoutFeeArgs,
   ): Promise<BtcPaymentAmount | OnChainServiceError>
-  getPayoutSpeeds(): Promise<PayoutQueue[]>
+  listPayoutQueues(): Promise<PayoutQueue[] | OnChainServiceError>
 }
 
 type RebalanceCheckerConfig = {
