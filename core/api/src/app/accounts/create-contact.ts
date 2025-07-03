@@ -1,18 +1,21 @@
-import { CouldNotFindContactFromAccountIdError } from "@/domain/errors"
+import { CouldNotFindContactFromAccountIdError } from "@/domain/contacts/errors"
 import { ContactType } from "@/domain/contacts"
 
 import { ContactsRepository } from "@/services/mongoose"
+import { checkedToContactAlias } from "@/domain/accounts"
 
 export const createContact = async ({
   accountId,
   handle,
   displayName,
   type,
+  incrementTxs = true,
 }: {
   accountId: AccountId
-  handle: string
+  handle: Username
   type: ContactType
-  displayName: string
+  displayName: ContactAlias
+  incrementTxs?: boolean
 }): Promise<Contact | ApplicationError> => {
   const contactsRepo = ContactsRepository()
 
@@ -23,7 +26,7 @@ export const createContact = async ({
       handle,
       type,
       displayName,
-      transactionsCount: 1,
+      transactionsCount: incrementTxs ? 1 : 0,
     })
   }
 
@@ -32,7 +35,9 @@ export const createContact = async ({
   return contactsRepo.update({
     ...existing,
     displayName,
-    transactionsCount: existing.transactionsCount + 1,
+    transactionsCount: incrementTxs
+      ? existing.transactionsCount + 1
+      : existing.transactionsCount,
   })
 }
 
@@ -48,20 +53,26 @@ export const createIntraledgerContact = async ({
   }
 
   if (recipientAccount.username) {
+    const alias = checkedToContactAlias(recipientAccount.username)
+    if (alias instanceof Error) return alias
+
     const contactToPayerResult = await createContact({
       accountId: senderAccount.id,
       handle: recipientAccount.username,
-      displayName: recipientAccount.username,
+      displayName: alias,
       type: ContactType.IntraLedger,
     })
     if (contactToPayerResult instanceof Error) return contactToPayerResult
   }
 
   if (senderAccount.username) {
+    const alias = checkedToContactAlias(senderAccount.username)
+    if (alias instanceof Error) return alias
+
     const contactToPayeeResult = await createContact({
       accountId: recipientAccount.id,
       handle: senderAccount.username,
-      displayName: senderAccount.username,
+      displayName: alias,
       type: ContactType.IntraLedger,
     })
     if (contactToPayeeResult instanceof Error) return contactToPayeeResult
