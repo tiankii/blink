@@ -366,9 +366,9 @@ wait_for_new_payout_id() {
   send_status="$(graphql_output '.data.onChainPaymentSend.status')"
   [[ "$send_status" == "SUCCESS" ]] || exit 1
 
-  retry 10 1 check_for_outgoing_broadcast 'alice' "$address" 4
+  retry 20 2 check_for_outgoing_broadcast 'alice' "$address" 4
   bitcoin_cli -generate 2
-  retry 10 1 check_for_onchain_initiated_settled 'alice' "$address" 4
+  retry 20 2 check_for_onchain_initiated_settled 'alice' "$address" 4
 }
 
 @test "onchain-send: settle onchain with payout speed MEDIUM" {
@@ -388,9 +388,9 @@ wait_for_new_payout_id() {
   send_status="$(graphql_output '.data.onChainPaymentSend.status')"
   [[ "$send_status" == "SUCCESS" ]] || exit 1
 
-  retry 10 1 check_for_outgoing_broadcast 'alice' "$address" 4
+  retry 20 2 check_for_outgoing_broadcast 'alice' "$address" 4
   bitcoin_cli -generate 2
-  retry 10 1 check_for_onchain_initiated_settled 'alice' "$address" 4
+  retry 20 2 check_for_onchain_initiated_settled 'alice' "$address" 4
 }
 
 @test "onchain-send: settle onchain with payout speed SLOW" {
@@ -410,9 +410,9 @@ wait_for_new_payout_id() {
   send_status="$(graphql_output '.data.onChainPaymentSend.status')"
   [[ "$send_status" == "SUCCESS" ]] || exit 1
 
-  retry 10 1 check_for_outgoing_broadcast 'alice' "$address" 4
+  retry 20 2 check_for_outgoing_broadcast 'alice' "$address" 4
   bitcoin_cli -generate 2
-  retry 10 1 check_for_onchain_initiated_settled 'alice' "$address" 4
+  retry 20 2 check_for_onchain_initiated_settled 'alice' "$address" 4
 }
 
 @test "onchain-send: get fee for external address" {

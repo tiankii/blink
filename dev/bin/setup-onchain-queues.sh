@@ -6,7 +6,7 @@ source "${DEV_DIR}/helpers/cli.sh"
 
 # Create dev-medium-queue if not exist
 QUEUE_NAME="dev-medium-queue"
-INTERVAL=30
+INTERVAL=15
 
 EXISTING_QUEUE=$(bria_cli list-payout-queues | jq -c ".PayoutQueues[] | select(.name == \"$QUEUE_NAME\")")
 if [[ -n "$EXISTING_QUEUE" ]]; then
@@ -18,7 +18,7 @@ fi
 
 # Create dev-slow-queue if not exist
 QUEUE_NAME="dev-slow-queue"
-INTERVAL=60
+INTERVAL=30
 
 EXISTING_QUEUE=$(bria_cli list-payout-queues | jq -c ".PayoutQueues[] | select(.name == \"$QUEUE_NAME\")")
 if [[ -n "$EXISTING_QUEUE" ]]; then

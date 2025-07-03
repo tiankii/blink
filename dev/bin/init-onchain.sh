@@ -23,6 +23,6 @@ bria_cli wallet-balance -w dev-wallet || exit 1
 
 echo "Setting up onchain payout queues..."
 
-"${DEV_DIR}/bin/setup_onchain_queues.sh"
+"${DEV_DIR}/bin/setup-onchain-queues.sh"
 
 echo "DONE"
