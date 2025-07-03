@@ -1,11 +1,11 @@
 import { parseRepositoryError } from "./utils"
 
-import { Contact } from "@/services/mongoose/schema"
 import {
-  RepositoryError,
-  CouldNotUpdateContactError,
   CouldNotFindContactFromAccountIdError,
-} from "@/domain/errors"
+  CouldNotUpdateContactError,
+} from "@/domain/contacts/errors"
+
+import { Contact } from "@/services/mongoose/schema"
 
 export const ContactsRepository = (): IContactsRepository => {
   const findByHandle = async ({
@@ -13,7 +13,7 @@ export const ContactsRepository = (): IContactsRepository => {
     handle,
   }: {
     accountId: AccountId
-    handle: string
+    handle: Username
   }): Promise<Contact | RepositoryError> => {
     try {
       const result = await Contact.findOne({ accountId, handle })
@@ -78,9 +78,9 @@ export const ContactsRepository = (): IContactsRepository => {
 const contactFromRaw = (result: ContactRecord): Contact => ({
   id: result.id as ContactId,
   accountId: result.accountId as AccountId,
-  handle: result.handle,
+  handle: result.handle as Username,
   type: result.type as ContactType,
-  displayName: result.displayName ?? "",
+  displayName: result.displayName as ContactAlias,
   transactionsCount: result.transactionsCount,
   createdAt: result.createdAt,
 })

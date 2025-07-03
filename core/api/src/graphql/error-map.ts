@@ -714,6 +714,8 @@ export const mapError = (error: ApplicationError): CustomGraphQLError => {
     case "InvalidAccountLevelError":
     case "InvalidAccountLimitTypeError":
     case "InvalidWithdrawFeeError":
+    case "InvalidHandleError":
+    case "InvalidContactIdError":
     case "InvalidUsdCents":
     case "NonIntegerError":
     case "FeeDifferenceError":
@@ -761,6 +763,7 @@ export const mapError = (error: ApplicationError): CustomGraphQLError => {
     case "InvalidAccountError":
     case "InvalidAccountIdError":
     case "InvalidMinutesError":
+    case "InvalidLightningAddress":
     case "InvalidWalletForAccountError":
     case "AuthenticationError":
     case "LikelyNoUserWithThisPhoneExistError":

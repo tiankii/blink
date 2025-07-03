@@ -1,3 +1,5 @@
+import { checkedToLightningAddress, checkedToUsername } from "../accounts"
+
 import { InvalidContactIdError, InvalidHandleError } from "./errors"
 
 import { UuidRegex } from "@/domain/shared"
@@ -14,19 +16,14 @@ export const checkedToContactId = (
   return new InvalidContactIdError(contactId)
 }
 
-export const checkedToHandle = (handle: string): string | InvalidHandleError => {
-  const trimmed = handle.trim()
+export const checkedToHandle = (handle: string): Handle | InvalidHandleError => {
+  const username = checkedToUsername(handle)
+  if (!(username instanceof Error)) return handle as Handle
 
-  if (
-    typeof trimmed !== "string" ||
-    trimmed.length === 0 ||
-    trimmed.length > 256 ||
-    /\s/.test(trimmed)
-  ) {
-    return new InvalidHandleError(handle)
-  }
+  const lnAddress = checkedToLightningAddress(handle)
+  if (!(lnAddress instanceof Error)) return handle as Handle
 
-  return trimmed
+  return new InvalidHandleError(handle)
 }
 
 export const checkedToDisplayName = (value: string) => {

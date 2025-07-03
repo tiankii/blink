@@ -27,6 +27,10 @@ const ContactCreateMutation = GT.Field({
   resolve: async (_, args, { domainAccount }: { domainAccount: Account }) => {
     const { handle, displayName, type } = args.input
 
+    if (handle instanceof Error) {
+      return { errors: [{ message: handle.message }] }
+    }
+
     if (type instanceof Error) {
       return { errors: [{ message: type.message }] }
     }

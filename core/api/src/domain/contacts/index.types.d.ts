@@ -1,13 +1,15 @@
 type ContactType =
   (typeof import("./primitives").ContactType)[keyof typeof import("./primitives").ContactType]
 
+type Handle = Username | LightningAddress
+
 type Contact = {
   readonly id: ContactId
   readonly createdAt: Date
   accountId: AccountId
   type: ContactType
-  handle: string
-  displayName: string
+  handle: Username
+  displayName: ContactAlias
   transactionsCount: number
   updatedAt?: Date
 }
@@ -20,7 +22,7 @@ interface IContactsRepository {
     handle,
   }: {
     accountId: AccountId
-    handle?: string
+    handle: Username
   }): Promise<Contact | RepositoryError>
 
   listByAccountId(accountId: string): Promise<Contact[] | RepositoryError>
