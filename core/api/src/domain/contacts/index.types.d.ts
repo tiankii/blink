@@ -22,7 +22,7 @@ interface IContactsRepository {
     handle,
   }: {
     accountId: AccountId
-    handle: Username
+    handle: Handle
   }): Promise<Contact | RepositoryError>
 
   listByAccountId(accountId: string): Promise<Contact[] | RepositoryError>
