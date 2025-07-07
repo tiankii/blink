@@ -13,7 +13,7 @@ export const ContactsRepository = (): IContactsRepository => {
     handle,
   }: {
     accountId: AccountId
-    handle: Username
+    handle: Handle
   }): Promise<Contact | RepositoryError> => {
     try {
       const result = await Contact.findOne({ accountId, handle })
