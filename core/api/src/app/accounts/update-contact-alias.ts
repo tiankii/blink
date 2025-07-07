@@ -1,4 +1,5 @@
 import { checkedToAccountId, checkedToContactAlias } from "@/domain/accounts"
+import { checkedToHandle } from "@/domain/contacts"
 
 import { ContactsRepository } from "@/services/mongoose"
 
@@ -8,8 +9,8 @@ export const updateContactAlias = async ({
   alias,
 }: {
   accountId: AccountId
-  username: Username
-  alias: ContactAlias
+  username: string
+  alias: string
 }): Promise<AccountContact | ApplicationError> => {
   const accountId = checkedToAccountId(accountIdRaw)
   if (accountId instanceof Error) return accountId
@@ -17,9 +18,12 @@ export const updateContactAlias = async ({
   const aliasChecked = checkedToContactAlias(alias)
   if (aliasChecked instanceof Error) return aliasChecked
 
+  const handle = checkedToHandle(username)
+  if (handle instanceof Error) return handle
+
   const contact = await ContactsRepository().findByHandle({
     accountId,
-    handle: username,
+    handle,
   })
   if (contact instanceof Error) return contact
 
