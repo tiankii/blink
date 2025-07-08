@@ -2,24 +2,24 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'refactor(core): soft delete merchants (#117)'
-      sha: fc34511aa5ca5d5d555e041c7b43140338ed336e
+      commitTitle: 'fix(core): set deleted attr for all merchants (#121)'
+      sha: 13867dde8aa091891d7e65da50303d6b6ef8fd5c
       tags:
-      - 0.21.55-3-gfc34511aa
+      - 0.21.56-2-g13867dde8
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'refactor(core): soft delete merchants (#117)'
-      sha: fc34511aa5ca5d5d555e041c7b43140338ed336e
+      commitTitle: 'fix(core): set deleted attr for all merchants (#121)'
+      sha: 13867dde8aa091891d7e65da50303d6b6ef8fd5c
       tags:
-      - 0.21.55-3-gfc34511aa
+      - 0.21.56-2-g13867dde8
     path: schemas
   - git:
-      commitTitle: 'refactor(core): soft delete merchants (#117)'
-      sha: fc34511aa5ca5d5d555e041c7b43140338ed336e
+      commitTitle: 'fix(core): set deleted attr for all merchants (#121)'
+      sha: 13867dde8aa091891d7e65da50303d6b6ef8fd5c
       tags:
-      - 0.21.55-3-gfc34511aa
+      - 0.21.57
     path: gql
   path: graphql
 kind: LockConfig
