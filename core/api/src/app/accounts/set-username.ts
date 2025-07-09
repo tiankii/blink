@@ -6,7 +6,7 @@ import {
   UsernameIsImmutableError,
   UsernameNotAvailableError,
 } from "@/domain/accounts"
-import { InvalidUsername } from "@/domain/errors"
+import { InvalidUsername, CouldNotFindUsernameError } from "@/domain/errors"
 import { checkedToPhoneNumber } from "@/domain/users"
 
 import { AccountsRepository, UsernameRepository } from "@/services/mongoose"
@@ -35,11 +35,10 @@ export const setUsername = async ({
   if (account instanceof Error) return account
 
   const usernamesRepo = UsernameRepository()
-  const existingUsernames = await usernamesRepo.listByAccountId(accountId)
-  if (existingUsernames instanceof Error) return existingUsernames
-
-  const alreadyHasDefault = existingUsernames.some((usr) => usr.isDefault)
-  if (alreadyHasDefault) return new UsernameIsImmutableError()
+  const existingDefaultUsername = await usernamesRepo.findDefaultByAccountId(accountId)
+  if (!(existingDefaultUsername instanceof CouldNotFindUsernameError)) {
+    return new UsernameIsImmutableError()
+  }
 
   const isAvailable = await usernameAvailable(checkedUsername)
   if (isAvailable instanceof Error) return isAvailable
