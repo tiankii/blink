@@ -2,24 +2,24 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'chore(core): bump deps (#126)'
-      sha: 82995d0e7832db9b8acc9a633d8a8a7c30505c09
+      commitTitle: 'feat(core): add withdrawal wallet (#120)...'
+      sha: 7a76d3bda4c6d95af00448a64c50e51cea56419c
       tags:
-      - 0.21.57-4-g82995d0e7
+      - 0.21.59
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'chore(core): bump deps (#126)'
-      sha: 82995d0e7832db9b8acc9a633d8a8a7c30505c09
+      commitTitle: 'feat(core): add withdrawal wallet (#120)...'
+      sha: 7a76d3bda4c6d95af00448a64c50e51cea56419c
       tags:
-      - 0.21.57-4-g82995d0e7
+      - 0.21.59
     path: schemas
   - git:
-      commitTitle: 'chore(core): bump deps (#126)'
-      sha: 82995d0e7832db9b8acc9a633d8a8a7c30505c09
+      commitTitle: 'feat(core): add withdrawal wallet (#120)...'
+      sha: 7a76d3bda4c6d95af00448a64c50e51cea56419c
       tags:
-      - 0.21.58
+      - 0.21.59
     path: gql
   path: graphql
 kind: LockConfig
