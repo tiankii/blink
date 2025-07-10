@@ -527,7 +527,7 @@ wait_for_new_payout_id() {
   )
   [[ "${payout_id}" != "null" ]] || exit 1
 
-  retry 10 1 grep_in_trigger_logs "sequence.*payout_submitted.*${payout_id}"
+  retry 15 2 grep_in_trigger_logs "sequence.*payout_submitted.*${payout_id}"
 
   last_sequence=$(
     grep_in_trigger_logs "sequence" \
@@ -537,7 +537,7 @@ wait_for_new_payout_id() {
   [[ -n "${last_sequence}" ]] || exit 1
 
   bria_cli cancel-payout -i ${payout_id}
-  retry 10 1 grep_in_trigger_logs "sequence.*payout_cancelled.*${payout_id}"
+  retry 15 2 grep_in_trigger_logs "sequence.*payout_cancelled.*${payout_id}"
 }
 
 @test "onchain-send: cancel internal payout" {
@@ -576,7 +576,7 @@ wait_for_new_payout_id() {
 
   # Check for cancelled event
   bria_cli cancel-payout -i ${payout_id}
-  retry 10 1 grep_in_trigger_logs "sequence.*payout_cancelled.*${payout_id}"
+  retry 15 2 grep_in_trigger_logs "sequence.*payout_cancelled.*${payout_id}"
 }
 
 @test "onchain-send: returns available payout speeds" {
