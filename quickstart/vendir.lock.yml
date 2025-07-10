@@ -2,24 +2,24 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'fix(core): set deleted attr for all merchants (#121)'
-      sha: 13867dde8aa091891d7e65da50303d6b6ef8fd5c
+      commitTitle: 'chore(core): bump deps (#126)'
+      sha: 82995d0e7832db9b8acc9a633d8a8a7c30505c09
       tags:
-      - 0.21.56-2-g13867dde8
+      - 0.21.57-4-g82995d0e7
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'fix(core): set deleted attr for all merchants (#121)'
-      sha: 13867dde8aa091891d7e65da50303d6b6ef8fd5c
+      commitTitle: 'chore(core): bump deps (#126)'
+      sha: 82995d0e7832db9b8acc9a633d8a8a7c30505c09
       tags:
-      - 0.21.56-2-g13867dde8
+      - 0.21.57-4-g82995d0e7
     path: schemas
   - git:
-      commitTitle: 'fix(core): set deleted attr for all merchants (#121)'
-      sha: 13867dde8aa091891d7e65da50303d6b6ef8fd5c
+      commitTitle: 'chore(core): bump deps (#126)'
+      sha: 82995d0e7832db9b8acc9a633d8a8a7c30505c09
       tags:
-      - 0.21.57
+      - 0.21.58
     path: gql
   path: graphql
 kind: LockConfig
