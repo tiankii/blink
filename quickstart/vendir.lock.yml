@@ -2,24 +2,24 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'feat(core): add withdrawal wallet (#120)...'
-      sha: 7a76d3bda4c6d95af00448a64c50e51cea56419c
+      commitTitle: 'fix(core): handle unknown character decode error (#129)'
+      sha: 8696021eb940a3e4750c6a690da2035d5a40a0cf
       tags:
-      - 0.21.59
+      - 0.21.59-2-g8696021eb
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'feat(core): add withdrawal wallet (#120)...'
-      sha: 7a76d3bda4c6d95af00448a64c50e51cea56419c
+      commitTitle: 'fix(core): handle unknown character decode error (#129)'
+      sha: 8696021eb940a3e4750c6a690da2035d5a40a0cf
       tags:
-      - 0.21.59
+      - 0.21.59-2-g8696021eb
     path: schemas
   - git:
-      commitTitle: 'feat(core): add withdrawal wallet (#120)...'
-      sha: 7a76d3bda4c6d95af00448a64c50e51cea56419c
+      commitTitle: 'fix(core): handle unknown character decode error (#129)'
+      sha: 8696021eb940a3e4750c6a690da2035d5a40a0cf
       tags:
-      - 0.21.59
+      - 0.21.59-2-g8696021eb
     path: gql
   path: graphql
 kind: LockConfig
