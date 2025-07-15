@@ -1305,6 +1305,7 @@ type Quiz {
 
 input QuizClaimInput {
   id: ID!
+  skipRewards: Boolean
 }
 
 type QuizClaimPayload {

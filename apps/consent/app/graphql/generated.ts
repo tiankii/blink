@@ -1619,6 +1619,7 @@ export type Quiz = {
 
 export type QuizClaimInput = {
   readonly id: Scalars['ID']['input'];
+  readonly skipRewards?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type QuizClaimPayload = {
@@ -2246,8 +2247,8 @@ export function useCountryCodesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<CountryCodesQuery, CountryCodesQueryVariables>(CountryCodesDocument, options);
         }
-export function useCountryCodesSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<CountryCodesQuery, CountryCodesQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
+export function useCountryCodesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<CountryCodesQuery, CountryCodesQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<CountryCodesQuery, CountryCodesQueryVariables>(CountryCodesDocument, options);
         }
 export type CountryCodesQueryHookResult = ReturnType<typeof useCountryCodesQuery>;
@@ -2285,8 +2286,8 @@ export function useGetUserIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<GetUserIdQuery, GetUserIdQueryVariables>(GetUserIdDocument, options);
         }
-export function useGetUserIdSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetUserIdQuery, GetUserIdQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
+export function useGetUserIdSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetUserIdQuery, GetUserIdQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<GetUserIdQuery, GetUserIdQueryVariables>(GetUserIdDocument, options);
         }
 export type GetUserIdQueryHookResult = ReturnType<typeof useGetUserIdQuery>;
