@@ -1750,6 +1750,7 @@ input QuizClaimInput
   @join__type(graph: PUBLIC)
 {
   id: ID!
+  skipRewards: Boolean = false
 }
 
 type QuizClaimPayload
