@@ -76,18 +76,17 @@ export const claimQuiz = async ({
   skipRewards: boolean
   ip: IpAddress | undefined
 }): Promise<ClaimQuizResult | ApplicationError> => {
-  if (!skipRewards) {
-    const checkIp = await checkAddQuizAttemptPerIpLimits(ip)
-    if (checkIp instanceof Error) return checkIp
-  }
-
   const accountId = checkedToAccountId(accountIdRaw)
   if (accountId instanceof Error) return accountId
 
-  const quizzesConfig = getQuizzesConfig()
-
   // TODO: quizQuestionId checkedFor
   const quizId = quizQuestionIdString as QuizQuestionId
+  if (skipRewards) return addQuizAndList({ quizId, accountId })
+
+  const checkIp = await checkAddQuizAttemptPerIpLimits(ip)
+  if (checkIp instanceof Error) return checkIp
+
+  const quizzesConfig = getQuizzesConfig()
 
   const amount = QuizzesValue[quizId]
   if (!amount) return new InvalidQuizQuestionIdError()
@@ -99,37 +98,33 @@ export const claimQuiz = async ({
   if (user instanceof Error) return user
   if (!user.phone) return new InvalidPhoneForQuizError()
 
-  if (!skipRewards) {
-    const phones = user.deletedPhones || []
-    phones.unshift(user.phone)
+  const phones = user.deletedPhones || []
+  phones.unshift(user.phone)
 
-    for (const phone of phones) {
-      const phoneCheck = await checkAddQuizAttemptPerPhoneLimits(phone)
-      if (phoneCheck instanceof Error) return phoneCheck
-    }
+  for (const phone of phones) {
+    const phoneCheck = await checkAddQuizAttemptPerPhoneLimits(phone)
+    if (phoneCheck instanceof Error) return phoneCheck
+  }
 
-    const validatedPhoneMetadata = PhoneMetadataAuthorizer(
-      quizzesConfig.phoneMetadataValidationSettings,
-    ).authorize(user.phoneMetadata)
+  const validatedPhoneMetadata = PhoneMetadataAuthorizer(
+    quizzesConfig.phoneMetadataValidationSettings,
+  ).authorize(user.phoneMetadata)
 
-    if (validatedPhoneMetadata instanceof Error) {
-      return new InvalidPhoneForQuizError(validatedPhoneMetadata.name)
-    }
+  if (validatedPhoneMetadata instanceof Error) {
+    return new InvalidPhoneForQuizError(validatedPhoneMetadata.name)
+  }
 
-    const accountIP = await AccountsIpsRepository().findLastByAccountId(
-      recipientAccount.id,
-    )
-    if (accountIP instanceof Error) return accountIP
+  const accountIP = await AccountsIpsRepository().findLastByAccountId(recipientAccount.id)
+  if (accountIP instanceof Error) return accountIP
 
-    const validatedIPMetadata = IPMetadataAuthorizer(
-      quizzesConfig.ipMetadataValidationSettings,
-    ).authorize(accountIP.metadata)
-    if (validatedIPMetadata instanceof Error) {
-      if (validatedIPMetadata instanceof MissingIPMetadataError)
-        return new InvalidIpMetadataError(validatedIPMetadata)
+  const validatedIPMetadata = IPMetadataAuthorizer(
+    quizzesConfig.ipMetadataValidationSettings,
+  ).authorize(accountIP.metadata)
+  if (validatedIPMetadata instanceof Error) {
+    if (validatedIPMetadata instanceof MissingIPMetadataError)
+      return new InvalidIpMetadataError(validatedIPMetadata)
 
-      return validatedIPMetadata
-    }
+    return validatedIPMetadata
   }
 
   const quizzesBefore = await listQuizzesByAccountId(accountId)
@@ -138,9 +133,7 @@ export const claimQuiz = async ({
   const quiz = quizzesBefore.find((quiz) => quiz.id === quizId)
   if (quiz === undefined) return new InvalidQuizQuestionIdError()
 
-  if (!skipRewards && quiz.notBefore && quiz.notBefore > new Date()) {
-    return new QuizClaimedTooEarlyError()
-  }
+  if (quiz.notBefore && quiz.notBefore > new Date()) return new QuizClaimedTooEarlyError()
 
   const recipientWallets = await WalletsRepository().listByAccountId(accountId)
   if (recipientWallets instanceof Error) return recipientWallets
@@ -157,35 +150,28 @@ export const claimQuiz = async ({
   const funderAccount = await AccountsRepository().findById(funderWallet.accountId)
   if (funderAccount instanceof Error) return funderAccount
 
-  if (!skipRewards) {
-    const funderBalance = await getBalanceForWallet({ walletId: funderWalletId })
-    if (funderBalance instanceof Error) return funderBalance
+  const funderBalance = await getBalanceForWallet({ walletId: funderWalletId })
+  if (funderBalance instanceof Error) return funderBalance
 
-    const sendCheck = FunderBalanceChecker().check({
-      balance: funderBalance as Satoshis,
-      amountToSend: amount,
-    })
-    if (sendCheck instanceof Error) return sendCheck
-  }
+  const sendCheck = FunderBalanceChecker().check({
+    balance: funderBalance as Satoshis,
+    amountToSend: amount,
+  })
+  if (sendCheck instanceof Error) return sendCheck
 
-  const shouldGiveSats = await QuizRepository().add({ quizId, accountId })
-  if (shouldGiveSats instanceof Error) return shouldGiveSats
+  const claimResult = await addQuizAndList({ quizId, accountId })
+  if (claimResult instanceof Error) return claimResult
 
-  if (!skipRewards) {
-    const payment = await intraledgerPaymentSendWalletIdForBtcWallet({
-      senderWalletId: funderWalletId,
-      recipientWalletId,
-      amount,
-      memo: quizId,
-      senderAccount: funderAccount,
-    })
-    if (payment instanceof Error) return payment
-  }
+  const payment = await intraledgerPaymentSendWalletIdForBtcWallet({
+    senderWalletId: funderWalletId,
+    recipientWalletId,
+    amount,
+    memo: quizId,
+    senderAccount: funderAccount,
+  })
+  if (payment instanceof Error) return payment
 
-  const quizzesAfter = await listQuizzesByAccountId(accountId)
-  if (quizzesAfter instanceof Error) return quizzesAfter
-
-  return quizzesAfter
+  return claimResult
 }
 
 const FunderBalanceChecker = () => {
@@ -204,4 +190,20 @@ const FunderBalanceChecker = () => {
   }
 
   return { check }
+}
+
+const addQuizAndList = async ({
+  quizId,
+  accountId,
+}: {
+  quizId: QuizQuestionId
+  accountId: AccountId
+}): Promise<ClaimQuizResult | ApplicationError> => {
+  const shouldGiveSats = await QuizRepository().add({ quizId, accountId })
+  if (shouldGiveSats instanceof Error) return shouldGiveSats
+
+  const quizzesAfter = await listQuizzesByAccountId(accountId)
+  if (quizzesAfter instanceof Error) return quizzesAfter
+
+  return quizzesAfter
 }
