@@ -1748,7 +1748,7 @@ input QuizClaimInput
   @join__type(graph: PUBLIC)
 {
   id: ID!
-  skipRewards: Boolean
+  skipRewards: Boolean = false
 }
 
 type QuizClaimPayload

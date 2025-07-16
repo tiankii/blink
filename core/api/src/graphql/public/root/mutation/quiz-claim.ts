@@ -8,14 +8,14 @@ const QuizClaimInput = GT.Input({
   name: "QuizClaimInput",
   fields: () => ({
     id: { type: GT.NonNull(GT.ID) },
-    skipRewards: { type: GT.Boolean },
+    skipRewards: { type: GT.Boolean, defaultValue: false },
   }),
 })
 
 const QuizClaimMutation = GT.Field<
   null,
   GraphQLPublicContextAuth,
-  { input: { id: string; skipRewards?: boolean } }
+  { input: { id: string; skipRewards: boolean } }
 >({
   extensions: {
     complexity: 120,
@@ -25,7 +25,7 @@ const QuizClaimMutation = GT.Field<
     input: { type: GT.NonNull(QuizClaimInput) },
   },
   resolve: async (_, args, { domainAccount, ip }) => {
-    const { id, skipRewards = false } = args.input
+    const { id, skipRewards } = args.input
 
     const quizzes = await Quiz.claimQuiz({
       quizQuestionId: id,
