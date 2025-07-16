@@ -2,24 +2,24 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'fix(core): handle unknown character decode error (#129)'
-      sha: 8696021eb940a3e4750c6a690da2035d5a40a0cf
+      commitTitle: 'chore(core): bump deps (#132)'
+      sha: 250da02fb35cdcaee5949bdd2885611c95b55516
       tags:
-      - 0.21.59-2-g8696021eb
+      - 0.21.62
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'fix(core): handle unknown character decode error (#129)'
-      sha: 8696021eb940a3e4750c6a690da2035d5a40a0cf
+      commitTitle: 'chore(core): bump deps (#132)'
+      sha: 250da02fb35cdcaee5949bdd2885611c95b55516
       tags:
-      - 0.21.59-2-g8696021eb
+      - 0.21.62
     path: schemas
   - git:
-      commitTitle: 'fix(core): handle unknown character decode error (#129)'
-      sha: 8696021eb940a3e4750c6a690da2035d5a40a0cf
+      commitTitle: 'chore(core): bump deps (#132)'
+      sha: 250da02fb35cdcaee5949bdd2885611c95b55516
       tags:
-      - 0.21.59-2-g8696021eb
+      - 0.21.62
     path: gql
   path: graphql
 kind: LockConfig
