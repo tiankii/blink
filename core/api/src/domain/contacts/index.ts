@@ -1,6 +1,10 @@
 import { checkedToLightningAddress, checkedToUsername } from "../accounts"
 
-import { InvalidContactIdError, InvalidHandleError } from "./errors"
+import {
+  InvalidContactIdError,
+  InvalidHandleError,
+  InvalidDisplayNameError,
+} from "./errors"
 
 import { UuidRegex } from "@/domain/shared"
 
@@ -31,5 +35,5 @@ export const checkedToDisplayName = (value: string) => {
     return value
   }
 
-  return new InvalidHandleError(value)
+  return new InvalidDisplayNameError(value)
 }

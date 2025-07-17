@@ -8,7 +8,7 @@ type Contact = {
   readonly createdAt: Date
   accountId: AccountId
   type: ContactType
-  handle: Username
+  handle: Handle
   displayName: ContactAlias
   transactionsCount: number
   updatedAt?: Date

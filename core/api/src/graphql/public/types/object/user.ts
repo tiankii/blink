@@ -107,9 +107,9 @@ const GraphQLUser = GT.Object<User, GraphQLPublicContextAuth>({
         if (username instanceof Error) {
           throw username
         }
-        const contact = await Accounts.getContactByUsername({
+        const contact = await Accounts.getContactByHandle({
           account: domainAccount,
-          contactUsername: username,
+          handle: username,
         })
         if (contact instanceof Error) {
           throw mapError(contact)
