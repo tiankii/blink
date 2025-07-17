@@ -1,5 +1,8 @@
-import { CouldNotFindContactFromAccountIdError } from "@/domain/contacts/errors"
-import { ContactType } from "@/domain/contacts"
+import { checkedToHandle, ContactType } from "@/domain/contacts"
+import {
+  CouldNotFindContactFromAccountIdError,
+  InvalidHandleError,
+} from "@/domain/contacts/errors"
 
 import { ContactsRepository } from "@/services/mongoose"
 import { checkedToContactAlias } from "@/domain/accounts"
@@ -9,24 +12,27 @@ export const createContact = async ({
   handle,
   displayName,
   type,
-  incrementTxs = true,
 }: {
   accountId: AccountId
-  handle: Username
+  handle: string
   type: ContactType
   displayName: ContactAlias
-  incrementTxs?: boolean
 }): Promise<Contact | ApplicationError> => {
   const contactsRepo = ContactsRepository()
 
-  const existing = await contactsRepo.findByHandle({ accountId, handle })
+  const validatedHandle = checkedToHandle(handle)
+  if (validatedHandle instanceof InvalidHandleError) {
+    return validatedHandle
+  }
+
+  const existing = await contactsRepo.findByHandle({ accountId, handle: validatedHandle })
   if (existing instanceof CouldNotFindContactFromAccountIdError) {
     return contactsRepo.persistNew({
       accountId,
-      handle,
+      handle: validatedHandle,
       type,
       displayName,
-      transactionsCount: incrementTxs ? 1 : 0,
+      transactionsCount: 1,
     })
   }
 
@@ -35,9 +41,7 @@ export const createContact = async ({
   return contactsRepo.update({
     ...existing,
     displayName,
-    transactionsCount: incrementTxs
-      ? existing.transactionsCount + 1
-      : existing.transactionsCount,
+    transactionsCount: existing.transactionsCount + 1,
   })
 }
 
