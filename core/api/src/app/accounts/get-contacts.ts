@@ -5,10 +5,10 @@ import { InvalidHandleError } from "@/domain/contacts/errors"
 import { ContactsRepository } from "@/services/mongoose"
 
 export const getContactByHandle = async ({
-  account,
+  accountId,
   handle,
 }: {
-  account: Account
+  accountId: AccountId
   handle: string
 }): Promise<AccountContact | ApplicationError> => {
   const validatedHandle = checkedToHandle(handle)
@@ -17,7 +17,7 @@ export const getContactByHandle = async ({
   }
 
   const contact = await ContactsRepository().findByHandle({
-    accountId: account.id,
+    accountId,
     handle: validatedHandle,
   })
   if (contact instanceof Error) return new NoContactForUsernameError()
