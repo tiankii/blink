@@ -163,6 +163,18 @@ export const mapError = (error: ApplicationError): CustomGraphQLError => {
       message = "Invoice has an unknown character, couldn't decode."
       return new InvoiceDecodeError({ message, logger: baseLogger })
 
+    case "InvalidContactIdError":
+      message = "Invalid contact id"
+      return new ValidationInternalError({ message, logger: baseLogger })
+
+    case "InvalidHandleError":
+      message = "Invalid handle"
+      return new ValidationInternalError({ message, logger: baseLogger })
+
+    case "InvalidDisplayNameError":
+      message = "Invalid display name"
+      return new ValidationInternalError({ message, logger: baseLogger })
+
     case "LnPaymentRequestInTransitError":
       message = "There is a pending payment for this invoice"
       return new ValidationInternalError({ message, logger: baseLogger })
@@ -714,9 +726,6 @@ export const mapError = (error: ApplicationError): CustomGraphQLError => {
     case "InvalidAccountLevelError":
     case "InvalidAccountLimitTypeError":
     case "InvalidWithdrawFeeError":
-    case "InvalidHandleError":
-    case "InvalidDisplayNameError":
-    case "InvalidContactIdError":
     case "InvalidUsdCents":
     case "NonIntegerError":
     case "FeeDifferenceError":
