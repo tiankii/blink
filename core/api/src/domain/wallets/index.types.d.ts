@@ -204,15 +204,14 @@ type DepositFeeCalculator = {
 }
 
 type OnchainWithdrawalConfig = {
-  thresholdImbalance: BtcPaymentAmount
-  feeRatioAsBasisPoints: bigint
+  onchain: OnchainFeesConfig
 }
 
 type OnChainWithdrawalFeeArgs = {
   minerFee: BtcPaymentAmount
-  minBankFee: BtcPaymentAmount
-  imbalance: BtcPaymentAmount
   amount: BtcPaymentAmount
+  speed: PayoutSpeed
+  feeRate: number
 }
 
 type WithdrawalFeePriceMethod =
@@ -249,4 +248,30 @@ type PaymentInputValidator = {
   validatePaymentInput: <T extends undefined | string>(
     args: ValidatePaymentInputArgs<T>,
   ) => Promise<ValidatePaymentInputRet<T> | ValidationError | RepositoryError>
+}
+
+interface TransactionSpecification {
+  readonly inputCount: number
+  readonly outputCount: number
+}
+
+type InputCountCalculator = (amount: number) => number
+type TransactionSizeCalculator = (spec: TransactionSpecification) => number
+type DecayRateCalculator = (amount: number, params: FeeDecayCurveParameters) => number
+type CostToBankCalculator = (
+  amount: number,
+  speed: PayoutSpeed,
+  feeRate: number,
+) => number
+type DynamicRateCalculator = (
+  amount: number,
+  speed: PayoutSpeed,
+  feeRate: number,
+) => number
+type BaseMultiplierCalculator = (speed: PayoutSpeed, feeRate: number) => number
+
+interface FeeDecayCurveParameters {
+  readonly minRate: number
+  readonly maxRate: number
+  readonly divisor: number
 }
