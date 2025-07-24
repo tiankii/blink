@@ -2197,11 +2197,16 @@ export type UserContact = {
    * Only the user can see the alias attached to their contact.
    */
   readonly alias?: Maybe<Scalars['ContactAlias']['output']>;
-  readonly id: Scalars['Username']['output'];
+  /** Identifier of the contact (username or Lightning address). */
+  readonly handle: Scalars['ContactHandle']['output'];
+  readonly id: Scalars['ContactHandle']['output'];
   /** Paginated list of transactions sent to/from this contact. */
   readonly transactions?: Maybe<TransactionConnection>;
   readonly transactionsCount: Scalars['Int']['output'];
-  /** Actual identifier of the contact. */
+  /**
+   * Actual identifier of the contact. Deprecated: use `handle` instead.
+   * @deprecated Use `handle` field; this will be removed in a future release.
+   */
   readonly username: Scalars['Username']['output'];
 };
 
@@ -5060,7 +5065,8 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
 
 export type UserContactResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserContact'] = ResolversParentTypes['UserContact']> = {
   alias?: Resolver<Maybe<ResolversTypes['ContactAlias']>, ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['Username'], ParentType, ContextType>;
+  handle?: Resolver<ResolversTypes['ContactHandle'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ContactHandle'], ParentType, ContextType>;
   transactions?: Resolver<Maybe<ResolversTypes['TransactionConnection']>, ParentType, ContextType, Partial<UserContactTransactionsArgs>>;
   transactionsCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   username?: Resolver<ResolversTypes['Username'], ParentType, ContextType>;

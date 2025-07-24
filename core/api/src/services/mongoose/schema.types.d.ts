@@ -78,6 +78,7 @@ interface AccountRecord {
   id: string
   kratosUserId: string
 
+  handle?: string
   username: string | null
   role: string
 

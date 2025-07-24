@@ -25,6 +25,7 @@ export const getContactByHandle = async ({
   return {
     id: contact.handle,
     username: contact.handle,
+    handle: contact.handle,
     alias: contact.displayName,
     transactionsCount: contact.transactionsCount,
   }
@@ -39,6 +40,7 @@ export const getContactsByAccountId = async (
   return contacts.map((contact) => ({
     id: contact.handle,
     username: contact.handle,
+    handle: contact.handle,
     alias: contact.displayName,
     transactionsCount: contact.transactionsCount,
   }))
