@@ -85,6 +85,7 @@ interface IAccountTxVolumeRemaining {
 type AccountContact = {
   readonly id: Handle
   readonly username: Handle
+  readonly handle: Handle
   alias: ContactAlias
   transactionsCount: number
 }

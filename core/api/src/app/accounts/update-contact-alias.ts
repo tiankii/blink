@@ -36,6 +36,7 @@ export const updateContactAlias = async ({
 
   return {
     id: contact.handle,
+    handle: contact.handle,
     username: contact.handle,
     alias: aliasChecked,
     transactionsCount: contact.transactionsCount,
