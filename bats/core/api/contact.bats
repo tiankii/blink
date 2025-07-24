@@ -37,7 +37,7 @@ setup_file() {
   [[ "$status" == 0 ]] || fail "Contact not found"
 }
 
-@test "contact: validate query and update" {
+@test "contact: add lnaddress contact" {
   local handle="lnaddress@example.com"
   local displayName="ln contact displayName"
 
