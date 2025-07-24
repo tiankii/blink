@@ -2,24 +2,24 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'chore(core): bump deps (#132)'
-      sha: 250da02fb35cdcaee5949bdd2885611c95b55516
+      commitTitle: 'chore: bump deps (#138)'
+      sha: 34f4400b5e24f63fbfa1923142d2125eba8b123f
       tags:
-      - 0.21.62
+      - 0.21.63
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'chore(core): bump deps (#132)'
-      sha: 250da02fb35cdcaee5949bdd2885611c95b55516
+      commitTitle: 'chore: bump deps (#138)'
+      sha: 34f4400b5e24f63fbfa1923142d2125eba8b123f
       tags:
-      - 0.21.62
+      - 0.21.63
     path: schemas
   - git:
-      commitTitle: 'chore(core): bump deps (#132)'
-      sha: 250da02fb35cdcaee5949bdd2885611c95b55516
+      commitTitle: 'chore: bump deps (#138)'
+      sha: 34f4400b5e24f63fbfa1923142d2125eba8b123f
       tags:
-      - 0.21.62
+      - 0.21.63
     path: gql
   path: graphql
 kind: LockConfig
