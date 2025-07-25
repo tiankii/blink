@@ -2,24 +2,24 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'chore: bump deps (#138)'
-      sha: 34f4400b5e24f63fbfa1923142d2125eba8b123f
+      commitTitle: 'chore(deps): bump bria proto to ''0.1.115'' (#142)...'
+      sha: 0c8961e5d5aaca9f686144d3fba8e85877a5c79e
       tags:
-      - 0.21.63
+      - 0.21.64
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'chore: bump deps (#138)'
-      sha: 34f4400b5e24f63fbfa1923142d2125eba8b123f
+      commitTitle: 'chore(deps): bump bria proto to ''0.1.115'' (#142)...'
+      sha: 0c8961e5d5aaca9f686144d3fba8e85877a5c79e
       tags:
-      - 0.21.63
+      - 0.21.64
     path: schemas
   - git:
-      commitTitle: 'chore: bump deps (#138)'
-      sha: 34f4400b5e24f63fbfa1923142d2125eba8b123f
+      commitTitle: 'chore(deps): bump bria proto to ''0.1.115'' (#142)...'
+      sha: 0c8961e5d5aaca9f686144d3fba8e85877a5c79e
       tags:
-      - 0.21.63
+      - 0.21.64
     path: gql
   path: graphql
 kind: LockConfig
