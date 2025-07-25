@@ -2,24 +2,24 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'chore(deps): bump bria proto to ''0.1.115'' (#142)...'
-      sha: 0c8961e5d5aaca9f686144d3fba8e85877a5c79e
+      commitTitle: 'fix(core): add retry to IP metadata query (#139)...'
+      sha: 3fed17102230193345b1c4bb772bcfe69d64c943
       tags:
-      - 0.21.64
+      - 0.21.65
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'chore(deps): bump bria proto to ''0.1.115'' (#142)...'
-      sha: 0c8961e5d5aaca9f686144d3fba8e85877a5c79e
+      commitTitle: 'fix(core): add retry to IP metadata query (#139)...'
+      sha: 3fed17102230193345b1c4bb772bcfe69d64c943
       tags:
-      - 0.21.64
+      - 0.21.65
     path: schemas
   - git:
-      commitTitle: 'chore(deps): bump bria proto to ''0.1.115'' (#142)...'
-      sha: 0c8961e5d5aaca9f686144d3fba8e85877a5c79e
+      commitTitle: 'fix(core): add retry to IP metadata query (#139)...'
+      sha: 3fed17102230193345b1c4bb772bcfe69d64c943
       tags:
-      - 0.21.64
+      - 0.21.65
     path: gql
   path: graphql
 kind: LockConfig
