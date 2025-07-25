@@ -2,24 +2,27 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'fix(core): add rebalance idempotency (#144)...'
-      sha: d32c2673645b0b3eb09b0477d8ed5d12275400bb
+      commitTitle: 'chore: add gh action to update disposable phone numbers library
+        (#145)'
+      sha: 4038297b1e78e5b7cbf17eb7867fb6e069212987
       tags:
-      - 0.21.65-2-gd32c26736
+      - 0.21.66-1-g4038297b1
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'fix(core): add rebalance idempotency (#144)...'
-      sha: d32c2673645b0b3eb09b0477d8ed5d12275400bb
+      commitTitle: 'chore: add gh action to update disposable phone numbers library
+        (#145)'
+      sha: 4038297b1e78e5b7cbf17eb7867fb6e069212987
       tags:
-      - 0.21.65-2-gd32c26736
+      - 0.21.66-1-g4038297b1
     path: schemas
   - git:
-      commitTitle: 'fix(core): add rebalance idempotency (#144)...'
-      sha: d32c2673645b0b3eb09b0477d8ed5d12275400bb
+      commitTitle: 'chore: add gh action to update disposable phone numbers library
+        (#145)'
+      sha: 4038297b1e78e5b7cbf17eb7867fb6e069212987
       tags:
-      - 0.21.65-2-gd32c26736
+      - 0.21.66-1-g4038297b1
     path: gql
   path: graphql
 kind: LockConfig
