@@ -2,24 +2,24 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'fix(core): add retry to IP metadata query (#139)...'
-      sha: 3fed17102230193345b1c4bb772bcfe69d64c943
+      commitTitle: 'fix(core): add rebalance idempotency (#144)...'
+      sha: d32c2673645b0b3eb09b0477d8ed5d12275400bb
       tags:
-      - 0.21.65
+      - 0.21.65-2-gd32c26736
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'fix(core): add retry to IP metadata query (#139)...'
-      sha: 3fed17102230193345b1c4bb772bcfe69d64c943
+      commitTitle: 'fix(core): add rebalance idempotency (#144)...'
+      sha: d32c2673645b0b3eb09b0477d8ed5d12275400bb
       tags:
-      - 0.21.65
+      - 0.21.65-2-gd32c26736
     path: schemas
   - git:
-      commitTitle: 'fix(core): add retry to IP metadata query (#139)...'
-      sha: 3fed17102230193345b1c4bb772bcfe69d64c943
+      commitTitle: 'fix(core): add rebalance idempotency (#144)...'
+      sha: d32c2673645b0b3eb09b0477d8ed5d12275400bb
       tags:
-      - 0.21.65
+      - 0.21.65-2-gd32c26736
     path: gql
   path: graphql
 kind: LockConfig
