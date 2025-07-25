@@ -2,27 +2,27 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'chore: add gh action to update disposable phone numbers library
-        (#145)'
-      sha: 4038297b1e78e5b7cbf17eb7867fb6e069212987
+      commitTitle: 'chore: update gh action to auto merge disposable phone numbers
+        PRs (#147)'
+      sha: 22c06a482734961e6d318e25a804a90bae7c011c
       tags:
-      - 0.21.66-1-g4038297b1
+      - 0.21.66-3-g22c06a482
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'chore: add gh action to update disposable phone numbers library
-        (#145)'
-      sha: 4038297b1e78e5b7cbf17eb7867fb6e069212987
+      commitTitle: 'chore: update gh action to auto merge disposable phone numbers
+        PRs (#147)'
+      sha: 22c06a482734961e6d318e25a804a90bae7c011c
       tags:
-      - 0.21.66-1-g4038297b1
+      - 0.21.66-3-g22c06a482
     path: schemas
   - git:
-      commitTitle: 'chore: add gh action to update disposable phone numbers library
-        (#145)'
-      sha: 4038297b1e78e5b7cbf17eb7867fb6e069212987
+      commitTitle: 'chore: update gh action to auto merge disposable phone numbers
+        PRs (#147)'
+      sha: 22c06a482734961e6d318e25a804a90bae7c011c
       tags:
-      - 0.21.66-1-g4038297b1
+      - 0.21.66-3-g22c06a482
     path: gql
   path: graphql
 kind: LockConfig
