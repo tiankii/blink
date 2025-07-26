@@ -2,24 +2,24 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'fix(core): update proxy check logic (#151)'
-      sha: 1a5a68ea461b93666ceef015d56b125c8fc2c9f1
+      commitTitle: 'fix(core): update proxy check risk validation (#152)'
+      sha: bd9c232e99bf3c808369ea274d3cbd7c446e065c
       tags:
-      - 0.21.68-1-g1a5a68ea4
+      - 0.21.69-1-gbd9c232e9
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'fix(core): update proxy check logic (#151)'
-      sha: 1a5a68ea461b93666ceef015d56b125c8fc2c9f1
+      commitTitle: 'fix(core): update proxy check risk validation (#152)'
+      sha: bd9c232e99bf3c808369ea274d3cbd7c446e065c
       tags:
-      - 0.21.68-1-g1a5a68ea4
+      - 0.21.70
     path: schemas
   - git:
-      commitTitle: 'fix(core): update proxy check logic (#151)'
-      sha: 1a5a68ea461b93666ceef015d56b125c8fc2c9f1
+      commitTitle: 'fix(core): update proxy check risk validation (#152)'
+      sha: bd9c232e99bf3c808369ea274d3cbd7c446e065c
       tags:
-      - 0.21.68-1-g1a5a68ea4
+      - 0.21.70
     path: gql
   path: graphql
 kind: LockConfig
