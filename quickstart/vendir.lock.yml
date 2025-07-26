@@ -2,27 +2,24 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'chore: update gh action to auto merge disposable phone numbers
-        PRs (#147)'
-      sha: 22c06a482734961e6d318e25a804a90bae7c011c
+      commitTitle: 'fix(core): update proxy check logic (#151)'
+      sha: 1a5a68ea461b93666ceef015d56b125c8fc2c9f1
       tags:
-      - 0.21.66-3-g22c06a482
+      - 0.21.68-1-g1a5a68ea4
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'chore: update gh action to auto merge disposable phone numbers
-        PRs (#147)'
-      sha: 22c06a482734961e6d318e25a804a90bae7c011c
+      commitTitle: 'fix(core): update proxy check logic (#151)'
+      sha: 1a5a68ea461b93666ceef015d56b125c8fc2c9f1
       tags:
-      - 0.21.66-3-g22c06a482
+      - 0.21.68-1-g1a5a68ea4
     path: schemas
   - git:
-      commitTitle: 'chore: update gh action to auto merge disposable phone numbers
-        PRs (#147)'
-      sha: 22c06a482734961e6d318e25a804a90bae7c011c
+      commitTitle: 'fix(core): update proxy check logic (#151)'
+      sha: 1a5a68ea461b93666ceef015d56b125c8fc2c9f1
       tags:
-      - 0.21.66-3-g22c06a482
+      - 0.21.68-1-g1a5a68ea4
     path: gql
   path: graphql
 kind: LockConfig
