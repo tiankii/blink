@@ -2,24 +2,27 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'fix(core): update proxy check risk validation (#152)'
-      sha: bd9c232e99bf3c808369ea274d3cbd7c446e065c
+      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1240
+        (#155)...'
+      sha: 062de78fd1dcc181115506d0ac71af6bd2f252a7
       tags:
-      - 0.21.69-1-gbd9c232e9
+      - 0.21.71
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'fix(core): update proxy check risk validation (#152)'
-      sha: bd9c232e99bf3c808369ea274d3cbd7c446e065c
+      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1240
+        (#155)...'
+      sha: 062de78fd1dcc181115506d0ac71af6bd2f252a7
       tags:
-      - 0.21.70
+      - 0.21.71
     path: schemas
   - git:
-      commitTitle: 'fix(core): update proxy check risk validation (#152)'
-      sha: bd9c232e99bf3c808369ea274d3cbd7c446e065c
+      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1240
+        (#155)...'
+      sha: 062de78fd1dcc181115506d0ac71af6bd2f252a7
       tags:
-      - 0.21.70
+      - 0.21.71
     path: gql
   path: graphql
 kind: LockConfig
