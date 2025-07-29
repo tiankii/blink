@@ -2,27 +2,27 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1240
-        (#155)...'
-      sha: 062de78fd1dcc181115506d0ac71af6bd2f252a7
+      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1241
+        (#156)...'
+      sha: 065d5d235910685d4c7a9cdcc13c1581687cca7b
       tags:
-      - 0.21.71
+      - 0.21.71-2-g065d5d235
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1240
-        (#155)...'
-      sha: 062de78fd1dcc181115506d0ac71af6bd2f252a7
+      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1241
+        (#156)...'
+      sha: 065d5d235910685d4c7a9cdcc13c1581687cca7b
       tags:
-      - 0.21.71
+      - 0.21.71-2-g065d5d235
     path: schemas
   - git:
-      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1240
-        (#155)...'
-      sha: 062de78fd1dcc181115506d0ac71af6bd2f252a7
+      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1241
+        (#156)...'
+      sha: 065d5d235910685d4c7a9cdcc13c1581687cca7b
       tags:
-      - 0.21.71
+      - 0.21.71-2-g065d5d235
     path: gql
   path: graphql
 kind: LockConfig
