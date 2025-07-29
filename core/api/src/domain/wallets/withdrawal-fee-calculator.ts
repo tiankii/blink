@@ -55,10 +55,13 @@ export const OnChainFees = ({
     onchain.thresholds.defaults.batch,
   )
 
-  const calculateTransactionSize: TransactionSizeCalculator = (spec) => {
+  const calculateTransactionSizeSpec: TransactionSizeCalculator = (spec) => {
     const { baseSize, inputSize, outputSize } = onchain.transaction
     return baseSize + spec.inputCount * inputSize + spec.outputCount * outputSize
   }
+
+  const calculateTransactionSize = (inputCount: number, outputCount: number): number =>
+    calculateTransactionSizeSpec({ inputCount, outputCount })
 
   const calculateExponentialDecay = (
     amount: number,
@@ -129,13 +132,14 @@ export const OnChainFees = ({
 
   const calculateCostToBank: CostToBankCalculator = (amount, speed, feeRate) => {
     const spec = createTransactionSpec(amount, speed)
-    const size = calculateTransactionSize(spec)
+    const size = calculateTransactionSizeSpec(spec)
 
     return speed === PayoutSpeed.Slow ? Math.round((size * feeRate) / 10) : size * feeRate
   }
 
   return {
     withdrawalFee,
+    calculateTransactionSize,
     intraLedgerFees: () => ({
       btc: ZERO_SATS,
       usd: ZERO_CENTS,

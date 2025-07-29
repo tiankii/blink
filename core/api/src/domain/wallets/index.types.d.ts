@@ -223,6 +223,7 @@ type OnChainFeeCalculator = {
     bankFee: BtcPaymentAmount
   }
   intraLedgerFees(): PaymentAmountInAllCurrencies
+  calculateTransactionSize: (inputCount: number, outputCount: number) => number
 }
 
 type PaymentInputValidatorConfig = (
