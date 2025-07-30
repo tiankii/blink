@@ -77,7 +77,7 @@ type FeeCase = {
   expectedSats: number
 }
 
-export const feeCapCases: {
+export const feeCapCasesMock: {
   tier1: FeeCase[]
   tier2: FeeCase[]
   tier3: FeeCase[]
@@ -203,5 +203,105 @@ export const feeCapCases: {
     { feeRate: 125, satsAmount: 100000, expectedSats: 9099 },
     { feeRate: 150, satsAmount: 100000, expectedSats: 10611 },
     { feeRate: 200, satsAmount: 100000, expectedSats: 13636 },
+  ],
+}
+
+export type CostToBankCase = {
+  feeRate: number
+  satsAmount: number
+  expectedCost: number
+}
+
+export const costToBankCasesMock: {
+  tier1_2: CostToBankCase[]
+  tier3: CostToBankCase[]
+} = {
+  tier1_2: [
+    { feeRate: 1, satsAmount: 21000, expectedCost: 141 },
+    { feeRate: 2, satsAmount: 21000, expectedCost: 282 },
+    { feeRate: 4, satsAmount: 21000, expectedCost: 564 },
+    { feeRate: 6, satsAmount: 21000, expectedCost: 846 },
+    { feeRate: 8, satsAmount: 21000, expectedCost: 1128 },
+    { feeRate: 10, satsAmount: 21000, expectedCost: 1410 },
+    { feeRate: 15, satsAmount: 21000, expectedCost: 2115 },
+    { feeRate: 20, satsAmount: 21000, expectedCost: 2820 },
+    { feeRate: 30, satsAmount: 21000, expectedCost: 4230 },
+    { feeRate: 40, satsAmount: 21000, expectedCost: 5640 },
+    { feeRate: 50, satsAmount: 21000, expectedCost: 7050 },
+    { feeRate: 75, satsAmount: 21000, expectedCost: 10575 },
+    { feeRate: 100, satsAmount: 21000, expectedCost: 14100 },
+    { feeRate: 125, satsAmount: 21000, expectedCost: 17625 },
+    { feeRate: 150, satsAmount: 21000, expectedCost: 21150 },
+    { feeRate: 200, satsAmount: 21000, expectedCost: 28200 },
+    { feeRate: 300, satsAmount: 21000, expectedCost: 42300 },
+    { feeRate: 400, satsAmount: 21000, expectedCost: 56400 },
+    { feeRate: 500, satsAmount: 21000, expectedCost: 70500 },
+    { feeRate: 1000, satsAmount: 21000, expectedCost: 141000 },
+    { feeRate: 2000, satsAmount: 21000, expectedCost: 282000 },
+    { feeRate: 1, satsAmount: 100000, expectedCost: 141 },
+    { feeRate: 2, satsAmount: 100000, expectedCost: 282 },
+    { feeRate: 4, satsAmount: 100000, expectedCost: 564 },
+    { feeRate: 6, satsAmount: 100000, expectedCost: 846 },
+    { feeRate: 8, satsAmount: 100000, expectedCost: 1128 },
+    { feeRate: 10, satsAmount: 100000, expectedCost: 1410 },
+    { feeRate: 15, satsAmount: 100000, expectedCost: 2115 },
+    { feeRate: 20, satsAmount: 100000, expectedCost: 2820 },
+    { feeRate: 30, satsAmount: 100000, expectedCost: 4230 },
+    { feeRate: 40, satsAmount: 100000, expectedCost: 5640 },
+    { feeRate: 50, satsAmount: 100000, expectedCost: 7050 },
+    { feeRate: 75, satsAmount: 100000, expectedCost: 10575 },
+    { feeRate: 100, satsAmount: 100000, expectedCost: 14100 },
+    { feeRate: 125, satsAmount: 100000, expectedCost: 17625 },
+    { feeRate: 150, satsAmount: 100000, expectedCost: 21150 },
+    { feeRate: 200, satsAmount: 100000, expectedCost: 28200 },
+    { feeRate: 300, satsAmount: 100000, expectedCost: 42300 },
+    { feeRate: 400, satsAmount: 100000, expectedCost: 56400 },
+    { feeRate: 500, satsAmount: 100000, expectedCost: 70500 },
+    { feeRate: 1000, satsAmount: 100000, expectedCost: 141000 },
+    { feeRate: 2000, satsAmount: 100000, expectedCost: 282000 },
+  ],
+  tier3: [
+    { feeRate: 1, satsAmount: 21000, expectedCost: 56 },
+    { feeRate: 2, satsAmount: 21000, expectedCost: 111 },
+    { feeRate: 4, satsAmount: 21000, expectedCost: 222 },
+    { feeRate: 6, satsAmount: 21000, expectedCost: 334 },
+    { feeRate: 8, satsAmount: 21000, expectedCost: 445 },
+    { feeRate: 10, satsAmount: 21000, expectedCost: 556 },
+    { feeRate: 15, satsAmount: 21000, expectedCost: 834 },
+    { feeRate: 20, satsAmount: 21000, expectedCost: 1112 },
+    { feeRate: 30, satsAmount: 21000, expectedCost: 1668 },
+    { feeRate: 40, satsAmount: 21000, expectedCost: 2224 },
+    { feeRate: 50, satsAmount: 21000, expectedCost: 2780 },
+    { feeRate: 75, satsAmount: 21000, expectedCost: 4170 },
+    { feeRate: 100, satsAmount: 21000, expectedCost: 5560 },
+    { feeRate: 125, satsAmount: 21000, expectedCost: 6950 },
+    { feeRate: 150, satsAmount: 21000, expectedCost: 8340 },
+    { feeRate: 200, satsAmount: 21000, expectedCost: 11120 },
+    { feeRate: 300, satsAmount: 21000, expectedCost: 16680 },
+    { feeRate: 400, satsAmount: 21000, expectedCost: 22240 },
+    { feeRate: 500, satsAmount: 21000, expectedCost: 27800 },
+    { feeRate: 1000, satsAmount: 21000, expectedCost: 55600 },
+    { feeRate: 2000, satsAmount: 21000, expectedCost: 111200 },
+    { feeRate: 1, satsAmount: 100000, expectedCost: 56 },
+    { feeRate: 2, satsAmount: 100000, expectedCost: 111 },
+    { feeRate: 4, satsAmount: 100000, expectedCost: 222 },
+    { feeRate: 6, satsAmount: 100000, expectedCost: 334 },
+    { feeRate: 8, satsAmount: 100000, expectedCost: 445 },
+    { feeRate: 10, satsAmount: 100000, expectedCost: 556 },
+    { feeRate: 15, satsAmount: 100000, expectedCost: 834 },
+    { feeRate: 20, satsAmount: 100000, expectedCost: 1112 },
+    { feeRate: 30, satsAmount: 100000, expectedCost: 1668 },
+    { feeRate: 40, satsAmount: 100000, expectedCost: 2224 },
+    { feeRate: 50, satsAmount: 100000, expectedCost: 2780 },
+    { feeRate: 75, satsAmount: 100000, expectedCost: 4170 },
+    { feeRate: 100, satsAmount: 100000, expectedCost: 5560 },
+    { feeRate: 125, satsAmount: 100000, expectedCost: 6950 },
+    { feeRate: 150, satsAmount: 100000, expectedCost: 8340 },
+    { feeRate: 200, satsAmount: 100000, expectedCost: 11120 },
+    { feeRate: 300, satsAmount: 100000, expectedCost: 16680 },
+    { feeRate: 400, satsAmount: 100000, expectedCost: 22240 },
+    { feeRate: 500, satsAmount: 100000, expectedCost: 27800 },
+    { feeRate: 1000, satsAmount: 100000, expectedCost: 55600 },
+    { feeRate: 2000, satsAmount: 100000, expectedCost: 111200 },
   ],
 }
