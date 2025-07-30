@@ -2,24 +2,27 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'fix(core): adjust twilio error pattern matching for v2 (#160)'
-      sha: b504adf99e320cc2c61cce441a4d607c19f9f649
+      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1242
+        (#159)...'
+      sha: 27ee015371e8531ee3d9c239fe38c156bd455c56
       tags:
-      - 0.21.72-2-gb504adf99
+      - 0.21.73-2-g27ee01537
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'fix(core): adjust twilio error pattern matching for v2 (#160)'
-      sha: b504adf99e320cc2c61cce441a4d607c19f9f649
+      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1242
+        (#159)...'
+      sha: 27ee015371e8531ee3d9c239fe38c156bd455c56
       tags:
-      - 0.21.72-2-gb504adf99
+      - 0.21.73-2-g27ee01537
     path: schemas
   - git:
-      commitTitle: 'fix(core): adjust twilio error pattern matching for v2 (#160)'
-      sha: b504adf99e320cc2c61cce441a4d607c19f9f649
+      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1242
+        (#159)...'
+      sha: 27ee015371e8531ee3d9c239fe38c156bd455c56
       tags:
-      - 0.21.72-2-gb504adf99
+      - 0.21.73-2-g27ee01537
     path: gql
   path: graphql
 kind: LockConfig
