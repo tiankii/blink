@@ -1,13 +1,16 @@
+import { PayoutSpeed } from "@/domain/bitcoin/onchain"
+import { WalletCurrency } from "@/domain/shared"
 import { OnChainFees } from "@/domain/wallets"
-// import { AmountCalculator } from "@/domain/shared"
 
 import { generateTxSizeCases } from "test/helpers/withdrawal-fee-calculator"
 import {
+  feeCapCases,
   onchainFeeSettingsMock,
   TRANSACTION_SIZE_MATRIX,
 } from "test/mocks/withdrawal-fee-calculator"
 
-// const calc = AmountCalculator()
+const minerZeroFee = { amount: 0n, currency: WalletCurrency.Btc }
+
 const txSizeCases = generateTxSizeCases(TRANSACTION_SIZE_MATRIX)
 const feeCalculator = OnChainFees({
   onchain: onchainFeeSettingsMock,
@@ -22,6 +25,53 @@ describe("OnChainFees", () => {
         expect(size).toBe(expectedSize)
       },
     )
+  })
+
+  describe("withdrawalFee", () => {
+    describe("Tier#1 (Fast)", () => {
+      test.each(feeCapCases.tier1)(
+        "Tier1: amount=$satsAmount sats, feeRate=$feeRate => bankFee $expectedSats sats",
+        ({ satsAmount, feeRate, expectedSats }) => {
+          const { totalFee } = feeCalculator.withdrawalFee({
+            minerFee: minerZeroFee,
+            amount: { amount: BigInt(satsAmount), currency: WalletCurrency.Btc },
+            speed: PayoutSpeed.Fast,
+            feeRate,
+          })
+          expect(totalFee.amount).toEqual(BigInt(expectedSats))
+        },
+      )
+    })
+
+    describe("Tier#2 (Medium)", () => {
+      test.each(feeCapCases.tier2)(
+        "Tier2: amount=$satsAmount sats, feeRate=$feeRate => bankFee $expectedSats sats",
+        ({ satsAmount, feeRate, expectedSats }) => {
+          const { totalFee } = feeCalculator.withdrawalFee({
+            minerFee: minerZeroFee,
+            amount: { amount: BigInt(satsAmount), currency: WalletCurrency.Btc },
+            speed: PayoutSpeed.Medium,
+            feeRate,
+          })
+          expect(totalFee.amount).toEqual(BigInt(expectedSats))
+        },
+      )
+    })
+
+    describe("Tier#3 (Slow)", () => {
+      test.each(feeCapCases.tier3)(
+        "Tier3: amount=$satsAmount sats, feeRate=$feeRate => bankFee $expectedSats sats",
+        ({ satsAmount, feeRate, expectedSats }) => {
+          const { totalFee } = feeCalculator.withdrawalFee({
+            minerFee: minerZeroFee,
+            amount: { amount: BigInt(satsAmount), currency: WalletCurrency.Btc },
+            speed: PayoutSpeed.Slow,
+            feeRate,
+          })
+          expect(totalFee.amount).toEqual(BigInt(expectedSats))
+        },
+      )
+    })
   })
 
   describe("onChainIntraLedgerFee", () => {
