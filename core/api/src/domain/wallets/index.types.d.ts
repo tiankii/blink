@@ -225,6 +225,7 @@ type OnChainFeeCalculator = {
   intraLedgerFees(): PaymentAmountInAllCurrencies
   calculateTransactionSize: (inputCount: number, outputCount: number) => number
   calculateCostToBank: CostToBankCalculator
+  calculateBaseMultiplier: BaseMultiplierCalculator
 }
 
 type PaymentInputValidatorConfig = (
