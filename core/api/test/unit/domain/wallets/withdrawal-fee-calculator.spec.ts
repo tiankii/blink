@@ -6,6 +6,7 @@ import { generateTxSizeCases } from "test/helpers/withdrawal-fee-calculator"
 import {
   costToBankCasesMock,
   feeCapCasesMock,
+  multiplierCasesMock,
   onchainFeeSettingsMock,
   TRANSACTION_SIZE_MATRIX,
 } from "test/mocks/withdrawal-fee-calculator"
@@ -101,6 +102,41 @@ describe("OnChainFees", () => {
           expect(
             feeCalculator.calculateCostToBank(satsAmount, PayoutSpeed.Slow, feeRate),
           ).toBe(expectedCost)
+        },
+      )
+    })
+  })
+
+  describe("calculateBaseMultiplier", () => {
+    describe("Tier #1 (Fast)", () => {
+      test.each(multiplierCasesMock.tier1)(
+        "Fast, feeRate=$feeRate => multiplier $expectedMultiplier",
+        ({ feeRate, expectedMultiplier }) => {
+          expect(
+            feeCalculator.calculateBaseMultiplier(PayoutSpeed.Fast, feeRate),
+          ).toBeCloseTo(expectedMultiplier, 6)
+        },
+      )
+    })
+
+    describe("Tier #2 (Medium)", () => {
+      test.each(multiplierCasesMock.tier2)(
+        "Medium, feeRate=$feeRate => multiplier $expectedMultiplier",
+        ({ feeRate, expectedMultiplier }) => {
+          expect(
+            feeCalculator.calculateBaseMultiplier(PayoutSpeed.Medium, feeRate),
+          ).toBeCloseTo(expectedMultiplier, 6)
+        },
+      )
+    })
+
+    describe("Tier #3 (Slow)", () => {
+      test.each(multiplierCasesMock.tier3)(
+        "Slow, feeRate=$feeRate => multiplier $expectedMultiplier",
+        ({ feeRate, expectedMultiplier }) => {
+          expect(
+            feeCalculator.calculateBaseMultiplier(PayoutSpeed.Slow, feeRate),
+          ).toBeCloseTo(expectedMultiplier, 6)
         },
       )
     })

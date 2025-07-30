@@ -140,6 +140,7 @@ export const OnChainFees = ({
   return {
     withdrawalFee,
     calculateCostToBank,
+    calculateBaseMultiplier,
     calculateTransactionSize,
     intraLedgerFees: () => ({
       btc: ZERO_SATS,

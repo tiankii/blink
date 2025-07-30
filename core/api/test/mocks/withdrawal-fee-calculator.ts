@@ -1,3 +1,20 @@
+type FeeCase = {
+  feeRate: number
+  satsAmount: number
+  expectedSats: number
+}
+
+type CostToBankCase = {
+  feeRate: number
+  satsAmount: number
+  expectedCost: number
+}
+
+type MultiplierCase = {
+  feeRate: number
+  expectedMultiplier: number
+}
+
 export const onchainFeeSettingsMock: OnchainFeesConfig = {
   decay: {
     fast: {
@@ -70,12 +87,6 @@ export const TRANSACTION_SIZE_MATRIX: number[][] = [
   /* 11 out*/ [420, 488, 556, 624, 692, 760, 828, 896, 964, 1032, 1100, 1168],
   /* 12 out*/ [451, 519, 587, 655, 723, 791, 859, 927, 995, 1063, 1131, 1199],
 ]
-
-type FeeCase = {
-  feeRate: number
-  satsAmount: number
-  expectedSats: number
-}
 
 export const feeCapCasesMock: {
   tier1: FeeCase[]
@@ -206,12 +217,6 @@ export const feeCapCasesMock: {
   ],
 }
 
-export type CostToBankCase = {
-  feeRate: number
-  satsAmount: number
-  expectedCost: number
-}
-
 export const costToBankCasesMock: {
   tier1_2: CostToBankCase[]
   tier3: CostToBankCase[]
@@ -303,5 +308,78 @@ export const costToBankCasesMock: {
     { feeRate: 500, satsAmount: 100000, expectedCost: 27800 },
     { feeRate: 1000, satsAmount: 100000, expectedCost: 55600 },
     { feeRate: 2000, satsAmount: 100000, expectedCost: 111200 },
+  ],
+}
+
+export const multiplierCasesMock: {
+  tier1: MultiplierCase[]
+  tier2: MultiplierCase[]
+  tier3: MultiplierCase[]
+} = {
+  tier1: [
+    { feeRate: 1, expectedMultiplier: 3.3 },
+    { feeRate: 2, expectedMultiplier: 2.3 },
+    { feeRate: 4, expectedMultiplier: 1.8 },
+    { feeRate: 8, expectedMultiplier: 1.55 },
+    { feeRate: 10, expectedMultiplier: 1.5 },
+    { feeRate: 15, expectedMultiplier: 1.433333 },
+    { feeRate: 20, expectedMultiplier: 1.4 },
+    { feeRate: 30, expectedMultiplier: 1.366667 },
+    { feeRate: 40, expectedMultiplier: 1.35 },
+    { feeRate: 50, expectedMultiplier: 1.34 },
+    { feeRate: 75, expectedMultiplier: 1.326667 },
+    { feeRate: 100, expectedMultiplier: 1.32 },
+    { feeRate: 125, expectedMultiplier: 1.316 },
+    { feeRate: 150, expectedMultiplier: 1.313333 },
+    { feeRate: 200, expectedMultiplier: 1.31 },
+    { feeRate: 300, expectedMultiplier: 1.306667 },
+    { feeRate: 400, expectedMultiplier: 1.305 },
+    { feeRate: 500, expectedMultiplier: 1.304 },
+    { feeRate: 1000, expectedMultiplier: 1.302 },
+    { feeRate: 2000, expectedMultiplier: 1.301 },
+  ],
+  tier2: [
+    { feeRate: 1, expectedMultiplier: 2.1 },
+    { feeRate: 2, expectedMultiplier: 1.6 },
+    { feeRate: 4, expectedMultiplier: 1.35 },
+    { feeRate: 8, expectedMultiplier: 1.225 },
+    { feeRate: 10, expectedMultiplier: 1.2 },
+    { feeRate: 15, expectedMultiplier: 1.166667 },
+    { feeRate: 20, expectedMultiplier: 1.15 },
+    { feeRate: 30, expectedMultiplier: 1.133333 },
+    { feeRate: 40, expectedMultiplier: 1.125 },
+    { feeRate: 50, expectedMultiplier: 1.12 },
+    { feeRate: 75, expectedMultiplier: 1.113333 },
+    { feeRate: 100, expectedMultiplier: 1.11 },
+    { feeRate: 125, expectedMultiplier: 1.108 },
+    { feeRate: 150, expectedMultiplier: 1.106667 },
+    { feeRate: 200, expectedMultiplier: 1.105 },
+    { feeRate: 300, expectedMultiplier: 1.103333 },
+    { feeRate: 400, expectedMultiplier: 1.1025 },
+    { feeRate: 500, expectedMultiplier: 1.102 },
+    { feeRate: 1000, expectedMultiplier: 1.101 },
+    { feeRate: 2000, expectedMultiplier: 1.1005 },
+  ],
+  tier3: [
+    { feeRate: 1, expectedMultiplier: 3.1 },
+    { feeRate: 2, expectedMultiplier: 2.1 },
+    { feeRate: 4, expectedMultiplier: 1.6 },
+    { feeRate: 8, expectedMultiplier: 1.35 },
+    { feeRate: 10, expectedMultiplier: 1.3 },
+    { feeRate: 15, expectedMultiplier: 1.233333 },
+    { feeRate: 20, expectedMultiplier: 1.2 },
+    { feeRate: 30, expectedMultiplier: 1.166667 },
+    { feeRate: 40, expectedMultiplier: 1.15 },
+    { feeRate: 50, expectedMultiplier: 1.14 },
+    { feeRate: 75, expectedMultiplier: 1.126667 },
+    { feeRate: 100, expectedMultiplier: 1.12 },
+    { feeRate: 125, expectedMultiplier: 1.116 },
+    { feeRate: 150, expectedMultiplier: 1.113333 },
+    { feeRate: 200, expectedMultiplier: 1.11 },
+    { feeRate: 300, expectedMultiplier: 1.106667 },
+    { feeRate: 400, expectedMultiplier: 1.105 },
+    { feeRate: 500, expectedMultiplier: 1.104 },
+    { feeRate: 1000, expectedMultiplier: 1.102 },
+    { feeRate: 2000, expectedMultiplier: 1.101 },
   ],
 }
