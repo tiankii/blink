@@ -2,27 +2,24 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1243
-        (#162)...'
-      sha: c93509c4c24e10ced9d8777ddcc3aa1b1db7f0b8
+      commitTitle: 'feat: add ln address support for contacts (#85)...'
+      sha: 8ff0b75ab28aef76d262fd32f45c6bd2919b9531
       tags:
-      - 0.21.74-1-gc93509c4c
+      - 0.21.75-1-g8ff0b75ab
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1243
-        (#162)...'
-      sha: c93509c4c24e10ced9d8777ddcc3aa1b1db7f0b8
+      commitTitle: 'feat: add ln address support for contacts (#85)...'
+      sha: 8ff0b75ab28aef76d262fd32f45c6bd2919b9531
       tags:
-      - 0.21.74-1-gc93509c4c
+      - 0.21.75-1-g8ff0b75ab
     path: schemas
   - git:
-      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1243
-        (#162)...'
-      sha: c93509c4c24e10ced9d8777ddcc3aa1b1db7f0b8
+      commitTitle: 'feat: add ln address support for contacts (#85)...'
+      sha: 8ff0b75ab28aef76d262fd32f45c6bd2919b9531
       tags:
-      - 0.21.74-1-gc93509c4c
+      - 0.21.75-1-g8ff0b75ab
     path: gql
   path: graphql
 kind: LockConfig
