@@ -20,6 +20,13 @@ export const OnChainFees = ({
   }) => {
     const satoshis = Number(amount.amount)
 
+    if (feeRate <= 0) {
+      return {
+        totalFee: calc.add(minerFee, ZERO_SATS),
+        bankFee: ZERO_SATS,
+      }
+    }
+
     const dynamicRate = calculateDynamicFeeRate(satoshis, speed, feeRate)
     const baseMultiplier = calculateBaseMultiplier(speed, feeRate)
     const bankCost = calculateCostToBank(satoshis, speed, feeRate)

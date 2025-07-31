@@ -328,6 +328,7 @@ type OPFBWithAmount<S extends WalletCurrency, R extends WalletCurrency> = {
 type OPFBWithConversion<S extends WalletCurrency, R extends WalletCurrency> = {
   withMinerFee(
     minerFee: BtcPaymentAmount,
+    feeRate: number,
     speed: PayoutSpeed,
   ): Promise<OnChainPaymentFlow<S, R> | ValidationError | DealerPriceServiceError>
   withoutMinerFee(): Promise<
