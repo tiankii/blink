@@ -31,9 +31,11 @@ export const getContactByHandle = async ({
   }
 }
 
-export const getContactsByAccountId = async (
-  accountId: AccountId,
-): Promise<AccountContact[] | ApplicationError> => {
+export const getContactsByAccountId = async ({
+  accountId,
+}: {
+  accountId: AccountId
+}): Promise<AccountContact[] | ApplicationError> => {
   const contacts = await ContactsRepository().listByAccountId({ accountId })
   if (contacts instanceof Error) return contacts
 
