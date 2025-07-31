@@ -34,7 +34,7 @@ export const getContactByHandle = async ({
 export const getContactsByAccountId = async (
   accountId: AccountId,
 ): Promise<AccountContact[] | ApplicationError> => {
-  const contacts = await ContactsRepository().listByAccountId(accountId)
+  const contacts = await ContactsRepository().listByAccountId({ accountId })
   if (contacts instanceof Error) return contacts
 
   return contacts.map((contact) => ({

@@ -28,7 +28,7 @@ export const ContactsRepository = (): IContactsRepository => {
   }
 
   const persistNew = async (
-    contactInput: NewContactInput,
+    contactInput: NewContact,
   ): Promise<Contact | RepositoryError> => {
     try {
       const contact = await new Contact({
@@ -41,9 +41,11 @@ export const ContactsRepository = (): IContactsRepository => {
     }
   }
 
-  const listByAccountId = async (
-    accountId: string,
-  ): Promise<Contact[] | RepositoryError> => {
+  const listByAccountId = async ({
+    accountId,
+  }: {
+    accountId: AccountId
+  }): Promise<Contact[] | RepositoryError> => {
     try {
       const results = await Contact.find({ accountId })
       return results.map(contactFromRaw)
