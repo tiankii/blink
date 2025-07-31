@@ -423,11 +423,13 @@ const OPFBWithConversion = <S extends WalletCurrency, R extends WalletCurrency>(
     })
   }
 
-  const withMinerFee = async (
-    minerFee: BtcPaymentAmount,
-    feeRate: number,
-    speed: PayoutSpeed,
-  ): Promise<OnChainPaymentFlow<S, R> | ValidationError | DealerPriceServiceError> => {
+  const withMinerFee = async ({
+    minerFee,
+    feeRate,
+    speed,
+  }: WithMinerFeeArgs): Promise<
+    OnChainPaymentFlow<S, R> | ValidationError | DealerPriceServiceError
+  > => {
     const state = await stateFromPromise(statePromise)
     if (state instanceof Error) return state
 
