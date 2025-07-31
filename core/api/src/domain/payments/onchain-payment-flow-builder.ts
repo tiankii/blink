@@ -425,6 +425,7 @@ const OPFBWithConversion = <S extends WalletCurrency, R extends WalletCurrency>(
 
   const withMinerFee = async (
     minerFee: BtcPaymentAmount,
+    feeRate: number,
     speed: PayoutSpeed,
   ): Promise<OnChainPaymentFlow<S, R> | ValidationError | DealerPriceServiceError> => {
     const state = await stateFromPromise(statePromise)
@@ -440,7 +441,7 @@ const OPFBWithConversion = <S extends WalletCurrency, R extends WalletCurrency>(
       minerFee,
       amount: state.btcProposedAmount,
       speed,
-      feeRate: 5,
+      feeRate,
     })
 
     // Calculate amounts & fees
