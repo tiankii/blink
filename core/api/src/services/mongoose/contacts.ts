@@ -82,7 +82,7 @@ const contactFromRaw = (result: ContactRecord): Contact => ({
   accountId: result.accountId as AccountId,
   handle: result.handle as Username,
   type: result.type as ContactType,
-  displayName: result.displayName as ContactAlias,
+  displayName: (result.displayName || "") as ContactAlias,
   transactionsCount: result.transactionsCount,
   createdAt: result.createdAt,
 })
