@@ -2,24 +2,24 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'feat: add ln address support for contacts (#85)...'
-      sha: 8ff0b75ab28aef76d262fd32f45c6bd2919b9531
+      commitTitle: 'fix(core): contact mongoose update method dont updatedAt (#164)...'
+      sha: caf3131ab1d2f8decd530e0e89fb6ee908bc7acc
       tags:
-      - 0.21.75-1-g8ff0b75ab
+      - 0.21.77
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'feat: add ln address support for contacts (#85)...'
-      sha: 8ff0b75ab28aef76d262fd32f45c6bd2919b9531
+      commitTitle: 'fix(core): contact mongoose update method dont updatedAt (#164)...'
+      sha: caf3131ab1d2f8decd530e0e89fb6ee908bc7acc
       tags:
-      - 0.21.75-1-g8ff0b75ab
+      - 0.21.77
     path: schemas
   - git:
-      commitTitle: 'feat: add ln address support for contacts (#85)...'
-      sha: 8ff0b75ab28aef76d262fd32f45c6bd2919b9531
+      commitTitle: 'fix(core): contact mongoose update method dont updatedAt (#164)...'
+      sha: caf3131ab1d2f8decd530e0e89fb6ee908bc7acc
       tags:
-      - 0.21.75-1-g8ff0b75ab
+      - 0.21.77
     path: gql
   path: graphql
 kind: LockConfig
