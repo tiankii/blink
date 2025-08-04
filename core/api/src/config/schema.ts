@@ -599,7 +599,7 @@ export const configSchema = {
           properties: {
             method: {
               type: "string",
-              enum: ["flat", "proportionalOnImbalance"],
+              enum: ["flat", "proportionalOnImbalance", "exponentialDecay"],
             },
             ratioAsBasisPoints: { type: "integer" },
             threshold: { type: "integer" },

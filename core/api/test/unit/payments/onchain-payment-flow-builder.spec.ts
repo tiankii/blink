@@ -8,6 +8,7 @@ import {
   WalletPriceRatio,
 } from "@/domain/payments"
 import {
+  BtcPaymentAmount,
   ONE_CENT,
   paymentAmountFromNumber,
   ValidationError,
@@ -241,9 +242,8 @@ describe("OnChainPaymentFlowBuilder", () => {
         if (thresholdImbalanceAmount instanceof Error) throw thresholdImbalanceAmount
 
         const onChainFees = OnChainFees({
-          // feeRatioAsBasisPoints: feeConfig.withdrawRatioAsBasisPoints,
-          // thresholdImbalance: thresholdImbalanceAmount,
-          onchain: feeConfig.onchain,
+          feeRatioAsBasisPoints: feeConfig.withdrawRatioAsBasisPoints,
+          thresholdImbalance: thresholdImbalanceAmount,
         })
 
         const amountCurrency = WalletCurrency.Btc
@@ -278,13 +278,13 @@ describe("OnChainPaymentFlowBuilder", () => {
                 const speed = PayoutSpeed.Fast
                 const estimateRes = {
                   fee: { amount: 300n, currency: WalletCurrency.Btc },
-                  feeRate: 5,
+                  feeRate: 10,
                 }
                 const payment = await withAmountBuilder
                   .withConversion(withConversionArgs)
                   .withMinerFee({
-                    minerFee: estimateRes.fee,
                     feeRate: estimateRes.feeRate,
+                    minerFee: estimateRes.fee,
                     speed,
                   })
                 if (payment instanceof Error) throw payment
@@ -322,9 +322,9 @@ describe("OnChainPaymentFlowBuilder", () => {
 
                 const withdrawFees = onChainFees.withdrawalFee({
                   minerFee: estimateRes.fee,
-                  feeRate: estimateRes.feeRate,
                   amount: sendAmount,
-                  speed,
+                  minBankFee,
+                  imbalance,
                 })
                 if (withdrawFees instanceof Error) throw withdrawFees
 
@@ -355,19 +355,18 @@ describe("OnChainPaymentFlowBuilder", () => {
 
             describe("with dust amount", () => {
               it("correctly returns dust error", async () => {
-                const speed = PayoutSpeed.Fast
+                const speed = PayoutSpeed.Medium
                 const estimateRes = {
                   fee: { amount: 300n, currency: WalletCurrency.Btc },
                   feeRate: 5,
                 }
-
                 const paymentLowest = await withBtcWalletBuilder
                   .withoutRecipientWallet()
                   .withAmount({ amount: BigInt(51), currency: amountCurrency }) // Close to 1 cent
                   .withConversion(withConversionArgs)
                   .withMinerFee({
-                    minerFee: estimateRes.fee,
                     feeRate: estimateRes.feeRate,
+                    minerFee: estimateRes.fee,
                     speed,
                   })
                 expect(paymentLowest).toBeInstanceOf(LessThanDustThresholdError)
@@ -377,8 +376,8 @@ describe("OnChainPaymentFlowBuilder", () => {
                   .withAmount({ amount: BigInt(dustAmount), currency: amountCurrency })
                   .withConversion(withConversionArgs)
                   .withMinerFee({
-                    minerFee: estimateRes.fee,
                     feeRate: estimateRes.feeRate,
+                    minerFee: estimateRes.fee,
                     speed,
                   })
                 expect(paymentBelow).toBeInstanceOf(LessThanDustThresholdError)
@@ -391,8 +390,8 @@ describe("OnChainPaymentFlowBuilder", () => {
                   })
                   .withConversion(withConversionArgs)
                   .withMinerFee({
-                    minerFee: estimateRes.fee,
                     feeRate: estimateRes.feeRate,
+                    minerFee: estimateRes.fee,
                     speed,
                   })
                 expect(paymentAbove).not.toBeInstanceOf(Error)
@@ -770,7 +769,8 @@ describe("OnChainPaymentFlowBuilder", () => {
         if (thresholdImbalanceAmount instanceof Error) throw thresholdImbalanceAmount
 
         const onChainFees = OnChainFees({
-          onchain: feeConfig.onchain,
+          feeRatioAsBasisPoints: feeConfig.withdrawRatioAsBasisPoints,
+          thresholdImbalance: thresholdImbalanceAmount,
         })
 
         const amountCurrencyCases = [
@@ -812,7 +812,7 @@ describe("OnChainPaymentFlowBuilder", () => {
                   }
 
                   it("correctly applies miner, bank and imbalance fees", async () => {
-                    const speed = PayoutSpeed.Slow
+                    const speed = PayoutSpeed.Fast
                     const estimateRes = {
                       fee: { amount: 300n, currency: WalletCurrency.Btc },
                       feeRate: 10,
@@ -820,8 +820,8 @@ describe("OnChainPaymentFlowBuilder", () => {
                     const payment = await withAmountBuilder
                       .withConversion(withConversionArgs)
                       .withMinerFee({
-                        minerFee: estimateRes.fee,
                         feeRate: estimateRes.feeRate,
+                        minerFee: estimateRes.fee,
                         speed,
                       })
                     if (payment instanceof Error) throw payment
@@ -864,11 +864,16 @@ describe("OnChainPaymentFlowBuilder", () => {
                       )
                     if (imbalanceForWallet instanceof Error) throw imbalanceForWallet
 
+                    const imbalance = await convertForUsdWalletToBtcAddress.btcFromUsd({
+                      amount: imbalanceForWallet.amount,
+                      currency: WalletCurrency.Usd,
+                    })
+
                     const withdrawalFees = onChainFees.withdrawalFee({
                       minerFee: estimateRes.fee,
-                      feeRate: estimateRes.feeRate,
                       amount: btcPaymentAmount,
-                      speed,
+                      minBankFee,
+                      imbalance,
                     })
                     if (withdrawalFees instanceof Error) throw withdrawalFees
                     const btcProtocolAndBankFee = withdrawalFees.totalFee
@@ -911,15 +916,15 @@ describe("OnChainPaymentFlowBuilder", () => {
                     const speed = PayoutSpeed.Fast
                     const estimateRes = {
                       fee: { amount: 300n, currency: WalletCurrency.Btc },
-                      feeRate: 5,
+                      feeRate: 10,
                     }
                     const paymentLowest = await withUsdWalletBuilder
                       .withoutRecipientWallet()
                       .withAmount({ amount: BigInt(1), currency: amountCurrency })
                       .withConversion(withConversionArgs)
                       .withMinerFee({
-                        minerFee: estimateRes.fee,
                         feeRate: estimateRes.feeRate,
+                        minerFee: estimateRes.fee,
                         speed,
                       })
                     expect(paymentLowest).toBeInstanceOf(LessThanDustThresholdError)
@@ -932,8 +937,8 @@ describe("OnChainPaymentFlowBuilder", () => {
                       })
                       .withConversion(withConversionArgs)
                       .withMinerFee({
-                        minerFee: estimateRes.fee,
                         feeRate: estimateRes.feeRate,
+                        minerFee: estimateRes.fee,
                         speed,
                       })
                     expect(paymentBelow).toBeInstanceOf(LessThanDustThresholdError)
@@ -950,8 +955,8 @@ describe("OnChainPaymentFlowBuilder", () => {
                       })
                       .withConversion(withConversionArgs)
                       .withMinerFee({
-                        minerFee: estimateRes.fee,
                         feeRate: estimateRes.feeRate,
+                        minerFee: estimateRes.fee,
                         speed,
                       })
                     expect(paymentAbove).not.toBeInstanceOf(Error)
@@ -1249,10 +1254,10 @@ describe("OnChainPaymentFlowBuilder", () => {
     describe("zero-value uncheckedAmount", () => {
       it("returns a ValidationError", async () => {
         const isIntraLedger = false
-        const speed = PayoutSpeed.Medium
+        const speed = PayoutSpeed.Slow
         const estimateRes = {
           fee: { amount: 300n, currency: WalletCurrency.Btc },
-          feeRate: 3,
+          feeRate: 10,
         }
 
         const payment = await OnChainPaymentFlowBuilder({
@@ -1271,8 +1276,8 @@ describe("OnChainPaymentFlowBuilder", () => {
           .withAmount({ amount: BigInt(0), currency: amountCurrency })
           .withConversion(withConversionArgs)
           .withMinerFee({
-            minerFee: estimateRes.fee,
             feeRate: estimateRes.feeRate,
+            minerFee: estimateRes.fee,
             speed,
           })
 

@@ -13,16 +13,31 @@ import { getFeesConfig } from "@/config"
 import {
   AmountCalculator,
   ONE_CENT,
+  paymentAmountFromNumber,
   ValidationError,
   WalletCurrency,
   ZERO_BANK_FEE,
 } from "@/domain/shared"
 import { LessThanDustThresholdError, SelfPaymentError } from "@/domain/errors"
-import { OnChainFees, PaymentInitiationMethod, SettlementMethod } from "@/domain/wallets"
+import { ImbalanceCalculator } from "@/domain/ledger/imbalance-calculator"
+import {
+  OnChainExpDecayFees,
+  OnChainFees,
+  PaymentInitiationMethod,
+  SettlementMethod,
+  WithdrawalFeePriceMethod,
+} from "@/domain/wallets"
 
 const calc = AmountCalculator()
 const feeConfig = getFeesConfig()
 const onChainFees = OnChainFees({
+  feeRatioAsBasisPoints: feeConfig.withdrawRatioAsBasisPoints,
+  thresholdImbalance: {
+    amount: BigInt(feeConfig.withdrawThreshold),
+    currency: WalletCurrency.Btc,
+  },
+})
+const onChainExpDecayFees = OnChainExpDecayFees({
   onchain: feeConfig.onchain,
 })
 
@@ -439,12 +454,43 @@ const OPFBWithConversion = <S extends WalletCurrency, R extends WalletCurrency>(
     })
     if (priceRatio instanceof Error) return priceRatio
 
-    const feeAmounts = onChainFees.withdrawalFee({
-      minerFee,
-      amount: state.btcProposedAmount,
-      speed,
-      feeRate,
+    const minBankFee = paymentAmountFromNumber({
+      amount: state.senderWithdrawFee || feeConfig.withdrawDefaultMin,
+      currency: WalletCurrency.Btc,
     })
+    if (minBankFee instanceof Error) return minBankFee
+
+    const imbalanceCalculator = ImbalanceCalculator({
+      method: feeConfig.withdrawMethod,
+      netInVolumeAmountLightningFn: state.netInVolumeAmountLightningFn,
+      netInVolumeAmountOnChainFn: state.netInVolumeAmountOnChainFn,
+      sinceDaysAgo: feeConfig.withdrawDaysLookback,
+    })
+    const imbalanceForWallet = await imbalanceCalculator.getSwapOutImbalanceAmount<S>({
+      id: state.senderWalletId,
+      currency: state.senderWalletCurrency,
+      accountId: state.senderAccountId,
+    })
+    if (imbalanceForWallet instanceof Error) return imbalanceForWallet
+
+    const imbalance =
+      imbalanceForWallet.currency === WalletCurrency.Btc
+        ? (imbalanceForWallet as BtcPaymentAmount)
+        : priceRatio.convertFromUsd(imbalanceForWallet as UsdPaymentAmount)
+
+    const feeAmounts =
+      feeConfig.withdrawMethod === WithdrawalFeePriceMethod.exponentialDecay
+        ? onChainExpDecayFees.expDecayFee({
+            amount: state.btcProposedAmount,
+            feeRate,
+            speed,
+          })
+        : onChainFees.withdrawalFee({
+            amount: state.btcProposedAmount,
+            minerFee,
+            minBankFee,
+            imbalance,
+          })
 
     // Calculate amounts & fees
     const btcProtocolAndBankFee = feeAmounts.totalFee

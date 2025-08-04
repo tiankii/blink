@@ -204,11 +204,22 @@ type DepositFeeCalculator = {
 }
 
 type OnchainWithdrawalConfig = {
+  thresholdImbalance: BtcPaymentAmount
+  feeRatioAsBasisPoints: bigint
+}
+
+type OnchainExpDecayConfig = {
   onchain: OnchainFeesConfig
 }
 
 type OnChainWithdrawalFeeArgs = {
   minerFee: BtcPaymentAmount
+  minBankFee: BtcPaymentAmount
+  imbalance: BtcPaymentAmount
+  amount: BtcPaymentAmount
+}
+
+type OnChainFeeExpDecayArgs = {
   amount: BtcPaymentAmount
   speed: PayoutSpeed
   feeRate: number
@@ -223,6 +234,13 @@ type OnChainFeeCalculator = {
     bankFee: BtcPaymentAmount
   }
   intraLedgerFees(): PaymentAmountInAllCurrencies
+}
+
+type OnChainFeeExpDecayCalculator = {
+  expDecayFee(args: OnChainFeeExpDecayArgs): {
+    totalFee: BtcPaymentAmount
+    bankFee: BtcPaymentAmount
+  }
   calculateTransactionSize: (inputCount: number, outputCount: number) => number
   calculateCostToBank: CostToBankCalculator
   calculateBaseMultiplier: BaseMultiplierCalculator
