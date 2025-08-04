@@ -2,24 +2,27 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'fix(core): contact mongoose update method dont updatedAt (#164)...'
-      sha: caf3131ab1d2f8decd530e0e89fb6ee908bc7acc
+      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1247
+        (#167)...'
+      sha: e63fd98b87cf069710b5ac087750df224b38d0f3
       tags:
-      - 0.21.77
+      - 0.21.77-2-ge63fd98b8
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'fix(core): contact mongoose update method dont updatedAt (#164)...'
-      sha: caf3131ab1d2f8decd530e0e89fb6ee908bc7acc
+      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1247
+        (#167)...'
+      sha: e63fd98b87cf069710b5ac087750df224b38d0f3
       tags:
-      - 0.21.77
+      - 0.21.77-2-ge63fd98b8
     path: schemas
   - git:
-      commitTitle: 'fix(core): contact mongoose update method dont updatedAt (#164)...'
-      sha: caf3131ab1d2f8decd530e0e89fb6ee908bc7acc
+      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1247
+        (#167)...'
+      sha: e63fd98b87cf069710b5ac087750df224b38d0f3
       tags:
-      - 0.21.77
+      - 0.21.77-2-ge63fd98b8
     path: gql
   path: graphql
 kind: LockConfig
