@@ -2,27 +2,24 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1256
-        (#176)...'
-      sha: d1ae74409b23d7e637e2e2b34bd4ef51b40f4cfe
+      commitTitle: 'fix(core): unset contacts from accounts (#124)...'
+      sha: eb20b5c238f6598ec305ead2553163c2286efb99
       tags:
-      - 0.21.79-2-gd1ae74409
+      - 0.21.80-1-geb20b5c23
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1256
-        (#176)...'
-      sha: d1ae74409b23d7e637e2e2b34bd4ef51b40f4cfe
+      commitTitle: 'fix(core): unset contacts from accounts (#124)...'
+      sha: eb20b5c238f6598ec305ead2553163c2286efb99
       tags:
-      - 0.21.79-2-gd1ae74409
+      - 0.21.80-1-geb20b5c23
     path: schemas
   - git:
-      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1256
-        (#176)...'
-      sha: d1ae74409b23d7e637e2e2b34bd4ef51b40f4cfe
+      commitTitle: 'fix(core): unset contacts from accounts (#124)...'
+      sha: eb20b5c238f6598ec305ead2553163c2286efb99
       tags:
-      - 0.21.79-2-gd1ae74409
+      - 0.21.80-1-geb20b5c23
     path: gql
   path: graphql
 kind: LockConfig
