@@ -2,24 +2,27 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'fix(core): update level for MissingTypePhoneProviderError (#180)'
-      sha: 66a20b9b97e89032baf31052f128204656b100c3
+      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1259
+        (#181)...'
+      sha: 4ba8dbee77326049081a4d05145f16a8634abbc8
       tags:
-      - 0.21.82-3-g66a20b9b9
+      - 0.21.83-1-g4ba8dbee7
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'fix(core): update level for MissingTypePhoneProviderError (#180)'
-      sha: 66a20b9b97e89032baf31052f128204656b100c3
+      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1259
+        (#181)...'
+      sha: 4ba8dbee77326049081a4d05145f16a8634abbc8
       tags:
-      - 0.21.82-3-g66a20b9b9
+      - 0.21.83-1-g4ba8dbee7
     path: schemas
   - git:
-      commitTitle: 'fix(core): update level for MissingTypePhoneProviderError (#180)'
-      sha: 66a20b9b97e89032baf31052f128204656b100c3
+      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1259
+        (#181)...'
+      sha: 4ba8dbee77326049081a4d05145f16a8634abbc8
       tags:
-      - 0.21.82-3-g66a20b9b9
+      - 0.21.83-1-g4ba8dbee7
     path: gql
   path: graphql
 kind: LockConfig
