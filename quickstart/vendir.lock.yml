@@ -2,27 +2,24 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1259
-        (#181)...'
-      sha: 4ba8dbee77326049081a4d05145f16a8634abbc8
+      commitTitle: 'fix(core): validate empty walletIds array (#183)'
+      sha: ca3376e4d5f0b00eda82b546036f85ad9aa01582
       tags:
-      - 0.21.83-1-g4ba8dbee7
+      - 0.21.86
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1259
-        (#181)...'
-      sha: 4ba8dbee77326049081a4d05145f16a8634abbc8
+      commitTitle: 'fix(core): validate empty walletIds array (#183)'
+      sha: ca3376e4d5f0b00eda82b546036f85ad9aa01582
       tags:
-      - 0.21.83-1-g4ba8dbee7
+      - 0.21.86
     path: schemas
   - git:
-      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1259
-        (#181)...'
-      sha: 4ba8dbee77326049081a4d05145f16a8634abbc8
+      commitTitle: 'fix(core): validate empty walletIds array (#183)'
+      sha: ca3376e4d5f0b00eda82b546036f85ad9aa01582
       tags:
-      - 0.21.83-1-g4ba8dbee7
+      - 0.21.86
     path: gql
   path: graphql
 kind: LockConfig
