@@ -2,27 +2,24 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1263
-        (#187)...'
-      sha: b73a1835d0fa5b607fbd0d794868e1464f1db731
+      commitTitle: 'perf: update payment flow indexes (#188)'
+      sha: d3889cf3105f28c2e374c81e9fd702027132a5dc
       tags:
-      - 0.21.87-2-gb73a1835d
+      - 0.21.88-2-gd3889cf31
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1263
-        (#187)...'
-      sha: b73a1835d0fa5b607fbd0d794868e1464f1db731
+      commitTitle: 'perf: update payment flow indexes (#188)'
+      sha: d3889cf3105f28c2e374c81e9fd702027132a5dc
       tags:
-      - 0.21.88
+      - 0.21.88-2-gd3889cf31
     path: schemas
   - git:
-      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1263
-        (#187)...'
-      sha: b73a1835d0fa5b607fbd0d794868e1464f1db731
+      commitTitle: 'perf: update payment flow indexes (#188)'
+      sha: d3889cf3105f28c2e374c81e9fd702027132a5dc
       tags:
-      - 0.21.88
+      - 0.21.88-2-gd3889cf31
     path: gql
   path: graphql
 kind: LockConfig
