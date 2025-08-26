@@ -2,24 +2,27 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'fix(core): update telegram webhook http status code (#196)...'
-      sha: 3c28c47c81b6cf651338f864e6ac9d8bc2e6278f
+      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1270
+        (#197)...'
+      sha: 51e1fcd7cf7522ca034b2d35f6a31a72faf55a6f
       tags:
-      - 0.21.90-2-g3c28c47c8
+      - 0.21.92
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'fix(core): update telegram webhook http status code (#196)...'
-      sha: 3c28c47c81b6cf651338f864e6ac9d8bc2e6278f
+      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1270
+        (#197)...'
+      sha: 51e1fcd7cf7522ca034b2d35f6a31a72faf55a6f
       tags:
-      - 0.21.90-2-g3c28c47c8
+      - 0.21.92
     path: schemas
   - git:
-      commitTitle: 'fix(core): update telegram webhook http status code (#196)...'
-      sha: 3c28c47c81b6cf651338f864e6ac9d8bc2e6278f
+      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1270
+        (#197)...'
+      sha: 51e1fcd7cf7522ca034b2d35f6a31a72faf55a6f
       tags:
-      - 0.21.90-2-g3c28c47c8
+      - 0.21.92
     path: gql
   path: graphql
 kind: LockConfig
