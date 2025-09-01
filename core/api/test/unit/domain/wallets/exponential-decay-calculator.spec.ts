@@ -66,7 +66,7 @@ describe("OnChainExpDecayFees", () => {
         "Fast, feeRate=$feeRate => multiplier $expectedMultiplier",
         ({ feeRate, expectedMultiplier }) => {
           expect(
-            feeCalculator.calculateBaseMultiplier(PayoutSpeed.Fast, feeRate),
+            feeCalculator.calculateBaseMultiplier({ speed: PayoutSpeed.Fast, feeRate }),
           ).toBeCloseTo(expectedMultiplier, 6)
         },
       )
@@ -77,7 +77,7 @@ describe("OnChainExpDecayFees", () => {
         "Medium, feeRate=$feeRate => multiplier $expectedMultiplier",
         ({ feeRate, expectedMultiplier }) => {
           expect(
-            feeCalculator.calculateBaseMultiplier(PayoutSpeed.Medium, feeRate),
+            feeCalculator.calculateBaseMultiplier({ speed: PayoutSpeed.Medium, feeRate }),
           ).toBeCloseTo(expectedMultiplier, 6)
         },
       )
@@ -88,7 +88,7 @@ describe("OnChainExpDecayFees", () => {
         "Slow, feeRate=$feeRate => multiplier $expectedMultiplier",
         ({ feeRate, expectedMultiplier }) => {
           expect(
-            feeCalculator.calculateBaseMultiplier(PayoutSpeed.Slow, feeRate),
+            feeCalculator.calculateBaseMultiplier({ speed: PayoutSpeed.Slow, feeRate }),
           ).toBeCloseTo(expectedMultiplier, 6)
         },
       )
