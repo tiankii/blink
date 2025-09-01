@@ -1,4 +1,3 @@
-import { PayoutSpeed } from "@/domain/bitcoin/onchain"
 import { WalletCurrency, ZERO_SATS } from "@/domain/shared"
 
 export const OnChainExpDecayFees = ({
@@ -8,12 +7,15 @@ export const OnChainExpDecayFees = ({
     amount,
     speed,
     feeRate,
+    minerFee,
   }: {
     amount: BtcPaymentAmount
+    minerFee: BtcPaymentAmount
     speed: PayoutSpeed
     feeRate: number
   }) => {
     const satoshis = Number(amount.amount)
+    const minerCost = Number(minerFee.amount)
 
     if (feeRate <= 0) {
       return {
@@ -24,10 +26,9 @@ export const OnChainExpDecayFees = ({
 
     const dynamicRate = calculateDynamicFeeRate(satoshis, speed, feeRate)
     const baseMultiplier = calculateBaseMultiplier(speed, feeRate)
-    const bankCost = calculateCostToBank(satoshis, speed, feeRate)
 
     const bankFee: BtcPaymentAmount = {
-      amount: BigInt(Math.round(satoshis * dynamicRate + bankCost * baseMultiplier)),
+      amount: BigInt(Math.round(satoshis * dynamicRate + minerCost * baseMultiplier)),
       currency: WalletCurrency.Btc,
     }
 
@@ -36,34 +37,6 @@ export const OnChainExpDecayFees = ({
       bankFee,
     }
   }
-
-  const createThresholdBasedCalculator =
-    (
-      thresholds: readonly { max: number; count: number }[],
-      defaultCount: number,
-    ): InputCountCalculator =>
-    (amount: number) => {
-      const threshold = thresholds.find(({ max }) => amount < max)
-      return threshold?.count ?? defaultCount
-    }
-
-  const calculateRegularInputCount: InputCountCalculator = createThresholdBasedCalculator(
-    onchain.thresholds.regular,
-    onchain.thresholds.defaults.regular,
-  )
-
-  const calculateBatchInputCount: InputCountCalculator = createThresholdBasedCalculator(
-    onchain.thresholds.batch,
-    onchain.thresholds.defaults.batch,
-  )
-
-  const calculateTransactionSizeSpec: TransactionSizeCalculator = (spec) => {
-    const { baseSize, inputSize, outputSize } = onchain.transaction
-    return baseSize + spec.inputCount * inputSize + spec.outputCount * outputSize
-  }
-
-  const calculateTransactionSize = (inputCount: number, outputCount: number): number =>
-    calculateTransactionSizeSpec({ inputCount, outputCount })
 
   const calculateExponentialDecay = (
     amount: number,
@@ -113,36 +86,8 @@ export const OnChainExpDecayFees = ({
     return factors[speed] / feeRate + offsets[speed]
   }
 
-  const createTransactionSpec = (
-    amount: number,
-    speed: PayoutSpeed,
-  ): TransactionSpecification => {
-    const { outputs } = onchain.transaction
-
-    if (speed === PayoutSpeed.Slow) {
-      return {
-        inputCount: calculateBatchInputCount(amount),
-        outputCount: outputs.batch,
-      }
-    }
-
-    return {
-      inputCount: calculateRegularInputCount(amount),
-      outputCount: outputs.regular,
-    }
-  }
-
-  const calculateCostToBank: CostToBankCalculator = (amount, speed, feeRate) => {
-    const spec = createTransactionSpec(amount, speed)
-    const size = calculateTransactionSizeSpec(spec)
-
-    return speed === PayoutSpeed.Slow ? Math.round((size * feeRate) / 10) : size * feeRate
-  }
-
   return {
     expDecayFee,
-    calculateCostToBank,
     calculateBaseMultiplier,
-    calculateTransactionSize,
   }
 }

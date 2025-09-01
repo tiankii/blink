@@ -196,41 +196,6 @@ fees:
       networkFeeRange:
         min: 1
         max: 2000
-    thresholds:
-      regular:
-        - max: 1
-          count: 0
-        - max: 500000
-          count: 1
-        - max: 3000000
-          count: 2
-        - max: 10000000
-          count: 3
-        - max: 22000000
-          count: 4
-        - max: 70000000
-          count: 5
-      batch:
-        - max: 500000
-          count: 3
-        - max: 3000000
-          count: 4
-        - max: 10000000
-          count: 5
-        - max: 22000000
-          count: 6
-        - max: 70000000
-          count: 7
-      defaults:
-        regular: 6
-        batch: 8
-    transaction:
-      baseSize: 11
-      inputSize: 68
-      outputSize: 31
-      outputs:
-        regular: 2
-        batch: 11
     multiplier:
       offsets:
         fast: 1.3

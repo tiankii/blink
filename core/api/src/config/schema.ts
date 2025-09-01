@@ -642,65 +642,6 @@ export const configSchema = {
               },
               additionalProperties: false,
             },
-            thresholds: {
-              type: "object",
-              properties: {
-                regular: {
-                  type: "array",
-                  items: {
-                    type: "object",
-                    properties: {
-                      max: { type: "integer" },
-                      count: { type: "integer" },
-                    },
-                    required: ["max", "count"],
-                    additionalProperties: false,
-                  },
-                },
-                batch: {
-                  type: "array",
-                  items: {
-                    type: "object",
-                    properties: {
-                      max: { type: "integer" },
-                      count: { type: "integer" },
-                    },
-                    required: ["max", "count"],
-                    additionalProperties: false,
-                  },
-                },
-                defaults: {
-                  type: "object",
-                  properties: {
-                    regular: { type: "integer" },
-                    batch: { type: "integer" },
-                  },
-                  required: ["regular", "batch"],
-                  additionalProperties: false,
-                },
-              },
-              required: ["regular", "batch", "defaults"],
-              additionalProperties: false,
-            },
-            transaction: {
-              type: "object",
-              properties: {
-                baseSize: { type: "integer" },
-                inputSize: { type: "integer" },
-                outputSize: { type: "integer" },
-                outputs: {
-                  type: "object",
-                  properties: {
-                    regular: { type: "integer" },
-                    batch: { type: "integer" },
-                  },
-                  required: ["regular", "batch"],
-                  additionalProperties: false,
-                },
-              },
-              required: ["baseSize", "inputSize", "outputSize", "outputs"],
-              additionalProperties: false,
-            },
             multiplier: {
               type: "object",
               properties: {
@@ -742,13 +683,7 @@ export const configSchema = {
               additionalProperties: false,
             },
           },
-          required: [
-            "decay",
-            "thresholds",
-            "transaction",
-            "multiplier",
-            "decayConstants",
-          ],
+          required: ["decay", "multiplier", "decayConstants"],
           additionalProperties: false,
         },
       },
@@ -789,30 +724,6 @@ export const configSchema = {
             minSats: 21000,
             exponentialFactor: 21,
             networkFeeRange: { min: 1, max: 2000 },
-          },
-          thresholds: {
-            regular: [
-              { max: 1, count: 0 },
-              { max: 500000, count: 1 },
-              { max: 3000000, count: 2 },
-              { max: 10000000, count: 3 },
-              { max: 22000000, count: 4 },
-              { max: 70000000, count: 5 },
-            ],
-            batch: [
-              { max: 500000, count: 3 },
-              { max: 3000000, count: 4 },
-              { max: 10000000, count: 5 },
-              { max: 22000000, count: 6 },
-              { max: 70000000, count: 7 },
-            ],
-            defaults: { regular: 6, batch: 8 },
-          },
-          transaction: {
-            baseSize: 11,
-            inputSize: 68,
-            outputSize: 31,
-            outputs: { regular: 2, batch: 11 },
           },
           multiplier: {
             offsets: { fast: 1.3, medium: 1.1, slow: 1.1 },
