@@ -47,17 +47,6 @@ type OnchainFeesConfig = {
     exponentialFactor: number
     networkFeeRange: { min: number; max: number }
   }
-  thresholds: {
-    regular: { max: number; count: number }[]
-    batch: { max: number; count: number }[]
-    defaults: { regular: number; batch: number }
-  }
-  transaction: {
-    baseSize: number
-    inputSize: number
-    outputSize: number
-    outputs: { regular: number; batch: number }
-  }
   multiplier: {
     offsets: Record<PayoutSpeed, number>
     factors: Record<PayoutSpeed, number>

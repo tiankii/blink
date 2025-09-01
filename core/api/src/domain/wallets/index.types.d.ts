@@ -221,6 +221,7 @@ type OnChainWithdrawalFeeArgs = {
 
 type OnChainFeeExpDecayArgs = {
   amount: BtcPaymentAmount
+  minerFee: BtcPaymentAmount
   speed: PayoutSpeed
   feeRate: number
 }
@@ -241,8 +242,6 @@ type OnChainFeeExpDecayCalculator = {
     totalFee: BtcPaymentAmount
     bankFee: BtcPaymentAmount
   }
-  calculateTransactionSize: (inputCount: number, outputCount: number) => number
-  calculateCostToBank: CostToBankCalculator
   calculateBaseMultiplier: BaseMultiplierCalculator
 }
 

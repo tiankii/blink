@@ -482,6 +482,7 @@ const OPFBWithConversion = <S extends WalletCurrency, R extends WalletCurrency>(
       feeConfig.withdrawMethod === WithdrawalFeePriceMethod.exponentialDecay
         ? onChainExpDecayFees.expDecayFee({
             amount: state.btcProposedAmount,
+            minerFee,
             feeRate,
             speed,
           })
