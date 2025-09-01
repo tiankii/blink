@@ -38,7 +38,7 @@ type SettlementViaIntraledger = {
 
 type SettlementViaLn = {
   readonly type: "lightning"
-  readonly revealedPreImage: RevealedPreImage | undefined // is sometimes added by dataloader in resolver
+  readonly revealedPreImage: RevealedPreImage | undefined
 }
 
 type SettlementViaOnChainIncoming = {
@@ -226,6 +226,30 @@ type OnChainFeeExpDecayArgs = {
   feeRate: number
 }
 
+type ExponentialDecayArgs = {
+  amount: number
+  minRate: number
+  maxRate: number
+  threshold: number
+  minAmount: number
+  exponentialFactor: number
+}
+
+type NormalizedFactorArgs = {
+  feeRate: number
+}
+
+type DynamicRateArgs = {
+  amount: number
+  speed: PayoutSpeed
+  feeRate: number
+}
+
+type BaseMultiplierArgs = {
+  speed: PayoutSpeed
+  feeRate: number
+}
+
 type WithdrawalFeePriceMethod =
   (typeof import("./index").WithdrawalFeePriceMethod)[keyof typeof import("./index").WithdrawalFeePriceMethod]
 
@@ -283,12 +307,8 @@ type CostToBankCalculator = (
   speed: PayoutSpeed,
   feeRate: number,
 ) => number
-type DynamicRateCalculator = (
-  amount: number,
-  speed: PayoutSpeed,
-  feeRate: number,
-) => number
-type BaseMultiplierCalculator = (speed: PayoutSpeed, feeRate: number) => number
+type DynamicRateCalculator = (args: DynamicRateArgs) => number
+type BaseMultiplierCalculator = (args: BaseMultiplierArgs) => number
 
 interface FeeDecayCurveParameters {
   readonly minRate: number
