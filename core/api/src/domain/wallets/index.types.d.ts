@@ -209,7 +209,8 @@ type OnchainWithdrawalConfig = {
 }
 
 type OnchainExpDecayConfig = {
-  onchain: OnchainFeesConfig
+  exponentialDecayConfig: ExponentialDecayFeesConfig
+  payoutQueueConfig: PayoutQueueConfig[]
 }
 
 type OnChainWithdrawalFeeArgs = {

@@ -9,7 +9,7 @@ import { WalletPriceRatio } from "./price-ratio"
 
 import { OnChainPaymentFlow } from "./payment-flow"
 
-import { getFeesConfig } from "@/config"
+import { getFeesConfig, getBriaPartialConfigFromYaml } from "@/config"
 import {
   AmountCalculator,
   ONE_CENT,
@@ -37,8 +37,10 @@ const onChainFees = OnChainFees({
     currency: WalletCurrency.Btc,
   },
 })
+const payoutQueueConfig = getBriaPartialConfigFromYaml()
 const onChainExpDecayFees = OnChainExpDecayFees({
-  onchain: feeConfig.onchain,
+  exponentialDecayConfig: feeConfig.exponentialDecayMethod,
+  payoutQueueConfig: payoutQueueConfig.payoutQueues,
 })
 
 export const OnChainPaymentFlowBuilder = <S extends WalletCurrency>(

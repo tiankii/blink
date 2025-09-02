@@ -1,3 +1,5 @@
+import { PayoutSpeed } from "@/domain/bitcoin/onchain"
+
 type FeeCase = {
   feeRate: number
   satsAmount: number
@@ -10,38 +12,63 @@ type MultiplierCase = {
   expectedMultiplier: number
 }
 
-export const onchainFeeSettingsMock: OnchainFeesConfig = {
-  decay: {
-    fast: {
-      minRate: 0.0075,
-      maxRate: 0.04,
-      divisor: 30000,
-      targetRate: 0.005,
-    },
-    medium: {
-      minRate: 0.005,
-      maxRate: 0.03,
-      divisor: 20000,
-      targetRate: 0.0025,
-    },
-    slow: {
-      minRate: 0.003125,
-      maxRate: 0.02,
-      divisor: 12500,
-      targetRate: 0.001,
-    },
-  },
-  decayConstants: {
-    threshold: 4000000,
-    minSats: 21000,
-    exponentialFactor: 21,
-    networkFeeRange: { min: 1, max: 2000 },
-  },
-  multiplier: {
-    offsets: { fast: 1.3, medium: 1.1, slow: 1.1 },
-    factors: { fast: 2, medium: 1, slow: 2 },
-  },
+export const exponentialDecayConfigMock: ExponentialDecayFeesConfig = {
+  threshold: 4000000,
+  minSats: 21000,
+  exponentialFactor: 21,
+  networkFeeRange: { min: 1, max: 2000 },
 }
+
+export const payoutQueueConfigMock: PayoutQueueConfig[] = [
+  {
+    speed: PayoutSpeed.Fast,
+    queueName: "fast-queue",
+    displayName: "Priority",
+    description: "Fast processing",
+    feeMethodConfig: {
+      exponentialDecay: {
+        minRate: 0.0075,
+        maxRate: 0.04,
+        divisor: 30000,
+        targetRate: 0.005,
+        offset: 1.3,
+        factor: 2,
+      },
+    },
+  },
+  {
+    speed: PayoutSpeed.Medium,
+    queueName: "medium-queue",
+    displayName: "Standard",
+    description: "Medium processing",
+    feeMethodConfig: {
+      exponentialDecay: {
+        minRate: 0.005,
+        maxRate: 0.03,
+        divisor: 20000,
+        targetRate: 0.0025,
+        offset: 1.1,
+        factor: 1,
+      },
+    },
+  },
+  {
+    speed: PayoutSpeed.Slow,
+    queueName: "slow-queue",
+    displayName: "Flexible",
+    description: "Slow processing",
+    feeMethodConfig: {
+      exponentialDecay: {
+        minRate: 0.003125,
+        maxRate: 0.02,
+        divisor: 12500,
+        targetRate: 0.001,
+        offset: 1.1,
+        factor: 2,
+      },
+    },
+  },
+]
 
 export const TRANSACTION_SIZE_MATRIX: number[][] = [
   // inputs:  1    2    3    4    5    6    7    8    9   10   11   12
