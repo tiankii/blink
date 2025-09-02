@@ -27,7 +27,6 @@ export const OnChainExpDecayFees = ({
 
     const dynamicRate = calculateDynamicFeeRate({ amount: satoshis, speed, feeRate })
     const baseMultiplier = calculateBaseMultiplier({ speed, feeRate })
-
     const bankFee: BtcPaymentAmount = {
       amount: BigInt(Math.round(satoshis * dynamicRate + minerCost * baseMultiplier)),
       currency: WalletCurrency.Btc,
@@ -60,6 +59,7 @@ export const OnChainExpDecayFees = ({
         exponentialFactor,
       })
     }
+
     return divisor / amount
   }
 
