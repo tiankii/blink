@@ -1,7 +1,8 @@
 import { WalletCurrency, ZERO_SATS } from "@/domain/shared"
 
 export const OnChainExpDecayFees = ({
-  onchain,
+  exponentialDecayConfig,
+  payoutQueueConfig,
 }: OnchainExpDecayConfig): OnChainFeeExpDecayCalculator => {
   const expDecayFee = ({
     amount,
@@ -46,7 +47,7 @@ export const OnChainExpDecayFees = ({
   }
 
   const calculateDecayRate: DecayRateCalculator = (amount, params) => {
-    const { threshold, minSats, exponentialFactor } = onchain.decayConstants
+    const { threshold, minSats, exponentialFactor } = exponentialDecayConfig
     const { minRate, maxRate, divisor } = params
 
     if (amount < threshold) {
@@ -59,19 +60,23 @@ export const OnChainExpDecayFees = ({
         exponentialFactor,
       })
     }
-
     return divisor / amount
   }
 
   const calculateNormalizedFactor = (args: NormalizedFactorArgs): number => {
     const { feeRate } = args
-    const { min, max } = onchain.decayConstants.networkFeeRange
+    const { min, max } = exponentialDecayConfig.networkFeeRange
     return (feeRate - min) / (max - min)
+  }
+
+  const getQueueConfigBySpeed = (speed: PayoutSpeed) => {
+    const queueConfig = payoutQueueConfig.find((queue) => queue.speed === speed)!
+    return queueConfig.feeMethodConfig.exponentialDecay
   }
 
   const calculateDynamicFeeRate: DynamicRateCalculator = (args: DynamicRateArgs) => {
     const { amount, speed, feeRate } = args
-    const { targetRate, ...decayParams } = onchain.decay[speed]
+    const { targetRate, ...decayParams } = getQueueConfigBySpeed(speed)
     const decay = calculateDecayRate(amount, decayParams)
     const normalizedFactor = calculateNormalizedFactor({ feeRate })
     return decay + normalizedFactor * (targetRate - decay)
@@ -81,8 +86,8 @@ export const OnChainExpDecayFees = ({
     args: BaseMultiplierArgs,
   ) => {
     const { speed, feeRate } = args
-    const { factors, offsets } = onchain.multiplier
-    return factors[speed] / feeRate + offsets[speed]
+    const { offset, factor } = getQueueConfigBySpeed(speed)
+    return factor / feeRate + offset
   }
 
   return {

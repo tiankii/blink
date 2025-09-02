@@ -5,11 +5,13 @@ import { OnChainExpDecayFees } from "@/domain/wallets"
 import {
   feeCapCasesMock,
   multiplierCasesMock,
-  onchainFeeSettingsMock,
+  exponentialDecayConfigMock,
+  payoutQueueConfigMock,
 } from "test/mocks/exponential-decay-calculator"
 
 const feeCalculator = OnChainExpDecayFees({
-  onchain: onchainFeeSettingsMock,
+  exponentialDecayConfig: exponentialDecayConfigMock,
+  payoutQueueConfig: payoutQueueConfigMock,
 })
 
 describe("OnChainExpDecayFees", () => {
