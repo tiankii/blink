@@ -2,24 +2,27 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'fix(core): add trim url validation (#198)'
-      sha: cfb4c39306874bbe566017f7d4f26b441e3f6d1f
+      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1279
+        (#211)...'
+      sha: b1440b3a4b9f3bd6d5d76a7d590dba442c9be9fd
       tags:
-      - 0.21.92-2-gcfb4c3930
+      - 0.21.93-1-gb1440b3a4
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'fix(core): add trim url validation (#198)'
-      sha: cfb4c39306874bbe566017f7d4f26b441e3f6d1f
+      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1279
+        (#211)...'
+      sha: b1440b3a4b9f3bd6d5d76a7d590dba442c9be9fd
       tags:
-      - 0.21.92-2-gcfb4c3930
+      - 0.21.93-1-gb1440b3a4
     path: schemas
   - git:
-      commitTitle: 'fix(core): add trim url validation (#198)'
-      sha: cfb4c39306874bbe566017f7d4f26b441e3f6d1f
+      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1279
+        (#211)...'
+      sha: b1440b3a4b9f3bd6d5d76a7d590dba442c9be9fd
       tags:
-      - 0.21.92-2-gcfb4c3930
+      - 0.21.93-1-gb1440b3a4
     path: gql
   path: graphql
 kind: LockConfig
