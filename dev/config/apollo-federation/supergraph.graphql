@@ -2311,6 +2311,7 @@ input UserEmailRegistrationInitiateInput
   @join__type(graph: PUBLIC)
 {
   email: EmailAddress!
+  requireUniqueEmail: Boolean = false
 }
 
 type UserEmailRegistrationInitiatePayload

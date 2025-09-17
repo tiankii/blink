@@ -2237,6 +2237,7 @@ export type UserEmailDeletePayload = {
 
 export type UserEmailRegistrationInitiateInput = {
   readonly email: Scalars['EmailAddress']['input'];
+  readonly requireUniqueEmail?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type UserEmailRegistrationInitiatePayload = {
