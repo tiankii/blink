@@ -2371,6 +2371,7 @@ input UserPhoneRegistrationInitiateInput
 {
   channel: PhoneCodeChannelType
   phone: Phone!
+  requireUniquePhone: Boolean = false
 }
 
 input UserPhoneRegistrationValidateInput

@@ -2280,6 +2280,7 @@ export type UserPhoneDeletePayload = {
 export type UserPhoneRegistrationInitiateInput = {
   readonly channel?: InputMaybe<PhoneCodeChannelType>;
   readonly phone: Scalars['Phone']['input'];
+  readonly requireUniquePhone?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type UserPhoneRegistrationValidateInput = {
