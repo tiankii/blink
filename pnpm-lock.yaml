@@ -1104,8 +1104,8 @@ importers:
         specifier: ^0.7.15
         version: 0.7.15
       '@ip1sms/disposable-phone-numbers':
-        specifier: ^2.1.1302
-        version: 2.1.1302
+        specifier: ^2.1.1303
+        version: 2.1.1303
       '@merqva/telegram-passport':
         specifier: ^1.0.2
         version: 1.0.2
@@ -5371,8 +5371,8 @@ packages:
   /@floating-ui/utils@0.2.10:
     resolution: {integrity: sha512-aGTxbpbg8/b5JfU1HXSrbH3wXZuLPJcNEcZQFMxLs3oSzgtVu6nFPkbbGGUvBcUjKV2YyB9Wxxabo+HEH9tcRQ==}
 
-  /@google-cloud/firestore@7.11.5:
-    resolution: {integrity: sha512-61xGOvRPi6Zg7b9JslD844dXRatwk+RtnXs4c4KtCdg30TkExRHx9QfJgnoIMvuffYBgDtzOdhvecUgTPboi/A==}
+  /@google-cloud/firestore@7.11.6:
+    resolution: {integrity: sha512-EW/O8ktzwLfyWBOsNuhRoMi8lrC3clHM5LVFhGvO1HCsLozCOOXRAlHrYBoE6HL42Sc8yYMuCb2XqcnJ4OOEpw==}
     engines: {node: '>=14.0.0'}
     requiresBuild: true
     dependencies:
@@ -7231,8 +7231,8 @@ packages:
     resolution: {integrity: sha512-Sx1pU8EM64o2BrqNpEO1CNLtKQwyhuXuqyfH7oGKCk+1a33d2r5saW8zNwm3j6BTExtjrv2BxTgzzkMwts6vGg==}
     dev: false
 
-  /@ip1sms/disposable-phone-numbers@2.1.1302:
-    resolution: {integrity: sha512-6DaJ3IiG5JUlag0ogK0cV4O8L9wBFBmvA/2S9T82aFlURlA70w1GkUmIMjklrpbhhAh9c+5Y+aeQI7aw3f8pbQ==}
+  /@ip1sms/disposable-phone-numbers@2.1.1303:
+    resolution: {integrity: sha512-v0WtHzPGAHlYCmBgSNvpXvL6IpRvCPOKZKD+0TM/9tryLKyJ5j84ubx7W7Q78t+5FzL8SnnE6ltwkyGvDubChQ==}
     dev: false
 
   /@isaacs/cliui@8.0.2:
@@ -16103,8 +16103,8 @@ packages:
     engines: {node: '>=6.0.0'}
     dev: true
 
-  /baseline-browser-mapping@2.8.6:
-    resolution: {integrity: sha512-wrH5NNqren/QMtKUEEJf7z86YjfqW/2uw3IL3/xpqZUC95SSVIFXYQeeGjL6FT/X68IROu6RMehZQS5foy2BXw==}
+  /baseline-browser-mapping@2.8.7:
+    resolution: {integrity: sha512-bxxN2M3a4d1CRoQC//IqsR5XrLh0IJ8TCv2x6Y9N0nckNz/rTjZB3//GGscZziZOxmjP55rzxg/ze7usFI9FqQ==}
     hasBin: true
     dev: true
 
@@ -16438,9 +16438,9 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      baseline-browser-mapping: 2.8.6
+      baseline-browser-mapping: 2.8.7
       caniuse-lite: 1.0.30001745
-      electron-to-chromium: 1.5.223
+      electron-to-chromium: 1.5.224
       node-releases: 2.0.21
       update-browserslist-db: 1.1.3(browserslist@4.26.2)
     dev: true
@@ -18496,8 +18496,8 @@ packages:
   /electron-to-chromium@1.5.178:
     resolution: {integrity: sha512-wObbz/ar3Bc6e4X5vf0iO8xTN8YAjN/tgiAOJLr7yjYFtP9wAjq8Mb5h0yn6kResir+VYx2DXBj9NNobs0ETSA==}
 
-  /electron-to-chromium@1.5.223:
-    resolution: {integrity: sha512-qKm55ic6nbEmagFlTFczML33rF90aU+WtrJ9MdTCThrcvDNdUHN4p6QfVN78U06ZmguqXIyMPyYhw2TrbDUwPQ==}
+  /electron-to-chromium@1.5.224:
+    resolution: {integrity: sha512-kWAoUu/bwzvnhpdZSIc6KUyvkI1rbRXMT0Eq8pKReyOyaPZcctMli+EgvcN1PAvwVc7Tdo4Fxi2PsLNDU05mdg==}
     dev: true
 
   /elliptic@6.6.1:
@@ -20554,7 +20554,7 @@ packages:
       node-forge: 1.3.1
       uuid: 10.0.0
     optionalDependencies:
-      '@google-cloud/firestore': 7.11.5
+      '@google-cloud/firestore': 7.11.6
       '@google-cloud/storage': 7.16.0
     transitivePeerDependencies:
       - encoding
