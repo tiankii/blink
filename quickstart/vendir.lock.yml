@@ -2,27 +2,24 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1308
-        (#251)...'
-      sha: 2f63e00adf659f01c5dcaef512b0847f056773fc
+      commitTitle: 'fix(voucher): validate pending status in onchain payments (#252)...'
+      sha: 4b3930cd092b3efe31d84fd27eb345e3d3d16576
       tags:
-      - 0.21.97-2-g2f63e00ad
+      - 0.21.98-2-g4b3930cd0
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1308
-        (#251)...'
-      sha: 2f63e00adf659f01c5dcaef512b0847f056773fc
+      commitTitle: 'fix(voucher): validate pending status in onchain payments (#252)...'
+      sha: 4b3930cd092b3efe31d84fd27eb345e3d3d16576
       tags:
-      - 0.21.97-2-g2f63e00ad
+      - 0.21.98-2-g4b3930cd0
     path: schemas
   - git:
-      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1308
-        (#251)...'
-      sha: 2f63e00adf659f01c5dcaef512b0847f056773fc
+      commitTitle: 'fix(voucher): validate pending status in onchain payments (#252)...'
+      sha: 4b3930cd092b3efe31d84fd27eb345e3d3d16576
       tags:
-      - 0.21.97-2-g2f63e00ad
+      - 0.21.99
     path: gql
   path: graphql
 kind: LockConfig
