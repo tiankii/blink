@@ -1104,8 +1104,8 @@ importers:
         specifier: ^0.7.15
         version: 0.7.15
       '@ip1sms/disposable-phone-numbers':
-        specifier: ^2.1.1311
-        version: 2.1.1311
+        specifier: ^2.1.1312
+        version: 2.1.1312
       '@merqva/telegram-passport':
         specifier: ^1.0.2
         version: 1.0.2
@@ -7231,8 +7231,8 @@ packages:
     resolution: {integrity: sha512-Sx1pU8EM64o2BrqNpEO1CNLtKQwyhuXuqyfH7oGKCk+1a33d2r5saW8zNwm3j6BTExtjrv2BxTgzzkMwts6vGg==}
     dev: false
 
-  /@ip1sms/disposable-phone-numbers@2.1.1311:
-    resolution: {integrity: sha512-bX4kKn1WQrGJ6fBHIqxX36gtaNVIlCzYbrSbzkJY/j+RgBJGWlJ1s4rwnW6ugW5i9V/18bKYjZdwofG+gfl57A==}
+  /@ip1sms/disposable-phone-numbers@2.1.1312:
+    resolution: {integrity: sha512-cNofPpCCkfHywEAsO6PrkEx7qDSgILds60O1C/LC+gyy5frKpDueHczh9yzhcGlAQ3Bf0DrwL07M5cWDFhIV1g==}
     dev: false
 
   /@isaacs/cliui@8.0.2:
@@ -16109,8 +16109,8 @@ packages:
     engines: {node: '>=6.0.0'}
     dev: true
 
-  /baseline-browser-mapping@2.8.10:
-    resolution: {integrity: sha512-uLfgBi+7IBNay8ECBO2mVMGZAc1VgZWEChxm4lv+TobGdG82LnXMjuNGo/BSSZZL4UmkWhxEHP2f5ziLNwGWMA==}
+  /baseline-browser-mapping@2.8.11:
+    resolution: {integrity: sha512-i+sRXGhz4+QW8aACZ3+r1GAKMt0wlFpeA8M5rOQd0HEYw9zhDrlx9Wc8uQ0IdXakjJRthzglEwfB/yqIjO6iDg==}
     hasBin: true
     dev: true
 
@@ -16444,10 +16444,10 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      baseline-browser-mapping: 2.8.10
+      baseline-browser-mapping: 2.8.11
       caniuse-lite: 1.0.30001747
-      electron-to-chromium: 1.5.229
-      node-releases: 2.0.21
+      electron-to-chromium: 1.5.230
+      node-releases: 2.0.23
       update-browserslist-db: 1.1.3(browserslist@4.26.3)
     dev: true
 
@@ -18502,8 +18502,8 @@ packages:
   /electron-to-chromium@1.5.178:
     resolution: {integrity: sha512-wObbz/ar3Bc6e4X5vf0iO8xTN8YAjN/tgiAOJLr7yjYFtP9wAjq8Mb5h0yn6kResir+VYx2DXBj9NNobs0ETSA==}
 
-  /electron-to-chromium@1.5.229:
-    resolution: {integrity: sha512-cwhDcZKGcT/rEthLRJ9eBlMDkh1sorgsuk+6dpsehV0g9CABsIqBxU4rLRjG+d/U6pYU1s37A4lSKrVc5lSQYg==}
+  /electron-to-chromium@1.5.230:
+    resolution: {integrity: sha512-A6A6Fd3+gMdaed9wX83CvHYJb4UuapPD5X5SLq72VZJzxHSY0/LUweGXRWmQlh2ln7KV7iw7jnwXK7dlPoOnHQ==}
     dev: true
 
   /elliptic@6.6.1:
@@ -25337,8 +25337,8 @@ packages:
   /node-releases@2.0.19:
     resolution: {integrity: sha512-xxOWJsBKtzAq7DY0J+DTzuz58K8e7sJbdgwkbMWQe8UYB6ekmsQ45q0M/tJDsGaZmbC+l7n57UV8Hl5tHxO9uw==}
 
-  /node-releases@2.0.21:
-    resolution: {integrity: sha512-5b0pgg78U3hwXkCM8Z9b2FJdPZlr9Psr9V2gQPESdGHqbntyFJKFW4r5TeWGFzafGY3hzs1JC62VEQMbl1JFkw==}
+  /node-releases@2.0.23:
+    resolution: {integrity: sha512-cCmFDMSm26S6tQSDpBCg/NR8NENrVPhAJSf+XbxBG4rPFaaonlEoE9wHQmun+cls499TQGSb7ZyPBRlzgKfpeg==}
     dev: true
 
   /node-source-walk@4.3.0:
