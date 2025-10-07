@@ -622,8 +622,17 @@ export const configSchema = {
             daysLookback: 30,
           },
         },
+        invitedAccount: {
+          type: "object",
+          properties: {
+            flatUsdCents: { type: "integer" },
+          },
+          required: ["flatUsdCents"],
+          additionalProperties: false,
+          default: { flatUsdCents: 15 },
+        },
       },
-      required: ["withdraw", "deposit"],
+      required: ["withdraw", "deposit", "invitedAccount"],
       additionalProperties: false,
       default: {
         withdraw: {
@@ -634,8 +643,10 @@ export const configSchema = {
           daysLookback: 30,
         },
         deposit: { defaultMin: 3000, threshold: 1000000, ratioAsBasisPoints: 30 },
+        invitedAccount: { flatUsdCents: 15 },
       },
     },
+
     onChainWallet: {
       type: "object",
       properties: {

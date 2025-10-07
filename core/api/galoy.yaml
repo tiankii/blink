@@ -172,6 +172,8 @@ fees:
     defaultMin: 3000
     threshold: 1000000
     ratioAsBasisPoints: 30
+  invitedAccount:
+    flatUsdCents: 15
   merchantDeposit:
     defaultMin: 3000
     threshold: 1000000

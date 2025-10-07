@@ -2,6 +2,7 @@ import { PartialResult } from "../partial-result"
 
 import { constructPaymentFlowBuilder, getPriceRatioForLimits } from "./helpers"
 
+import { getFeesConfig } from "@/config"
 import { decodeInvoice, defaultTimeToExpiryInSeconds } from "@/domain/bitcoin/lightning"
 import { checkedToWalletId } from "@/domain/wallets"
 import {
@@ -9,9 +10,15 @@ import {
   LnPaymentRequestZeroAmountRequiredError,
   SkipProbeForPubkeyError,
 } from "@/domain/payments"
+import { AccountStatus } from "@/domain/accounts"
+import { WalletCurrency } from "@/domain/shared"
 import { LndService } from "@/services/lnd"
 
-import { WalletsRepository, PaymentFlowStateRepository } from "@/services/mongoose"
+import {
+  WalletsRepository,
+  PaymentFlowStateRepository,
+  AccountsRepository,
+} from "@/services/mongoose"
 import { DealerPriceService } from "@/services/dealer-price"
 import { addAttributesToCurrentSpan } from "@/services/tracing"
 
@@ -21,6 +28,32 @@ import {
   checkTradeIntraAccountLimits,
   checkWithdrawalLimits,
 } from "@/app/accounts"
+
+const feesConfig = getFeesConfig()
+
+const getInvitedFee = async (
+  baseFee: PaymentAmount<WalletCurrency>,
+  accountId: AccountId,
+  dealer: IDealerPriceService,
+): Promise<PaymentAmount<WalletCurrency> | ApplicationError> => {
+  const account = await AccountsRepository().findById(accountId)
+  if (account instanceof Error || account?.status !== AccountStatus.Invited)
+    return baseFee
+
+  if (baseFee.currency === WalletCurrency.Usd) {
+    return {
+      currency: baseFee.currency,
+      amount: baseFee.amount + feesConfig.invitedAccountFlatUsdCents,
+    }
+  }
+
+  const sats = await dealer.getSatsFromCentsForFutureBuy({
+    amount: feesConfig.invitedAccountFlatUsdCents,
+    currency: WalletCurrency.Usd,
+  })
+  if (sats instanceof Error) return sats
+  return { currency: baseFee.currency, amount: baseFee.amount + sats.amount }
+}
 
 const getLightningFeeEstimation = async ({
   walletId,
@@ -216,12 +249,14 @@ const estimateLightningFee = async ({
       }
 
       PaymentFlowStateRepository(defaultTimeToExpiryInSeconds).persistNew(paymentFlow)
+
+      const baseFee = paymentFlow.protocolAndBankFeeInSenderWalletCurrency()
+      const feeOrErr = await getInvitedFee(baseFee, senderWallet.accountId, dealer)
+      if (feeOrErr instanceof Error) return PartialResult.err(feeOrErr)
+
       return routeResult instanceof SkipProbeForPubkeyError
-        ? PartialResult.ok(paymentFlow.protocolAndBankFeeInSenderWalletCurrency())
-        : PartialResult.partial(
-            paymentFlow.protocolAndBankFeeInSenderWalletCurrency(),
-            routeResult,
-          )
+        ? PartialResult.ok(feeOrErr)
+        : PartialResult.partial(feeOrErr, routeResult)
     }
 
     paymentFlow = await builder.withRoute(routeResult)
@@ -241,5 +276,9 @@ const estimateLightningFee = async ({
       persistedPayment,
     )
 
-  return PartialResult.ok(persistedPayment.protocolAndBankFeeInSenderWalletCurrency())
+  const baseFee = persistedPayment.protocolAndBankFeeInSenderWalletCurrency()
+  const feeOrErr = await getInvitedFee(baseFee, senderWallet.accountId, dealer)
+  if (feeOrErr instanceof Error) return PartialResult.err(feeOrErr)
+
+  return PartialResult.ok(feeOrErr)
 }

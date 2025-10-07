@@ -142,6 +142,9 @@ type YamlSchema = {
       daysLookback: number
       defaultMin: number
     }
+    invitedAccount: {
+      flatUsdCents: number
+    }
   }
   onChainWallet: {
     dustThreshold: number
