@@ -109,6 +109,29 @@ export const TwilioClient = (): IPhoneProviderService => {
     }
   }
 
+  const sendPlainSMS = async ({
+    to,
+    body,
+  }: {
+    to: PhoneNumber
+    body: string
+  }): Promise<true | PhoneProviderServiceError> => {
+    if (!messagingServiceSid) return true
+
+    try {
+      await client.messages.create({
+        to,
+        body,
+        messagingServiceSid,
+      })
+
+      return true
+    } catch (err) {
+      baseLogger.error({ err }, "impossible to send plain sms")
+      return handleCommonErrors(err)
+    }
+  }
+
   const validateDestination = async (
     phone: PhoneNumber,
   ): Promise<true | PhoneProviderServiceError> => {
@@ -205,6 +228,7 @@ export const TwilioClient = (): IPhoneProviderService => {
       validateVerify,
       initiateVerify,
       sendTemplatedSMS,
+      sendPlainSMS,
       validateDestination,
     },
   })

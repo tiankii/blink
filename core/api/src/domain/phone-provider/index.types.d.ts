@@ -31,4 +31,11 @@ interface IPhoneProviderService {
     contentSid: string
     contentVariables: Record<string, string>
   }): Promise<true | PhoneProviderServiceError>
+  sendPlainSMS({
+    to,
+    body,
+  }: {
+    to: PhoneNumber
+    body: string
+  }): Promise<true | PhoneProviderServiceError>
 }
