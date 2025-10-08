@@ -2,27 +2,24 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1315
-        (#260)...'
-      sha: da97a8a3ea81f6150fab0c1fab5d328e6f582a23
+      commitTitle: 'feat(core): add prelude as phone provider (#259)...'
+      sha: 1f3b927eae0ad446315623212f4577e1386bc6d6
       tags:
-      - 0.21.101-2-gda97a8a3e
+      - 0.21.102-2-g1f3b927ea
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1315
-        (#260)...'
-      sha: da97a8a3ea81f6150fab0c1fab5d328e6f582a23
+      commitTitle: 'feat(core): add prelude as phone provider (#259)...'
+      sha: 1f3b927eae0ad446315623212f4577e1386bc6d6
       tags:
-      - 0.21.101-2-gda97a8a3e
+      - 0.21.102-2-g1f3b927ea
     path: schemas
   - git:
-      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1315
-        (#260)...'
-      sha: da97a8a3ea81f6150fab0c1fab5d328e6f582a23
+      commitTitle: 'feat(core): add prelude as phone provider (#259)...'
+      sha: 1f3b927eae0ad446315623212f4577e1386bc6d6
       tags:
-      - 0.21.101-2-gda97a8a3e
+      - 0.21.102-2-g1f3b927ea
     path: gql
   path: graphql
 kind: LockConfig
