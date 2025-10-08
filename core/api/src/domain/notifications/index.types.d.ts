@@ -42,6 +42,7 @@ type NotificationRecipient = {
   level: AccountLevel
   status: AccountStatus
   phoneNumber?: PhoneNumber
+  language?: UserLanguageOrEmpty
 }
 
 type NotificatioSendTransactionArgs = {

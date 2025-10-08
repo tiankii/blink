@@ -60,6 +60,7 @@ import { PubSubService } from "@/services/pubsub"
 import { CallbackService } from "@/services/svix"
 import { wrapAsyncFunctionsToRunInSpan, wrapAsyncToRunInSpan } from "@/services/tracing"
 import { TwilioClient } from "@/services/twilio-service"
+import { translateText } from "@/services/translation"
 
 export const NotificationsService = (): INotificationsService => {
   const pubsub = PubSubService()
@@ -261,20 +262,23 @@ export const NotificationsService = (): INotificationsService => {
   }: NotificatioSendTransactionArgs): Promise<true | NotificationsServiceError> => {
     try {
       const { settlementCurrency, settlementAmount } = transaction
-      const { status, phoneNumber } = recipient
+      const { status, phoneNumber, language = "en" } = recipient
       if (status !== AccountStatus.Invited || !phoneNumber) return true
 
-      const { contentSid, contentVariables } = phonePaymentSmsTemplate({
+      const templateMessage = phonePaymentSmsTemplate({
         currency: settlementCurrency,
         amount: settlementAmount,
         phoneNumber,
       })
-      if (!contentSid) return true
 
-      const result = await TwilioClient().sendTemplatedSMS({
+      const translatedMessage =
+        language !== "en"
+          ? await translateText({ text: templateMessage, targetLang: language })
+          : templateMessage
+
+      const result = await TwilioClient().sendPlainSMS({
         to: phoneNumber,
-        contentSid,
-        contentVariables,
+        body: translatedMessage,
       })
       if (result instanceof Error) return result
 

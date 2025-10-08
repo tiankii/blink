@@ -3,8 +3,3 @@ type PhonePaymentTemplateParams = {
   currency: WalletCurrency
   phoneNumber: string
 }
-
-type SmsTemplateResponse = {
-  contentSid: string
-  contentVariables: Record<string, string>
-}
