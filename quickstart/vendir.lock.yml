@@ -2,24 +2,27 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'fix(core): remove is_trusted_user from prelude (#264)'
-      sha: b51cc366764055aa883da2b78ced80058e722869
+      commitTitle: 'fix(core): dont trigger alerts with prelude unsupported countries
+        (#265)'
+      sha: 76c24fc8ab6893a459f924f2d9e3c1862e3c34f4
       tags:
-      - 0.21.103-2-gb51cc3667
+      - 0.21.104-2-g76c24fc8a
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'fix(core): remove is_trusted_user from prelude (#264)'
-      sha: b51cc366764055aa883da2b78ced80058e722869
+      commitTitle: 'fix(core): dont trigger alerts with prelude unsupported countries
+        (#265)'
+      sha: 76c24fc8ab6893a459f924f2d9e3c1862e3c34f4
       tags:
-      - 0.21.103-2-gb51cc3667
+      - 0.21.104-2-g76c24fc8a
     path: schemas
   - git:
-      commitTitle: 'fix(core): remove is_trusted_user from prelude (#264)'
-      sha: b51cc366764055aa883da2b78ced80058e722869
+      commitTitle: 'fix(core): dont trigger alerts with prelude unsupported countries
+        (#265)'
+      sha: 76c24fc8ab6893a459f924f2d9e3c1862e3c34f4
       tags:
-      - 0.21.104
+      - 0.21.104-2-g76c24fc8a
     path: gql
   path: graphql
 kind: LockConfig
