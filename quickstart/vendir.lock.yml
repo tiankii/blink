@@ -2,24 +2,24 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'feat(core): add prelude as phone provider (#259)...'
-      sha: 1f3b927eae0ad446315623212f4577e1386bc6d6
+      commitTitle: 'fix(core): remove is_trusted_user from prelude (#264)'
+      sha: b51cc366764055aa883da2b78ced80058e722869
       tags:
-      - 0.21.102-2-g1f3b927ea
+      - 0.21.103-2-gb51cc3667
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'feat(core): add prelude as phone provider (#259)...'
-      sha: 1f3b927eae0ad446315623212f4577e1386bc6d6
+      commitTitle: 'fix(core): remove is_trusted_user from prelude (#264)'
+      sha: b51cc366764055aa883da2b78ced80058e722869
       tags:
-      - 0.21.102-2-g1f3b927ea
+      - 0.21.103-2-gb51cc3667
     path: schemas
   - git:
-      commitTitle: 'feat(core): add prelude as phone provider (#259)...'
-      sha: 1f3b927eae0ad446315623212f4577e1386bc6d6
+      commitTitle: 'fix(core): remove is_trusted_user from prelude (#264)'
+      sha: b51cc366764055aa883da2b78ced80058e722869
       tags:
-      - 0.21.102-2-g1f3b927ea
+      - 0.21.104
     path: gql
   path: graphql
 kind: LockConfig
