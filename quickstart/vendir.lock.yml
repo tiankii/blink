@@ -2,24 +2,27 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'fix(core): update prelude error parsing (#267)'
-      sha: 98f7341c3420c10724987bf703f03d88250aac88
+      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1318
+        (#268)...'
+      sha: 5b09a98a1486558bf7f8f75c55bd306514f694b7
       tags:
-      - 0.21.106-1-g98f7341c3
+      - 0.21.107-2-g5b09a98a1
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'fix(core): update prelude error parsing (#267)'
-      sha: 98f7341c3420c10724987bf703f03d88250aac88
+      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1318
+        (#268)...'
+      sha: 5b09a98a1486558bf7f8f75c55bd306514f694b7
       tags:
-      - 0.21.106-1-g98f7341c3
+      - 0.21.107-2-g5b09a98a1
     path: schemas
   - git:
-      commitTitle: 'fix(core): update prelude error parsing (#267)'
-      sha: 98f7341c3420c10724987bf703f03d88250aac88
+      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1318
+        (#268)...'
+      sha: 5b09a98a1486558bf7f8f75c55bd306514f694b7
       tags:
-      - 0.21.106-1-g98f7341c3
+      - 0.21.107-2-g5b09a98a1
     path: gql
   path: graphql
 kind: LockConfig
