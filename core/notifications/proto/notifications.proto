@@ -284,6 +284,9 @@ enum DeepLinkScreen {
   SettingsTxLimits = 18;
   SettingsNotifications = 19;
   SettingsEmail = 20;
+  WelcomeCard = 21;
+  LoadingCard = 22;
+  VisaCard = 23;
 }
 
 enum DeepLinkAction {
