@@ -70,6 +70,9 @@ export const DeepLinkScreen = {
   SettingsTxLimits: "SettingsTxLimits",
   SettingsNotifications: "SettingsNotifications",
   SettingsEmail: "SettingsEmail",
+  WelcomeCard: "WelcomeCard",
+  LoadingCard: "LoadingCard",
+  VisaCard: "VisaCard",
 } as const
 
 export const DeepLinkAction = {
