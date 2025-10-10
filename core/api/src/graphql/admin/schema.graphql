@@ -157,6 +157,7 @@ enum DeepLinkScreen {
   CONVERT
   EARN
   HOME
+  LOADING_CARD
   MAP
   PEOPLE
   PRICE
@@ -173,6 +174,8 @@ enum DeepLinkScreen {
   SETTINGS_SECURITY
   SETTINGS_THEME
   SETTINGS_TX_LIMITS
+  VISA_CARD
+  WELCOME_CARD
 }
 
 """Display currency of an account"""
