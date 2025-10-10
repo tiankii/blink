@@ -2,27 +2,24 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'fix(core): dont trigger alerts with prelude unsupported countries
-        (#265)'
-      sha: 76c24fc8ab6893a459f924f2d9e3c1862e3c34f4
+      commitTitle: 'fix(core): update prelude error parsing (#267)'
+      sha: 98f7341c3420c10724987bf703f03d88250aac88
       tags:
-      - 0.21.104-2-g76c24fc8a
+      - 0.21.106-1-g98f7341c3
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'fix(core): dont trigger alerts with prelude unsupported countries
-        (#265)'
-      sha: 76c24fc8ab6893a459f924f2d9e3c1862e3c34f4
+      commitTitle: 'fix(core): update prelude error parsing (#267)'
+      sha: 98f7341c3420c10724987bf703f03d88250aac88
       tags:
-      - 0.21.104-2-g76c24fc8a
+      - 0.21.106-1-g98f7341c3
     path: schemas
   - git:
-      commitTitle: 'fix(core): dont trigger alerts with prelude unsupported countries
-        (#265)'
-      sha: 76c24fc8ab6893a459f924f2d9e3c1862e3c34f4
+      commitTitle: 'fix(core): update prelude error parsing (#267)'
+      sha: 98f7341c3420c10724987bf703f03d88250aac88
       tags:
-      - 0.21.104-2-g76c24fc8a
+      - 0.21.106-1-g98f7341c3
     path: gql
   path: graphql
 kind: LockConfig
