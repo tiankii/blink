@@ -1099,6 +1099,7 @@ export enum DeepLinkScreen {
     WELCOMECARD = 21,
     LOADINGCARD = 22,
     VISACARD = 23,
+    CREDITCARDLIMIT = 24,
 }
 
 export enum DeepLinkAction {

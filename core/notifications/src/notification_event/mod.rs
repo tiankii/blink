@@ -109,6 +109,7 @@ pub enum DeepLinkScreen {
     WelcomeCard,
     LoadingCard,
     VisaCard,
+    CreditCardLimit,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -168,6 +169,7 @@ impl DeepLink {
                 DeepLinkScreen::WelcomeCard => "welcomeCard".to_string(),
                 DeepLinkScreen::LoadingCard => "loadingCard".to_string(),
                 DeepLinkScreen::VisaCard => "visaCard".to_string(),
+                DeepLinkScreen::CreditCardLimit => "creditCardLimit".to_string(),
             };
             link_string.push_str(&screen);
         }

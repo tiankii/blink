@@ -234,6 +234,9 @@ impl From<proto::DeepLinkScreen> for notification_event::DeepLinkScreen {
             proto::DeepLinkScreen::VisaCard => {
                 notification_event::DeepLinkScreen::VisaCard
             }
+            proto::DeepLinkScreen::CreditCardLimit => {
+                notification_event::DeepLinkScreen::CreditCardLimit
+            }
         }
     }
 }

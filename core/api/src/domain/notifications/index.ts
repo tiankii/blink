@@ -73,6 +73,7 @@ export const DeepLinkScreen = {
   WelcomeCard: "WelcomeCard",
   LoadingCard: "LoadingCard",
   VisaCard: "VisaCard",
+  CreditCardLimit: "CreditCardLimit",
 } as const
 
 export const DeepLinkAction = {

@@ -8033,7 +8033,8 @@ proto.services.notifications.v1.DeepLinkScreen = {
   SETTINGSEMAIL: 20,
   WELCOMECARD: 21,
   LOADINGCARD: 22,
-  VISACARD: 23
+  VISACARD: 23,
+  CREDITCARDLIMIT: 24,
 };
 
 /**

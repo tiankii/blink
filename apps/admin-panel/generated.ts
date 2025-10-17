@@ -226,6 +226,7 @@ export const DeepLinkScreen = {
   Chat: 'CHAT',
   Circles: 'CIRCLES',
   Convert: 'CONVERT',
+  CreditCardLimit: 'CREDIT_CARD_LIMIT',
   Earn: 'EARN',
   Home: 'HOME',
   LoadingCard: 'LOADING_CARD',

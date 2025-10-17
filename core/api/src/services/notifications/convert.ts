@@ -143,6 +143,8 @@ export const deepLinkScreenToGrpcDeepLinkScreen = (
       return Grpc.DeepLinkScreen.LOADINGCARD
     case DeepLinkScreen.VisaCard:
       return Grpc.DeepLinkScreen.VISACARD
+    case DeepLinkScreen.CreditCardLimit:
+      return Grpc.DeepLinkScreen.CREDITCARDLIMIT
   }
 }
 
