@@ -24,6 +24,7 @@ import { getAccountsOnboardConfig, getDefaultAccountsConfig } from "@/config"
 import {
   EmailUnverifiedError,
   IdentifierNotFoundError,
+  PhoneAlreadyExistsError,
   InvalidNoncePhoneTelegramPassportError,
   InvalidNonceTelegramPassportError,
   WaitingDataTelegramPassportError,
@@ -41,13 +42,13 @@ import {
   AuthWithUsernamePasswordDeviceIdService,
   IdentityRepository,
 } from "@/services/kratos"
-import { LedgerService } from "@/services/ledger"
-import { WalletsRepository } from "@/services/mongoose"
 import {
   addAttributesToCurrentSpan,
   recordExceptionInCurrentSpan,
 } from "@/services/tracing"
 import { isPhoneCodeValid } from "@/services/phone-provider"
+import { consumeLimiter } from "@/services/rate-limit"
+import { RedisCacheService } from "@/services/cache"
 
 import { IPMetadataAuthorizer } from "@/domain/accounts-ips/ip-metadata-authorizer"
 
@@ -59,13 +60,9 @@ import {
 import { IpFetcher } from "@/services/ipfetcher"
 
 import { IpFetcherServiceError } from "@/domain/ipfetcher"
-import { PhoneAccountAlreadyExistsNeedToSweepFundsError } from "@/domain/kratos"
 import { RateLimitConfig } from "@/domain/rate-limit"
 import { RateLimiterExceededError } from "@/domain/rate-limit/errors"
 import { ErrorLevel } from "@/domain/shared"
-import { consumeLimiter } from "@/services/rate-limit"
-
-import { RedisCacheService } from "@/services/cache"
 
 const redisCache = RedisCacheService()
 
@@ -251,26 +248,9 @@ export const loginDeviceUpgradeWithPhone = async ({
     return { success }
   }
 
-  // Complex path - Phone account already exists
-  // is there still txns left over on the device account?
-  const deviceWallets = await WalletsRepository().listByAccountId(account.id)
-  if (deviceWallets instanceof Error) return deviceWallets
-  const ledger = LedgerService()
-  let deviceAccountHasBalance = false
-  for (const wallet of deviceWallets) {
-    const balance = await ledger.getWalletBalance(wallet.id)
-    if (balance instanceof Error) return balance
-    if (balance > 0) {
-      deviceAccountHasBalance = true
-    }
-  }
-  if (deviceAccountHasBalance) return new PhoneAccountAlreadyExistsNeedToSweepFundsError()
+  if (userId instanceof Error) return userId
 
-  // no txns on device account but phone account exists, just log the user in with the phone account
-  const authService = AuthWithPhonePasswordlessService()
-  const kratosResult = await authService.loginToken({ phone })
-  if (kratosResult instanceof Error) return kratosResult
-  return { success: true, authToken: kratosResult.authToken }
+  return new PhoneAlreadyExistsError()
 }
 
 export const loginTelegramPassportNonceWithPhone = async ({
