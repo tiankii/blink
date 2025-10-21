@@ -359,6 +359,85 @@ export const loginTelegramPassportNonceWithPhone = async ({
   }
 }
 
+export const loginDeviceUpgradeWithTelegramPassportNonce = async ({
+  phone,
+  nonce,
+  ip,
+  account,
+}: {
+  phone: PhoneNumber
+  nonce: TelegramPassportNonce
+  ip: IpAddress
+  account: Account
+}): Promise<LoginDeviceUpgradeWithPhoneResult | ApplicationError> => {
+  const isValidPhoneForChannel = checkedToChannel(phone, ChannelType.Telegram)
+  if (isValidPhoneForChannel instanceof Error) return isValidPhoneForChannel
+
+  {
+    const limitOk = await checkFailedLoginAttemptPerIpLimits(ip)
+    if (limitOk instanceof Error) return limitOk
+  }
+  {
+    const limitOk = await checkLoginAttemptPerLoginIdentifierLimits(phone)
+    if (limitOk instanceof Error) return limitOk
+  }
+
+  const loginKey = telegramPassportLoginKey(nonce)
+  const phoneNumberFromNonce = await redisCache.get<PhoneNumber>({ key: loginKey })
+  if (phoneNumberFromNonce instanceof Error) {
+    // if it is valid telegram has not sent data to the webhook
+    const requestKey = telegramPassportRequestKey(nonce)
+    const validRequestNonce = await redisCache.get<PhoneNumber>({ key: requestKey })
+    if (validRequestNonce instanceof Error)
+      return new InvalidNonceTelegramPassportError(nonce)
+
+    return new WaitingDataTelegramPassportError(nonce)
+  }
+
+  if (phoneNumberFromNonce !== phone) {
+    return new InvalidNoncePhoneTelegramPassportError(nonce)
+  }
+
+  // invalidate login with the same nonce
+  await redisCache.clear({ key: loginKey })
+
+  await rewardFailedLoginAttemptPerIpLimits(ip)
+
+  const identities = IdentityRepository()
+  const userId = await identities.getUserIdFromIdentifier(phone)
+
+  // Happy path — phone identity does not exist: upgrade in-place (same identity/account)
+  if (userId instanceof IdentifierNotFoundError) {
+    // user is a new user
+    // this branch exists because we currently make no difference between a registration and login
+    addAttributesToCurrentSpan({ "login.newAccount": true })
+
+    const phoneMetadata = await isAllowedToOnboard({ ip, phone })
+    if (phoneMetadata instanceof Error) return phoneMetadata
+
+    const upgraded = await AuthWithUsernamePasswordDeviceIdService().upgradeToPhoneSchema(
+      {
+        phone,
+        userId: account.kratosUserId,
+      },
+    )
+    if (upgraded instanceof Error) return upgraded
+
+    const res = await upgradeAccountFromDeviceToPhone({
+      userId: account.kratosUserId,
+      phone,
+      phoneMetadata,
+    })
+    if (res instanceof Error) return res
+
+    return { success: true }
+  }
+
+  if (userId instanceof Error) return userId
+
+  return new PhoneAlreadyExistsError()
+}
+
 export const loginWithDevice = async ({
   username: usernameRaw,
   password: passwordRaw,
