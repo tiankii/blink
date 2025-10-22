@@ -29,7 +29,9 @@ const UserLoginUpgradeTelegramMutation = GT.Field<
     }
   }
 >({
-  extensions: { complexity: 120 },
+  extensions: {
+    complexity: 120,
+  },
   type: GT.NonNull(UpgradePayload),
   args: {
     input: { type: GT.NonNull(UserLoginUpgradeTelegramInput) },
