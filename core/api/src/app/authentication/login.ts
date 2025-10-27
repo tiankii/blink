@@ -224,7 +224,6 @@ export const loginDeviceUpgradeWithPhone = async ({
   const identities = IdentityRepository()
   const userId = await identities.getUserIdFromIdentifier(phone)
 
-  // Happy Path - phone account does not exist
   if (userId instanceof IdentifierNotFoundError) {
     // a. create kratos account
     // b. and c. migrate account/user collection in mongo via kratos/registration webhook
@@ -406,7 +405,6 @@ export const loginDeviceUpgradeWithTelegramPassportNonce = async ({
   const identities = IdentityRepository()
   const userId = await identities.getUserIdFromIdentifier(phone)
 
-  // Happy path — phone identity does not exist: upgrade in-place (same identity/account)
   if (userId instanceof IdentifierNotFoundError) {
     // user is a new user
     // this branch exists because we currently make no difference between a registration and login
