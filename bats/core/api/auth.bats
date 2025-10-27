@@ -153,6 +153,7 @@ generateTotpCode() {
   curl_request "http://${GALOY_ENDPOINT}/auth/telegram-passport/request-params" "$variables"
   nonce=$(curl_output '.nonce')
   [ -n "$nonce" ] || exit 1
+  cache_value "telegram.nonce" "$nonce"
 
   # Step 2: Try to login with the nonce before Telegram Passport webhook is called
   variables="{\"nonce\": \"$nonce\", \"phone\": \"$phone\"}"
@@ -184,6 +185,24 @@ generateTotpCode() {
   curl_request "http://${GALOY_ENDPOINT}/auth/telegram-passport/login" "$variables"
   error=$(curl_output '.error')
   [[ "$error" =~ "Invalid nonce $nonce" ]] || exit 1
+}
+
+@test "auth: telegram upgrade fails with used nonce" {
+  local phone="$(read_value diana.phone)"
+  local nonce="$(read_value telegram.nonce)"
+
+  variables=$(
+    jq -n \
+    --arg phone "$phone" \
+    --arg nonce "$nonce" \
+    '{input: {phone: $phone, nonce: $nonce}}'
+  )
+
+  exec_graphql 'diana' 'user-login-upgrade-telegram' "$variables"
+
+  [[ "$(graphql_output '.data.userLoginUpgradeTelegram.success')" == "false" ]] || exit 1
+  [[ "$(graphql_output '.data.userLoginUpgradeTelegram.errors[0].code')" == "NOT_FOUND" ]] || exit 1
+  [[ "$(graphql_output '.data.userLoginUpgradeTelegram.errors[0].message')" == "Invalid nonce ${nonce}" ]] || exit 1
 }
 
 @test "auth: remove phone login" {

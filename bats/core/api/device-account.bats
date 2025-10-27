@@ -1,6 +1,11 @@
 load "../../helpers/_common.bash"
 load "../../helpers/cli.bash"
 load "../../helpers/user.bash"
+load "../../helpers/telegram.bash"
+
+setup_file() {
+  clear_cache
+}
 
 DEVICE_NAME="device-user"
 
@@ -46,6 +51,32 @@ jwt="eyJhbGciOiJSUzI1NiIsImtpZCI6IjFiOTdiMjIxLWNhMDgtNGViMi05ZDA5LWE1NzcwZmNjZWI
   [[ "$refetched_account_id" == "$account_id" ]] || exit 1
 }
 
+@test "device-account: upgrade fails if phone already exists" {
+  token_name="$DEVICE_NAME"
+
+  create_user 'fran'
+  phone_number="$(read_value fran.phone)"
+
+  code="000000"
+  variables=$(
+    jq -n \
+    --arg phone "$phone_number" \
+    --arg code "$code" \
+    '{input: {phone: $phone, code: $code}}'
+  )
+  exec_graphql "$token_name" 'user-login-upgrade' "$variables"   
+
+  err_code="$(graphql_output '.data.userLoginUpgrade.errors[0].code')"
+  if [[ "$err_code" != "PHONE_ALREADY_ATTACHED_ERROR" ]]; then
+    echo "Unexpected error code: $err_code"
+    exit 1
+  fi
+
+  exec_graphql "$token_name" 'account-details'
+  level="$(graphql_output '.data.me.defaultAccount.level')"
+  [[ "$level" == "ZERO" ]] || exit 1
+}
+
 @test "device-account: upgrade" {
   token_name="$DEVICE_NAME"
   code="000000"
@@ -77,4 +108,51 @@ jwt="eyJhbGciOiJSUzI1NiIsImtpZCI6IjFiOTdiMjIxLWNhMDgtNGViMi05ZDA5LWE1NzcwZmNjZWI
   exec_graphql "$token_name" 'account-delete'
   delete_success="$(graphql_output '.data.accountDelete.success')"
   [[ "$delete_success" == "true" ]] || exit 1
+}
+
+@test "device-account: telegram upgrade success" {
+  #
+  # TODO: Remove skip method
+  #
+  skip
+  local token_name="device-user-telegram"
+  local appcheck_header="Appcheck: $jwt"
+
+  local username="$(random_uuid)"
+  local password="$(random_uuid)"
+  local basic_token="$(echo -n $username:$password | base64 -w 0)"
+  local auth_header="Authorization: Basic $basic_token"
+
+  curl_request "$url" "" "$auth_header" "$appcheck_header"
+  local new_token="$(echo $output | jq -r '.result')"
+  [[ "$new_token" != "null" && -n "$new_token" ]] || exit 1
+  cache_value "$token_name" "$new_token"
+
+  exec_graphql "$token_name" 'account-details'
+  [[ "$(graphql_output '.data.me.defaultAccount.level')" == "ZERO" ]] || exit 1
+
+  # Request nonce
+  local phone="$(random_phone)"
+  cache_value "$token_name.phone" "$phone"
+  curl_request "http://${GALOY_ENDPOINT}/auth/telegram-passport/request-params" "{\"phone\":\"$phone\"}"
+  local nonce="$(curl_output '.nonce')"
+  [ -n "$nonce" ] || exit 1
+
+  # Pending before webhook
+  local variables=$(
+    jq -n \
+    --arg phone "$phone" \
+    --arg nonce "$nonce" \
+    '{input: {phone: $phone, nonce: $nonce}}'
+  )
+  exec_graphql "$token_name" 'user-login-upgrade-telegram' "$variables"
+  [[ "$(graphql_output '.data.userLoginUpgradeTelegram.success')" == "false" ]] || exit 1
+
+  simulateTelegramPassportWebhook "$nonce" "${phone//+/}"
+
+  exec_graphql "$token_name" 'user-login-upgrade-telegram' "$variables"
+  [[ "$(graphql_output '.data.userLoginUpgradeTelegram.success')" == "true" ]] || exit 1
+
+  exec_graphql "$token_name" 'account-details'
+  [[ "$(graphql_output '.data.me.defaultAccount.level')" == "ONE" ]] || exit 1
 }
