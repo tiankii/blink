@@ -2,27 +2,24 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1335
-        (#293)...'
-      sha: 61f4c6ac7ab96e810f7e725d3a33ec716f102ba4
+      commitTitle: 'fix: onboarding prevent cross login (#286)...'
+      sha: cf64fb8c2ee543e392f0df379b33f431014fd343
       tags:
-      - 0.21.111-2-g61f4c6ac7
+      - 0.21.112-1-gcf64fb8c2
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1335
-        (#293)...'
-      sha: 61f4c6ac7ab96e810f7e725d3a33ec716f102ba4
+      commitTitle: 'fix: onboarding prevent cross login (#286)...'
+      sha: cf64fb8c2ee543e392f0df379b33f431014fd343
       tags:
-      - 0.21.111-2-g61f4c6ac7
+      - 0.21.112-1-gcf64fb8c2
     path: schemas
   - git:
-      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1335
-        (#293)...'
-      sha: 61f4c6ac7ab96e810f7e725d3a33ec716f102ba4
+      commitTitle: 'fix: onboarding prevent cross login (#286)...'
+      sha: cf64fb8c2ee543e392f0df379b33f431014fd343
       tags:
-      - 0.21.111-2-g61f4c6ac7
+      - 0.21.112-1-gcf64fb8c2
     path: gql
   path: graphql
 kind: LockConfig
