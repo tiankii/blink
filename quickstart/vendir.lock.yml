@@ -2,27 +2,24 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1345
-        (#309)...'
-      sha: 758ad72ab23f19121bccd5cbb24663cfded70228
+      commitTitle: 'chore: create api key for dealer (#294)...'
+      sha: ebd8b0f4bb8897ffdd529113210577607110327b
       tags:
-      - 0.21.113-2-g758ad72ab
+      - 0.21.114-1-gebd8b0f4b
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1345
-        (#309)...'
-      sha: 758ad72ab23f19121bccd5cbb24663cfded70228
+      commitTitle: 'chore: create api key for dealer (#294)...'
+      sha: ebd8b0f4bb8897ffdd529113210577607110327b
       tags:
-      - 0.21.113-2-g758ad72ab
+      - 0.21.114-1-gebd8b0f4b
     path: schemas
   - git:
-      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1345
-        (#309)...'
-      sha: 758ad72ab23f19121bccd5cbb24663cfded70228
+      commitTitle: 'chore: create api key for dealer (#294)...'
+      sha: ebd8b0f4bb8897ffdd529113210577607110327b
       tags:
-      - 0.21.113-2-g758ad72ab
+      - 0.21.114-1-gebd8b0f4b
     path: gql
   path: graphql
 kind: LockConfig
