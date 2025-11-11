@@ -6,7 +6,7 @@ import {
   checkIntraledgerLimits,
   checkTradeIntraAccountLimits,
   createIntraledgerContact,
-  getUsernameForAccount,
+  getDefaultUsernameByAccount,
 } from "@/app/accounts"
 import {
   btcFromUsdMidPriceFn,
@@ -64,7 +64,7 @@ const intraledgerPaymentSendWalletId = async ({
   const { senderWallet, recipientWallet, recipientAccount, recipientUser, senderUser } =
     validatedPaymentInputs
 
-  const recipientUsername = await getUsernameForAccount(recipientAccount.id)
+  const recipientUsername = await getDefaultUsernameByAccount(recipientAccount.id)
   if (recipientUsername instanceof Error) return recipientUsername
 
   const { currency: recipientWalletCurrency } = recipientWallet
@@ -265,10 +265,10 @@ const executePaymentViaIntraledger = async <
     )
   }
 
-  const recipientUsername = await getUsernameForAccount(recipientAccount.id)
+  const recipientUsername = await getDefaultUsernameByAccount(recipientAccount.id)
   if (recipientUsername instanceof Error) return recipientUsername
 
-  const senderUsername = await getUsernameForAccount(senderAccount.id)
+  const senderUsername = await getDefaultUsernameByAccount(senderAccount.id)
   if (senderUsername instanceof Error) return senderUsername
 
   const recipientAsNotificationRecipient = {
