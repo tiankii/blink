@@ -72,6 +72,8 @@ export type Scalars = {
   SignedAmount: { input: number; output: number; }
   /** A string amount (of a currency) that can be negative (e.g. in a transaction) */
   SignedDisplayMajorAmount: { input: string; output: string; }
+  /** Nonce provided by Telegram Passport to validate the login/upgrade flow */
+  TelegramPassportNonce: { input: string; output: string; }
   /** Timestamp field, serialized as Unix time (the number of seconds since the Unix epoch) */
   Timestamp: { input: number; output: number; }
   /** A time-based one-time password */
@@ -724,6 +726,7 @@ export type LnInvoicePaymentInput = {
 export type LnInvoicePaymentStatus = {
   readonly __typename: 'LnInvoicePaymentStatus';
   readonly paymentHash?: Maybe<Scalars['PaymentHash']['output']>;
+  readonly paymentPreimage?: Maybe<Scalars['LnPaymentPreImage']['output']>;
   readonly paymentRequest?: Maybe<Scalars['LnPaymentRequest']['output']>;
   readonly status?: Maybe<InvoicePaymentStatus>;
 };
@@ -744,6 +747,7 @@ export type LnInvoicePaymentStatusPayload = {
   readonly __typename: 'LnInvoicePaymentStatusPayload';
   readonly errors: ReadonlyArray<Error>;
   readonly paymentHash?: Maybe<Scalars['PaymentHash']['output']>;
+  readonly paymentPreimage?: Maybe<Scalars['LnPaymentPreImage']['output']>;
   readonly paymentRequest?: Maybe<Scalars['LnPaymentRequest']['output']>;
   readonly status?: Maybe<InvoicePaymentStatus>;
 };
@@ -1043,6 +1047,7 @@ export type Mutation = {
   readonly userEmailRegistrationValidate: UserEmailRegistrationValidatePayload;
   readonly userLogin: AuthTokenPayload;
   readonly userLoginUpgrade: UpgradePayload;
+  readonly userLoginUpgradeTelegram: UpgradePayload;
   readonly userLogout: SuccessPayload;
   readonly userPhoneDelete: UserPhoneDeletePayload;
   readonly userPhoneRegistrationInitiate: SuccessPayload;
@@ -1281,6 +1286,11 @@ export type MutationUserLoginUpgradeArgs = {
 };
 
 
+export type MutationUserLoginUpgradeTelegramArgs = {
+  input: UserLoginUpgradeTelegramInput;
+};
+
+
 export type MutationUserLogoutArgs = {
   input?: InputMaybe<UserLogoutInput>;
 };
@@ -1451,10 +1461,19 @@ export const PaymentSendResult = {
 
 export type PaymentSendResult = typeof PaymentSendResult[keyof typeof PaymentSendResult];
 export const PayoutSpeed = {
-  Fast: 'FAST'
+  Fast: 'FAST',
+  Medium: 'MEDIUM',
+  Slow: 'SLOW'
 } as const;
 
 export type PayoutSpeed = typeof PayoutSpeed[keyof typeof PayoutSpeed];
+export type PayoutSpeeds = {
+  readonly __typename: 'PayoutSpeeds';
+  readonly description: Scalars['String']['output'];
+  readonly displayName: Scalars['String']['output'];
+  readonly speed: PayoutSpeed;
+};
+
 export const PhoneCodeChannelType = {
   Sms: 'SMS',
   Telegram: 'TELEGRAM',
@@ -1565,6 +1584,8 @@ export type Query = {
   readonly onChainTxFee: OnChainTxFee;
   readonly onChainUsdTxFee: OnChainUsdTxFee;
   readonly onChainUsdTxFeeAsBtcDenominated: OnChainUsdTxFee;
+  /** Returns the list of available speeds for on-chain payments */
+  readonly payoutSpeeds: ReadonlyArray<PayoutSpeeds>;
   /** Returns 1 Sat and 1 Usd Cent price for the given currency in minor unit */
   readonly realtimePrice: RealtimePrice;
   /** @deprecated will be migrated to AccountDefaultWalletId */
@@ -1654,6 +1675,7 @@ export type Quiz = {
 
 export type QuizClaimInput = {
   readonly id: Scalars['ID']['input'];
+  readonly skipRewards?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type QuizClaimPayload = {
@@ -1994,11 +2016,16 @@ export type UserContact = {
    * Only the user can see the alias attached to their contact.
    */
   readonly alias?: Maybe<Scalars['ContactAlias']['output']>;
-  readonly id: Scalars['Username']['output'];
+  /** Identifier of the contact (username or Lightning address). */
+  readonly handle: Scalars['ContactHandle']['output'];
+  readonly id: Scalars['ContactHandle']['output'];
   /** Paginated list of transactions sent to/from this contact. */
   readonly transactions?: Maybe<TransactionConnection>;
   readonly transactionsCount: Scalars['Int']['output'];
-  /** Actual identifier of the contact. */
+  /**
+   * Actual identifier of the contact. Deprecated: use `handle` instead.
+   * @deprecated Use `handle` field; this will be removed in a future release.
+   */
   readonly username: Scalars['Username']['output'];
 };
 
@@ -2056,6 +2083,11 @@ export type UserLoginInput = {
 
 export type UserLoginUpgradeInput = {
   readonly code: Scalars['OneTimeAuthCode']['input'];
+  readonly phone: Scalars['Phone']['input'];
+};
+
+export type UserLoginUpgradeTelegramInput = {
+  readonly nonce: Scalars['TelegramPassportNonce']['input'];
   readonly phone: Scalars['Phone']['input'];
 };
 
@@ -2281,8 +2313,8 @@ export function useCountryCodesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<CountryCodesQuery, CountryCodesQueryVariables>(CountryCodesDocument, options);
         }
-export function useCountryCodesSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<CountryCodesQuery, CountryCodesQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
+export function useCountryCodesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<CountryCodesQuery, CountryCodesQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<CountryCodesQuery, CountryCodesQueryVariables>(CountryCodesDocument, options);
         }
 export type CountryCodesQueryHookResult = ReturnType<typeof useCountryCodesQuery>;
@@ -2320,8 +2352,8 @@ export function useGetUserIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<GetUserIdQuery, GetUserIdQueryVariables>(GetUserIdDocument, options);
         }
-export function useGetUserIdSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetUserIdQuery, GetUserIdQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
+export function useGetUserIdSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetUserIdQuery, GetUserIdQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<GetUserIdQuery, GetUserIdQueryVariables>(GetUserIdDocument, options);
         }
 export type GetUserIdQueryHookResult = ReturnType<typeof useGetUserIdQuery>;

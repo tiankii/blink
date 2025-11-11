@@ -70,6 +70,13 @@ type QueuePayoutToAddressArgs = {
   journalId: LedgerJournalId
 }
 
+type PayoutQueue = {
+  speed: PayoutSpeed
+  queueName: string
+  displayName: string
+  description: string
+}
+
 type EstimatePayoutFeeArgs = {
   address: OnChainAddress
   amount: BtcPaymentAmount
@@ -102,6 +109,9 @@ type OnChainEventHandler = (event: OnChainEvent) => true | ApplicationError
 
 interface IOnChainService {
   getHotBalance(): Promise<BtcPaymentAmount | OnChainServiceError>
+  getReceiveWalletBalance(): Promise<BtcPaymentAmount | OnChainServiceError>
+  getWithdrawalWalletBalance(): Promise<BtcPaymentAmount | OnChainServiceError>
+  getWalletBalance(walletName: string): Promise<BtcPaymentAmount | OnChainServiceError>
   getColdBalance(): Promise<BtcPaymentAmount | OnChainServiceError>
   getAddressForWallet(args: {
     walletDescriptor: WalletDescriptor<WalletCurrency>
@@ -117,15 +127,21 @@ interface IOnChainService {
   queuePayoutToAddress(
     args: QueuePayoutToAddressArgs,
   ): Promise<OnChainPayout | OnChainServiceError>
-  rebalanceToColdWallet(amount: BtcPaymentAmount): Promise<PayoutId | OnChainServiceError>
+  rebalanceToWithdrawalWallet(args: {
+    amount: BtcPaymentAmount
+  }): Promise<PayoutId | OnChainServiceError>
+  rebalanceToColdWallet(args: {
+    amount: BtcPaymentAmount
+  }): Promise<PayoutId | OnChainServiceError>
   estimateFeeForPayout(
     args: EstimatePayoutFeeArgs,
   ): Promise<BtcPaymentAmount | OnChainServiceError>
+  listPayoutQueues(): Promise<PayoutQueue[] | OnChainServiceError>
 }
 
 type RebalanceCheckerConfig = {
-  minOnChainHotWalletBalance: Satoshis
-  maxHotWalletBalance: Satoshis
+  minBalance: Satoshis
+  threshold: Satoshis
   minRebalanceSize: Satoshis
 }
 
@@ -136,9 +152,11 @@ type WithdrawFromHotWalletAmountArgs = {
   offChainHotWalletBalance: Satoshis
 }
 
+type WithdrawAmountArgs = {
+  totalBalance: Satoshis
+  availableBalance?: Satoshis
+}
+
 type RebalanceChecker = {
-  getWithdrawFromHotWalletAmount({
-    onChainHotWalletBalance,
-    offChainHotWalletBalance,
-  }: WithdrawFromHotWalletAmountArgs): Satoshis
+  getWithdrawAmount(args: WithdrawAmountArgs): Satoshis
 }

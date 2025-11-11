@@ -1,4 +1,7 @@
+import https from "https"
+
 import axios from "axios"
+import axiosRetry, { linearDelay } from "axios-retry"
 
 import { UnknownIpFetcherServiceError } from "@/domain/ipfetcher"
 import { PROXY_CHECK_APIKEY } from "@/config"
@@ -14,6 +17,16 @@ type Params = {
   risk: string
   key?: string
 }
+
+export const client = axios.create({
+  timeout: 2000,
+  httpsAgent: new https.Agent({ keepAlive: true }),
+})
+axiosRetry(client, {
+  retries: 4,
+  retryDelay: linearDelay(200),
+  shouldResetTimeout: true,
+})
 
 export const IpFetcher = (): IIpFetcherService => {
   const fetchIPInfo = async (ip: string): Promise<IPInfo | IpFetcherServiceError> => {
@@ -33,17 +46,18 @@ export const IpFetcher = (): IIpFetcherService => {
     }
 
     try {
-      const { data } = await axios.request({
+      const { data } = await client.request({
         url: `https://proxycheck.io/v2/${ip}`,
         params,
-        timeout: 2000, // ms
       })
 
       const proxy = !!(data[ip] && data[ip].proxy && data[ip].proxy === "yes")
       const isoCode = data[ip] && data[ip].isocode
+      const type = data[ip] ? `${data[ip].type}` : ""
+      const risk = Number(data[ip]?.risk) || 0
 
-      addAttributesToCurrentSpan({ proxy, isoCode, keyIsPresent })
-      return { ...data[ip], isoCode, proxy, status: data.status }
+      addAttributesToCurrentSpan({ proxy, risk, type, isoCode, keyIsPresent })
+      return { ...data[ip], isoCode, proxy, risk, type, status: data.status }
     } catch (error) {
       recordExceptionInCurrentSpan({ error, attributes: { ip, keyIsPresent } })
       return new UnknownIpFetcherServiceError(error)

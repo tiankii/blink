@@ -28,7 +28,7 @@ export const ContactsRepository = (): IContactsRepository => {
   }
 
   const persistNew = async (
-    contactInput: NewContactInput,
+    contactInput: NewContact,
   ): Promise<Contact | RepositoryError> => {
     try {
       const contact = await new Contact({
@@ -41,9 +41,11 @@ export const ContactsRepository = (): IContactsRepository => {
     }
   }
 
-  const listByAccountId = async (
-    accountId: string,
-  ): Promise<Contact[] | RepositoryError> => {
+  const listByAccountId = async ({
+    accountId,
+  }: {
+    accountId: AccountId
+  }): Promise<Contact[] | RepositoryError> => {
     try {
       const results = await Contact.find({ accountId })
       return results.map(contactFromRaw)
@@ -56,7 +58,12 @@ export const ContactsRepository = (): IContactsRepository => {
     try {
       const result = await Contact.findOneAndUpdate(
         { accountId: contact.accountId, id: contact.id },
-        contact,
+        {
+          $set: {
+            ...contact,
+            updatedAt: Date.now(),
+          },
+        },
         { new: true },
       )
       if (!result) return new CouldNotUpdateContactError()
@@ -80,7 +87,7 @@ const contactFromRaw = (result: ContactRecord): Contact => ({
   accountId: result.accountId as AccountId,
   handle: result.handle as Username,
   type: result.type as ContactType,
-  displayName: result.displayName as ContactAlias,
+  displayName: (result.displayName || "") as ContactAlias,
   transactionsCount: result.transactionsCount,
   createdAt: result.createdAt,
 })

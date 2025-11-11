@@ -11,7 +11,7 @@ export class UnsubscribedRecipientPhoneProviderError extends PhoneProviderServic
 export class RestrictedRecipientPhoneNumberError extends PhoneProviderServiceError {}
 export class InvalidOrApprovedVerificationError extends PhoneProviderServiceError {}
 export class MissingTypePhoneProviderError extends PhoneProviderServiceError {
-  level = ErrorLevel.Critical
+  level = ErrorLevel.Warn
 }
 
 export class PhoneCodeInvalidError extends PhoneProviderServiceError {}
@@ -23,5 +23,11 @@ export class PhoneProviderUnavailableError extends PhoneProviderServiceError {
   level = ErrorLevel.Critical
 }
 export class UnknownPhoneProviderServiceError extends PhoneProviderServiceError {
+  level = ErrorLevel.Critical
+}
+export class SpendingLimitExceededPhoneProviderError extends PhoneProviderServiceError {
+  level = ErrorLevel.Critical
+}
+export class PhoneProviderConfigError extends PhoneProviderServiceError {
   level = ErrorLevel.Critical
 }

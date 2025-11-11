@@ -96,3 +96,97 @@ setup_file() {
   error_msg=$(graphql_output '.data.quizClaim.errors[0].code')
   [[ "${error_msg}" =~ "QUIZ_CLAIMED_TOO_EARLY" ]] || exit 1
 }
+
+@test "quiz: completes a quiz question and gets paid once (skipRewards false)" {
+  token_name="alice"
+  question_id="sat"
+
+  exec_graphql $token_name 'wallets-for-account'
+  btc_initial_balance=$(graphql_output '
+    .data.me.defaultAccount.wallets[]
+    | select(.walletCurrency == "BTC")
+    .balance
+  ')
+
+  variables=$(
+    jq -n \
+    --arg question_id "$question_id" \
+    '{input: {id: $question_id, skipRewards: false}}'
+  )
+  exec_graphql "$token_name" 'quiz-claim' "$variables"
+
+  errors=$(graphql_output '.data.quizClaim.errors')
+  [[ "$errors" == "[]" ]] || exit 1
+
+  quizzes=$(graphql_output '.data.quizClaim.quizzes')
+  [[ "$quizzes" != "null" ]] || exit 1
+
+  quiz_completed=$(echo "$quizzes" | jq --arg id "$question_id" '.[] | select(.id == $id) | .completed')
+  [[ "$quiz_completed" == "true" ]] || exit 1
+
+  exec_graphql $token_name 'wallets-for-account'
+  btc_balance_after_quiz=$(graphql_output '
+    .data.me.defaultAccount.wallets[]
+    | select(.walletCurrency == "BTC")
+    .balance
+  ')
+  [[ "$btc_balance_after_quiz" -gt "$btc_initial_balance" ]] || exit 1
+}
+
+@test "quiz: completes a quiz question without receiving payment (skipRewards true)" {
+  token_name="alice"
+  question_id="whereBitcoinExist"
+
+  exec_graphql $token_name 'wallets-for-account'
+  btc_initial_balance=$(graphql_output '
+    .data.me.defaultAccount.wallets[]
+    | select(.walletCurrency == "BTC")
+    .balance
+  ')
+
+  variables=$(
+    jq -n \
+    --arg question_id "$question_id" \
+    '{input: {id: $question_id, skipRewards: true}}'
+  )
+  exec_graphql "$token_name" 'quiz-claim' "$variables"
+
+  errors=$(graphql_output '.data.quizClaim.errors')
+  [[ "$errors" == "[]" ]] || exit 1
+
+  quizzes=$(graphql_output '.data.quizClaim.quizzes')
+  [[ "$quizzes" != "null" ]] || exit 1
+
+  quiz_completed=$(echo "$quizzes" | jq --arg id "$question_id" '.[] | select(.id == $id) | .completed')
+  [[ "$quiz_completed" == "true" ]] || exit 1
+
+  exec_graphql $token_name 'wallets-for-account'
+  btc_balance_after_quiz=$(graphql_output '
+    .data.me.defaultAccount.wallets[]
+    | select(.walletCurrency == "BTC")
+    .balance
+  ')
+  [[ "$btc_balance_after_quiz" == "$btc_initial_balance" ]] || exit 1
+}
+
+@test "quiz: skipRewards true omits validations and payment" {
+  token_name="alice"
+  question_id="whoControlsBitcoin"
+
+  variables=$(
+    jq -n \
+    --arg question_id "$question_id" \
+    '{input: {id: $question_id, skipRewards: true}}'
+  )
+
+  exec_graphql "$token_name" 'quiz-claim' "$variables"
+
+  errors=$(graphql_output '.data.quizClaim.errors')
+  [[ "$errors" == "[]" ]] || exit 1
+
+  quizzes=$(graphql_output '.data.quizClaim.quizzes')
+  [[ "$quizzes" != "null" ]] || exit 1
+
+  quiz_completed=$(echo "$quizzes" | jq --arg id "$question_id" '.[] | select(.id == $id) | .completed')
+  [[ "$quiz_completed" == "true" ]] || exit 1
+}

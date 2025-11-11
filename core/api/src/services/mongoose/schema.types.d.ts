@@ -6,9 +6,10 @@ type IPType = {
   isoCode?: string
   region?: string
   city?: string
-  Type?: string
+  type?: string
   asn?: string
   proxy?: boolean
+  risk?: number
 }
 
 type OnChainObjectForUser = {
@@ -78,6 +79,7 @@ interface AccountRecord {
   id: string
   kratosUserId: string
 
+  handle?: string
   username: string | null
   role: string
 
@@ -108,6 +110,9 @@ interface MerchantRecord {
   createdAt: Date
   location: LocationRecord
   validated: boolean
+  deleted: boolean
+  deletedAt?: Date
+  deletedByPrivilegedClientId?: string
 }
 
 interface QuizCompletedRecord {

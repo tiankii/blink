@@ -5,11 +5,11 @@ import { ContactsRepository } from "@/services/mongoose"
 
 export const updateContactAlias = async ({
   accountId: accountIdRaw,
-  username,
+  handle,
   alias,
 }: {
-  accountId: AccountId
-  username: string
+  accountId: string
+  handle: string
   alias: string
 }): Promise<AccountContact | ApplicationError> => {
   const accountId = checkedToAccountId(accountIdRaw)
@@ -18,12 +18,12 @@ export const updateContactAlias = async ({
   const aliasChecked = checkedToContactAlias(alias)
   if (aliasChecked instanceof Error) return aliasChecked
 
-  const handle = checkedToHandle(username)
-  if (handle instanceof Error) return handle
+  const validatedHandle = checkedToHandle(handle)
+  if (validatedHandle instanceof Error) return validatedHandle
 
   const contact = await ContactsRepository().findByHandle({
+    handle: validatedHandle,
     accountId,
-    handle,
   })
   if (contact instanceof Error) return contact
 
@@ -36,6 +36,7 @@ export const updateContactAlias = async ({
 
   return {
     id: contact.handle,
+    handle: contact.handle,
     username: contact.handle,
     alias: aliasChecked,
     transactionsCount: contact.transactionsCount,

@@ -113,9 +113,6 @@ export const checkedToAccountLevel = (level: number): AccountLevel | ValidationE
   return new InvalidAccountLevelError()
 }
 
-const toLightningAddress = (address: string): LightningAddress =>
-  address as LightningAddress
-
 export const checkedToLightningAddress = (
   address: string,
 ): LightningAddress | InvalidLightningAddress => {
@@ -125,5 +122,5 @@ export const checkedToLightningAddress = (
     return new InvalidLightningAddress(address)
   }
 
-  return toLightningAddress(address)
+  return address as LightningAddress
 }

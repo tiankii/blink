@@ -8,13 +8,13 @@ type Contact = {
   readonly createdAt: Date
   accountId: AccountId
   type: ContactType
-  handle: Username
+  handle: Handle
   displayName: ContactAlias
   transactionsCount: number
   updatedAt?: Date
 }
 
-type NewContactInput = Omit<Contact, "id" | "createdAt" | "updatedAt">
+type NewContact = Omit<Contact, "id" | "createdAt" | "updatedAt">
 
 interface IContactsRepository {
   findByHandle({
@@ -25,9 +25,13 @@ interface IContactsRepository {
     handle: Handle
   }): Promise<Contact | RepositoryError>
 
-  listByAccountId(accountId: string): Promise<Contact[] | RepositoryError>
+  listByAccountId({
+    accountId,
+  }: {
+    accountId: AccountId
+  }): Promise<Contact[] | RepositoryError>
 
-  persistNew(contact: NewContactInput): Promise<Contact | RepositoryError>
+  persistNew(contact: NewContact): Promise<Contact | RepositoryError>
 
   update(contact: Contact): Promise<Contact | RepositoryError>
 }

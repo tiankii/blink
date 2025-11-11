@@ -7,7 +7,7 @@ COMPOSE_PROJECT_NAME="${COMPOSE_PROJECT_NAME:-quickstart}"
 GALOY_ENDPOINT=${GALOY_ENDPOINT:-localhost:4455}
 
 if [ -n "$HOST_PROJECT_PATH" ]; then
-  GALOY_DIR="./vendor/galoy-quickstart"
+  GALOY_DIR="./vendor/blink-quickstart"
 else
   GALOY_DIR="."
 fi
@@ -235,5 +235,32 @@ initialize_user_from_onchain() {
     "$token_name" \
     "$token_name.btc_wallet_id" \
     "$btc_amount_in_btc"
+}
+
+create_dealer_api_key() {
+  local dealer_phone="+16505554327"
+  local api_key_name="dealer-service-key"
+  local token_name="dealer"
+
+  login_user "${token_name}" "${dealer_phone}" "000000"
+
+  local variables="{\"input\": {\"name\": \"${api_key_name}\", \"scopes\": [\"READ\", \"WRITE\", \"RECEIVE\"]}}"
+
+  exec_graphql "${token_name}" 'api-key-create' "${variables}"
+
+  local api_key_response="$output"
+
+  local errors=$(echo "$api_key_response" | jq -r '.errors // empty' 2>/dev/null)
+  if [ -n "$errors" ] && [ "$errors" != "null" ] && [ "$errors" != "" ]; then
+    return 1
+  fi
+
+  local api_key_secret=$(echo "$api_key_response" | jq -r '.data.apiKeyCreate.apiKeySecret')
+
+  if [ -z "$api_key_secret" ] || [ "$api_key_secret" == "null" ]; then
+    return 1
+  fi
+
+  echo "$api_key_secret"
 }
 

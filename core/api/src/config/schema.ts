@@ -163,53 +163,114 @@ export const configSchema = {
         denyASNs: [],
       },
     },
-    coldStorage: {
-      type: "object",
-      properties: {
-        minOnChainHotWalletBalance: { type: "integer" },
-        minRebalanceSize: { type: "integer" },
-        maxHotWalletBalance: { type: "integer" },
-      },
-      required: ["minOnChainHotWalletBalance", "minRebalanceSize", "maxHotWalletBalance"],
-      additionalProperties: false,
-      default: {
-        minOnChainHotWalletBalance: 1000000,
-        minRebalanceSize: 10000000,
-        maxHotWalletBalance: 200000000,
-      },
-    },
     bria: {
       type: "object",
       properties: {
-        hotWalletName: { type: "string" },
-        queueNames: {
-          type: "object",
-          properties: {
-            fast: { type: "string" },
+        receiveWalletName: { type: "string" },
+        withdrawalWalletName: { type: "string" },
+        coldWalletName: { type: "string" },
+        payoutQueues: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              speed: {
+                type: "string",
+                enum: ["fast", "medium", "slow"],
+              },
+              queueName: { type: "string" },
+              displayName: { type: "string" },
+              description: { type: "string" },
+            },
+            required: ["speed", "queueName", "displayName", "description"],
+            additionalProperties: false,
           },
-          required: ["fast"],
-          additionalProperties: false,
-          default: {
-            fast: "dev-queue",
-          },
+          default: [
+            {
+              speed: "fast",
+              queueName: "dev-queue",
+              displayName: "Priority",
+              description: "Estimated broadcast ~10 minutes",
+            },
+            {
+              speed: "medium",
+              queueName: "dev-medium-queue",
+              displayName: "Standard",
+              description: "Estimated broadcast ~1 hour",
+            },
+            {
+              speed: "slow",
+              queueName: "dev-slow-queue",
+              displayName: "Flexible",
+              description: "Estimated broadcast ~24 hours",
+            },
+          ],
         },
-        coldStorage: {
+        rebalances: {
           type: "object",
           properties: {
-            walletName: { type: "string" },
-            hotToColdRebalanceQueueName: { type: "string" },
+            hotToCold: {
+              type: "object",
+              properties: {
+                threshold: { type: "integer" },
+                minRebalanceSize: { type: "integer" },
+                minBalance: { type: "integer" },
+                payoutQueueName: { type: "string" },
+              },
+              required: [
+                "threshold",
+                "minRebalanceSize",
+                "minBalance",
+                "payoutQueueName",
+              ],
+              additionalProperties: false,
+            },
+            receiveToWithdrawal: {
+              type: "object",
+              properties: {
+                threshold: { type: "integer" },
+                minRebalanceSize: { type: "integer" },
+                minBalance: { type: "integer" },
+                payoutQueueName: { type: "string" },
+              },
+              required: [
+                "threshold",
+                "minRebalanceSize",
+                "minBalance",
+                "payoutQueueName",
+              ],
+              additionalProperties: false,
+            },
           },
-          required: ["walletName", "hotToColdRebalanceQueueName"],
+          required: ["hotToCold", "receiveToWithdrawal"],
           default: {
-            walletName: "cold",
-            hotToColdRebalanceQueueName: "dev-queue",
+            hotToCold: {
+              threshold: 200000000,
+              minRebalanceSize: 10000000,
+              minBalance: 1000000,
+              payoutQueueName: "dev-queue",
+            },
+            receiveToWithdrawal: {
+              threshold: 25000000,
+              minRebalanceSize: 25000000,
+              minBalance: 100000,
+              payoutQueueName: "dev-queue",
+            },
           },
         },
       },
-      required: ["hotWalletName", "queueNames", "coldStorage"],
+      required: [
+        "receiveWalletName",
+        "withdrawalWalletName",
+        "coldWalletName",
+        "payoutQueues",
+        "rebalances",
+      ],
       additionalProperties: false,
       default: {
-        hotWalletName: "dev-wallet",
+        receiveWalletName: "dev-wallet",
+        withdrawalWalletName: "dev-wallet",
+        coldWalletName: "cold",
       },
     },
     lndScbBackupBucketName: { type: "string", default: "lnd-static-channel-backups" },
@@ -605,11 +666,13 @@ export const configSchema = {
       type: "object",
       properties: {
         rebalanceEnabled: { type: "boolean" },
+        removeInactiveMerchantsEnabled: { type: "boolean" },
       },
-      required: ["rebalanceEnabled"],
+      required: ["rebalanceEnabled", "removeInactiveMerchantsEnabled"],
       additionalProperties: false,
       default: {
         rebalanceEnabled: true,
+        removeInactiveMerchantsEnabled: true,
       },
     },
     captcha: {
@@ -656,6 +719,19 @@ export const configSchema = {
       items: { type: "string" },
       default: [],
     },
+    phoneProvider: {
+      type: "object",
+      properties: {
+        verify: { type: "string", enum: ["prelude", "twilio"] },
+        transactional: { type: "string", enum: ["prelude", "twilio"] },
+      },
+      required: ["verify", "transactional"],
+      additionalProperties: false,
+      default: {
+        verify: "twilio",
+        transactional: "twilio",
+      },
+    },
   },
   required: [
     "lightningAddressDomain",
@@ -667,7 +743,6 @@ export const configSchema = {
     "ratioPrecision",
     "buildVersion",
     "quizzes",
-    "coldStorage",
     "bria",
     "lndScbBackupBucketName",
     "admin_accounts",
@@ -686,6 +761,7 @@ export const configSchema = {
     "smsAuthUnsupportedCountries",
     "whatsAppAuthUnsupportedCountries",
     "telegramAuthUnsupportedCountries",
+    "phoneProvider",
   ],
   additionalProperties: false,
 } as const

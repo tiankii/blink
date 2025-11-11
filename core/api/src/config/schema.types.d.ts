@@ -17,6 +17,20 @@ type AccountLimitsConfig = {
   }
 }
 
+type PayoutQueueConfig = {
+  speed: PayoutSpeed
+  queueName: string
+  displayName: string
+  description: string
+}
+
+type RebalanceConfig = {
+  threshold: Satoshis
+  minRebalanceSize: Satoshis
+  minBalance: Satoshis
+  payoutQueueName: string
+}
+
 type YamlSchema = {
   name: string
   lightningAddressDomain: string
@@ -46,19 +60,14 @@ type YamlSchema = {
     denyASNs: string[]
     allowASNs: string[]
   }
-  coldStorage: {
-    minOnChainHotWalletBalance: number
-    minRebalanceSize: number
-    maxHotWalletBalance: number
-  }
   bria: {
-    hotWalletName: string
-    queueNames: {
-      fast: string
-    }
-    coldStorage: {
-      walletName: string
-      hotToColdRebalanceQueueName: string
+    receiveWalletName: string
+    withdrawalWalletName: string
+    payoutQueues: PayoutQueueConfig[]
+    coldWalletName: string
+    rebalances: {
+      hotToCold: RebalanceConfig
+      receiveToWithdrawal: RebalanceConfig
     }
   }
   lndScbBackupBucketName: string
@@ -144,6 +153,7 @@ type YamlSchema = {
   userActivenessMonthlyVolumeThreshold: number
   cronConfig: {
     rebalanceEnabled: boolean
+    removeInactiveMerchantsEnabled: boolean
   }
   captcha: {
     mandatory: boolean
@@ -152,4 +162,8 @@ type YamlSchema = {
   smsAuthUnsupportedCountries: string[]
   whatsAppAuthUnsupportedCountries: string[]
   telegramAuthUnsupportedCountries: string[]
+  phoneProvider: {
+    verify: "prelude" | "twilio"
+    transactional: "prelude" | "twilio"
+  }
 }

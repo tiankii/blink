@@ -94,9 +94,11 @@ export const USER_ACTIVENESS_MONTHLY_VOLUME_THRESHOLD = toCents(
 )
 
 export const getBriaPartialConfigFromYaml = () => ({
-  hotWalletName: yamlConfig.bria.hotWalletName,
-  queueNames: yamlConfig.bria.queueNames,
-  coldStorage: yamlConfig.bria.coldStorage,
+  receiveWalletName: yamlConfig.bria.receiveWalletName,
+  withdrawalWalletName: yamlConfig.bria.withdrawalWalletName,
+  coldWalletName: yamlConfig.bria.coldWalletName,
+  payoutQueues: yamlConfig.bria.payoutQueues,
+  rebalances: yamlConfig.bria.rebalances,
 })
 
 export const getLightningAddressDomain = (): string => yamlConfig.lightningAddressDomain
@@ -231,16 +233,6 @@ export const getOnChainWalletConfig = () => ({
   dustThreshold: yamlConfig.onChainWallet.dustThreshold,
 })
 
-export const getColdStorageConfig = (): ColdStorageConfig => {
-  const config = yamlConfig.coldStorage
-
-  return {
-    minOnChainHotWalletBalance: toSats(config.minOnChainHotWalletBalance),
-    maxHotWalletBalance: toSats(config.maxHotWalletBalance),
-    minRebalanceSize: toSats(config.minRebalanceSize),
-  }
-}
-
 export const getBuildVersions = (): {
   minBuildNumberAndroid: number
   lastBuildNumberAndroid: number
@@ -348,3 +340,8 @@ export const getWhatsAppAuthUnsupportedCountries = (): CountryCode[] => {
 export const getTelegramAuthUnsupportedCountries = (): CountryCode[] => {
   return yamlConfig.telegramAuthUnsupportedCountries as CountryCode[]
 }
+
+export const getPhoneProviderConfig = () => ({
+  verify: yamlConfig.phoneProvider.verify,
+  transactional: yamlConfig.phoneProvider.transactional,
+})

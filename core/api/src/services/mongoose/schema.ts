@@ -361,7 +361,22 @@ const MerchantSchema = new Schema<MerchantRecord>({
     default: false,
     index: true,
   },
+  deleted: {
+    type: Boolean,
+    default: false,
+    required: true,
+  },
+  deletedAt: {
+    type: Date,
+    required: false,
+  },
+  deletedByPrivilegedClientId: {
+    type: String,
+    required: false,
+  },
 })
+
+MerchantSchema.index({ validated: 1, deleted: 1 })
 
 export const Merchant = mongoose.model<MerchantRecord>("Merchant", MerchantSchema)
 
@@ -503,6 +518,16 @@ const paymentFlowStateSchema = new Schema<PaymentFlowStateRecord>(
 
 paymentFlowStateSchema.index({
   paymentHash: 1,
+  senderWalletId: 1,
+  inputAmount: 1,
+  _id: -1,
+})
+
+paymentFlowStateSchema.index({
+  intraLedgerHash: 1,
+  senderWalletId: 1,
+  inputAmount: 1,
+  _id: -1,
 })
 
 export const PaymentFlowState = mongoose.model(

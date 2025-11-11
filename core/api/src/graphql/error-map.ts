@@ -159,6 +159,22 @@ export const mapError = (error: ApplicationError): CustomGraphQLError => {
       message = "Invoice has an invalid checksum, please check again"
       return new InvoiceDecodeError({ message, logger: baseLogger })
 
+    case "UnknownCharacterForLnInvoiceError":
+      message = "Invoice has an unknown character, couldn't decode."
+      return new InvoiceDecodeError({ message, logger: baseLogger })
+
+    case "InvalidContactIdError":
+      message = "Invalid contact id"
+      return new ValidationInternalError({ message, logger: baseLogger })
+
+    case "InvalidHandleError":
+      message = "Invalid handle"
+      return new ValidationInternalError({ message, logger: baseLogger })
+
+    case "InvalidDisplayNameError":
+      message = "Invalid display name"
+      return new ValidationInternalError({ message, logger: baseLogger })
+
     case "LnPaymentRequestInTransitError":
       message = "There is a pending payment for this invoice"
       return new ValidationInternalError({ message, logger: baseLogger })
@@ -211,6 +227,11 @@ export const mapError = (error: ApplicationError): CustomGraphQLError => {
       message = "Phone number is not from a valid region"
       return new ValidationInternalError({ message, logger: baseLogger })
 
+    case "SpendingLimitExceededPhoneProviderError":
+      message = "Service spending limit exceeded. Please contact support."
+      return new ValidationInternalError({ message, logger: baseLogger })
+
+    case "PhoneProviderConfigError":
     case "PhoneProviderConnectionError":
     case "PhoneProviderUnavailableError":
       message = "Phone provider temporarily unreachable"
@@ -591,6 +612,9 @@ export const mapError = (error: ApplicationError): CustomGraphQLError => {
         "Authorization data from Telegram is still pending. Please wait a few seconds and try again."
       return new AuthorizationError({ message, logger: baseLogger })
 
+    case "PayoutQueueNotFoundError":
+      message = "Invalid or inactive speed"
+      return new ValidationInternalError({ message, logger: baseLogger })
     // ----------
     // Unhandled below here
     // ----------
@@ -603,7 +627,6 @@ export const mapError = (error: ApplicationError): CustomGraphQLError => {
     case "LedgerFacadeError":
     case "LightningError":
     case "BadPaymentDataError":
-    case "LnInvoiceDecodeError":
     case "LightningServiceError":
     case "CouldNotDecodeReturnedPaymentRequest":
     case "InvoiceNotFoundError":
@@ -837,6 +860,7 @@ export const mapError = (error: ApplicationError): CustomGraphQLError => {
       message = "Unknown error occurred when trying to find a route for payment."
       return new RouteFindingError({ message, logger: baseLogger })
 
+    case "LnInvoiceDecodeError":
     case "UnknownLnInvoiceDecodeError":
       message = "Invalid lightning request, couldn't decode."
       return new InvoiceDecodeError({ message, logger: baseLogger })

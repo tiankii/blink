@@ -1,17 +1,15 @@
 import twilio from "twilio"
 import { isAxiosError } from "axios"
-import disposablePhoneList from "@ip1sms/disposable-phone-numbers"
 
-import { wrapAsyncFunctionsToRunInSpan } from "./tracing"
+import { wrapAsyncFunctionsToRunInSpan } from "../tracing"
 
 import {
   TWILIO_ACCOUNT_SID,
   TWILIO_AUTH_TOKEN,
   TWILIO_VERIFY_SERVICE_ID,
   TWILIO_MESSAGING_SERVICE_ID,
-  UNSECURE_DEFAULT_LOGIN_CODE,
-  getTestAccounts,
 } from "@/config"
+
 import {
   ExpiredOrNonExistentPhoneNumberError,
   InvalidOrApprovedVerificationError,
@@ -19,6 +17,7 @@ import {
   InvalidTypePhoneProviderError,
   MissingTypePhoneProviderError,
   PhoneCodeInvalidError,
+  PhoneProviderConfigError,
   PhoneProviderConnectionError,
   PhoneProviderRateLimitExceededError,
   PhoneProviderUnavailableError,
@@ -26,19 +25,30 @@ import {
   RestrictedRegionPhoneProviderError,
   UnknownPhoneProviderServiceError,
   UnsubscribedRecipientPhoneProviderError,
+  isDisposablePhoneNumber,
 } from "@/domain/phone-provider"
-import { baseLogger } from "@/services/logger"
-
-import { TestAccountsChecker } from "@/domain/accounts/test-accounts-checker"
-import { NotImplementedError } from "@/domain/errors"
 import { parseErrorMessageFromUnknown } from "@/domain/shared"
+
+import { baseLogger } from "@/services/logger"
 
 export const TWILIO_ACCOUNT_TEST = "AC_twilio_id"
 
-export const TwilioClient = (): IPhoneProviderService => {
+export const TwilioClient = (): IPhoneProviderService | PhoneProviderConfigError => {
   const accountSid = TWILIO_ACCOUNT_SID
+  if (!accountSid) {
+    return new PhoneProviderConfigError("TWILIO_ACCOUNT_SID is required")
+  }
+
   const authToken = TWILIO_AUTH_TOKEN
+  if (!authToken) {
+    return new PhoneProviderConfigError("TWILIO_AUTH_TOKEN is required")
+  }
+
   const verifyService = TWILIO_VERIFY_SERVICE_ID
+  if (!verifyService) {
+    return new PhoneProviderConfigError("TWILIO_VERIFY_SERVICE_ID is required")
+  }
+
   const messagingServiceSid = TWILIO_MESSAGING_SERVICE_ID
 
   const client = twilio(accountSid, authToken)
@@ -52,22 +62,13 @@ export const TwilioClient = (): IPhoneProviderService => {
     to: PhoneNumber
     channel: ChannelType
     phoneExists: boolean
+    ip: IpAddress
   }): Promise<true | PhoneProviderServiceError> => {
     try {
       if (!phoneExists) {
-        if (isDisposablePhoneNumber(to)) {
-          return new InvalidTypePhoneProviderError("disposable")
-        }
-
-        const lookup = await client.lookups.v2.phoneNumbers(to).fetch({
-          fields: "line_type_intelligence",
-        })
-        // https://www.twilio.com/docs/lookup/v2-api/line-type-intelligence#type-property-values
-        if (!lookup.lineTypeIntelligence) {
-          return new MissingTypePhoneProviderError()
-        }
-        if (lookup.lineTypeIntelligence.type === "nonFixedVoip") {
-          return new InvalidTypePhoneProviderError("nonFixedVoip")
+        const validation = await validateDestination(to)
+        if (validation instanceof Error) {
+          return validation
         }
       }
 
@@ -121,7 +122,10 @@ export const TwilioClient = (): IPhoneProviderService => {
       if (!lookup.lineTypeIntelligence) {
         return new MissingTypePhoneProviderError()
       }
-      if (lookup.lineTypeIntelligence.type === "nonFixedVoip") {
+      if (
+        lookup.lineTypeIntelligence["type"] &&
+        String(lookup.lineTypeIntelligence["type"]) === "nonFixedVoip"
+      ) {
         return new InvalidTypePhoneProviderError("nonFixedVoip")
       }
 
@@ -160,7 +164,6 @@ export const TwilioClient = (): IPhoneProviderService => {
       const result = await client.lookups.v1
         .phoneNumbers(phone)
         .fetch({ type: ["carrier"] })
-      baseLogger.info({ result }, "result carrier info")
 
       // TODO: migration to save the converted value to mongoose instead
       // of the one returned from twilio
@@ -178,17 +181,17 @@ export const TwilioClient = (): IPhoneProviderService => {
       const phoneMetadata: PhoneMetadata = {
         carrier: {
           error_code: `${result.carrier.error_code}`,
-          mobile_country_code: result.carrier.mobile_country_code,
-          mobile_network_code: result.carrier.mobile_network_code,
-          name: result.carrier.name,
-          type: result.carrier.type,
+          mobile_country_code: `${result.carrier.mobile_country_code}`,
+          mobile_network_code: `${result.carrier.mobile_network_code}`,
+          name: `${result.carrier.name}`,
+          type: `${result.carrier.type}` as CarrierType,
         },
         countryCode: result.countryCode,
       }
 
       return phoneMetadata
     } catch (err) {
-      return new UnknownPhoneProviderServiceError(err)
+      return handleCommonErrors(err)
     }
   }
 
@@ -263,43 +266,5 @@ export const KnownTwilioErrorMessages = {
     /The destination phone number has been temporarily blocked by Twilio due to fraudulent activities/,
   ServiceUnavailable: /Service is unavailable. Please try again/,
   InvalidOrApprovedVerification:
-    /The requested resource \/Services\/(.*?)\/VerificationCheck was not found/,
+    /The requested resource \/(?:v2\/)?Services\/(.*?)\/VerificationCheck was not found/,
 } as const
-
-export const isPhoneCodeValid = async ({
-  code,
-  phone,
-}: {
-  phone: PhoneNumber
-  code: PhoneCode
-}) => {
-  if (code === UNSECURE_DEFAULT_LOGIN_CODE) {
-    return true
-  }
-
-  const testAccounts = getTestAccounts()
-  if (TestAccountsChecker(testAccounts).isPhoneTest(phone)) {
-    const validTestCode = TestAccountsChecker(testAccounts).isPhoneTestAndCodeValid({
-      code,
-      phone,
-    })
-    if (!validTestCode) {
-      return new PhoneCodeInvalidError()
-    }
-    return true
-  }
-
-  // we can't mock this function properly because in the e2e test,
-  // the server is been launched as a sub process,
-  // so it's not been mocked by jest
-  if (TWILIO_ACCOUNT_SID === TWILIO_ACCOUNT_TEST) {
-    return new NotImplementedError("use test account for local dev and tests")
-  }
-
-  return TwilioClient().validateVerify({ to: phone, code })
-}
-
-export const isDisposablePhoneNumber = (phone: PhoneNumber) => {
-  const phoneNumber = phone.replace(/[^0-9]/, "")
-  return phoneNumber in disposablePhoneList
-}
