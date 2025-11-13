@@ -1104,8 +1104,8 @@ importers:
         specifier: ^0.7.15
         version: 0.7.15
       '@ip1sms/disposable-phone-numbers':
-        specifier: ^2.1.1354
-        version: 2.1.1354
+        specifier: ^2.1.1355
+        version: 2.1.1355
       '@merqva/telegram-passport':
         specifier: ^1.0.2
         version: 1.0.2
@@ -1511,7 +1511,7 @@ importers:
         version: 6.1.0(typescript@5.8.3)
       migrate-mongo:
         specifier: ^11.0.0
-        version: 11.0.0(mongodb@6.20.0)
+        version: 11.0.0(mongodb@6.21.0)
       node-jose:
         specifier: ^2.2.0
         version: 2.2.0
@@ -7235,8 +7235,8 @@ packages:
     resolution: {integrity: sha512-Sx1pU8EM64o2BrqNpEO1CNLtKQwyhuXuqyfH7oGKCk+1a33d2r5saW8zNwm3j6BTExtjrv2BxTgzzkMwts6vGg==}
     dev: false
 
-  /@ip1sms/disposable-phone-numbers@2.1.1354:
-    resolution: {integrity: sha512-EyFpPa6jQ9pSugu1pw8lfUufHIDIkJbcg1urq/6/HUgLqRRmzdteXkRut0HZWWH0m3fN5exTsmBg2yuh6i2RFg==}
+  /@ip1sms/disposable-phone-numbers@2.1.1355:
+    resolution: {integrity: sha512-zBiH+u3x1aNKfF24/xCxX19VUhvnP0ZuPGXzaP4uhkX8YzEpKwJNYaJWMogxU+AVI80LQvgNHSMgHzDD+7WgNg==}
     dev: false
 
   /@isaacs/cliui@8.0.2:
@@ -16122,8 +16122,8 @@ packages:
     engines: {node: '>=6.0.0'}
     dev: true
 
-  /baseline-browser-mapping@2.8.26:
-    resolution: {integrity: sha512-73lC1ugzwoaWCLJ1LvOgrR5xsMLTqSKIEoMHVtL9E/HNk0PXtTM76ZIm84856/SF7Nv8mPZxKoBsgpm0tR1u1Q==}
+  /baseline-browser-mapping@2.8.27:
+    resolution: {integrity: sha512-2CXFpkjVnY2FT+B6GrSYxzYf65BJWEqz5tIRHCvNsZZ2F3CmsCB37h8SpYgKG7y9C4YAeTipIPWG7EmFmhAeXA==}
     hasBin: true
     dev: true
 
@@ -16457,7 +16457,7 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      baseline-browser-mapping: 2.8.26
+      baseline-browser-mapping: 2.8.27
       caniuse-lite: 1.0.30001754
       electron-to-chromium: 1.5.250
       node-releases: 2.0.27
@@ -24651,7 +24651,7 @@ packages:
       braces: 3.0.3
       picomatch: 2.3.1
 
-  /migrate-mongo@11.0.0(mongodb@6.20.0):
+  /migrate-mongo@11.0.0(mongodb@6.21.0):
     resolution: {integrity: sha512-GB/gHzUwp/fL1w6ksNGihTyb+cSrm6NbVLlz1OSkQKaLlzAXMwH7iKK2ZS7W5v+I8vXiY2rL58WTUZSAL6QR+A==}
     engines: {node: '>=8'}
     hasBin: true
@@ -24664,7 +24664,7 @@ packages:
       fn-args: 5.0.0
       fs-extra: 10.1.0
       lodash: 4.17.21
-      mongodb: 6.20.0(snappy@7.2.2)
+      mongodb: 6.21.0(snappy@7.2.2)
       p-each-series: 2.2.0
     dev: true
 
@@ -24932,8 +24932,8 @@ packages:
       snappy: 7.2.2
     dev: true
 
-  /mongodb@6.20.0(snappy@7.2.2):
-    resolution: {integrity: sha512-Tl6MEIU3K4Rq3TSHd+sZQqRBoGlFsOgNrH5ltAcFBV62Re3Fd+FcaVf8uSEQFOJ51SDowDVttBTONMfoYWrWlQ==}
+  /mongodb@6.21.0(snappy@7.2.2):
+    resolution: {integrity: sha512-URyb/VXMjJ4da46OeSXg+puO39XH9DeQpWCslifrRn9JWugy0D+DvvBvkm2WxmHe61O/H19JM66p1z7RHVkZ6A==}
     engines: {node: '>=16.20.1'}
     peerDependencies:
       '@aws-sdk/credential-providers': ^3.188.0
