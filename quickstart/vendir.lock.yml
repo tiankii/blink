@@ -2,24 +2,24 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'feat: add block info to global query (#328)...'
-      sha: 8904f4e0f13b03bf50b2c8f2075afb5f33fc3561
+      commitTitle: 'chore: remove redundant check in settlement-via.ts (#331)'
+      sha: b1c3b3bf57f999104c2d5ed243c16ea66e4e359c
       tags:
-      - 0.21.117-3-g8904f4e0f
+      - 0.21.118-1-gb1c3b3bf5
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'feat: add block info to global query (#328)...'
-      sha: 8904f4e0f13b03bf50b2c8f2075afb5f33fc3561
+      commitTitle: 'chore: remove redundant check in settlement-via.ts (#331)'
+      sha: b1c3b3bf57f999104c2d5ed243c16ea66e4e359c
       tags:
-      - 0.21.117-3-g8904f4e0f
+      - 0.21.118-1-gb1c3b3bf5
     path: schemas
   - git:
-      commitTitle: 'feat: add block info to global query (#328)...'
-      sha: 8904f4e0f13b03bf50b2c8f2075afb5f33fc3561
+      commitTitle: 'chore: remove redundant check in settlement-via.ts (#331)'
+      sha: b1c3b3bf57f999104c2d5ed243c16ea66e4e359c
       tags:
-      - 0.21.117-3-g8904f4e0f
+      - 0.21.118-1-gb1c3b3bf5
     path: gql
   path: graphql
 kind: LockConfig
