@@ -2,24 +2,27 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'feat(core): add fee strategies (#336)...'
-      sha: 903e197aa2f57aba587166c2f95532d8da43eba6
+      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1375
+        (#342)...'
+      sha: 663b8ef5be1300df88f9604457e4d4d5335bc734
       tags:
-      - 0.21.119-2-g903e197aa
+      - 0.21.120-2-g663b8ef5b
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'feat(core): add fee strategies (#336)...'
-      sha: 903e197aa2f57aba587166c2f95532d8da43eba6
+      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1375
+        (#342)...'
+      sha: 663b8ef5be1300df88f9604457e4d4d5335bc734
       tags:
-      - 0.21.119-2-g903e197aa
+      - 0.21.120-2-g663b8ef5b
     path: schemas
   - git:
-      commitTitle: 'feat(core): add fee strategies (#336)...'
-      sha: 903e197aa2f57aba587166c2f95532d8da43eba6
+      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1375
+        (#342)...'
+      sha: 663b8ef5be1300df88f9604457e4d4d5335bc734
       tags:
-      - 0.21.119-2-g903e197aa
+      - 0.21.121
     path: gql
   path: graphql
 kind: LockConfig
