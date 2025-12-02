@@ -2,24 +2,24 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'chore: remove redundant check in settlement-via.ts (#331)'
-      sha: b1c3b3bf57f999104c2d5ed243c16ea66e4e359c
+      commitTitle: 'feat(core): add fee strategies (#336)...'
+      sha: 903e197aa2f57aba587166c2f95532d8da43eba6
       tags:
-      - 0.21.118-1-gb1c3b3bf5
+      - 0.21.119-2-g903e197aa
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'chore: remove redundant check in settlement-via.ts (#331)'
-      sha: b1c3b3bf57f999104c2d5ed243c16ea66e4e359c
+      commitTitle: 'feat(core): add fee strategies (#336)...'
+      sha: 903e197aa2f57aba587166c2f95532d8da43eba6
       tags:
-      - 0.21.118-1-gb1c3b3bf5
+      - 0.21.119-2-g903e197aa
     path: schemas
   - git:
-      commitTitle: 'chore: remove redundant check in settlement-via.ts (#331)'
-      sha: b1c3b3bf57f999104c2d5ed243c16ea66e4e359c
+      commitTitle: 'feat(core): add fee strategies (#336)...'
+      sha: 903e197aa2f57aba587166c2f95532d8da43eba6
       tags:
-      - 0.21.118-1-gb1c3b3bf5
+      - 0.21.119-2-g903e197aa
     path: gql
   path: graphql
 kind: LockConfig
