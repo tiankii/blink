@@ -2,27 +2,24 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1375
-        (#342)...'
-      sha: 663b8ef5be1300df88f9604457e4d4d5335bc734
+      commitTitle: 'refactor(core): make network fee rate mandatory (#348)...'
+      sha: 7ff095ccada4d24329aa64bfab1ac6194092ce88
       tags:
-      - 0.21.120-2-g663b8ef5b
+      - 0.21.121-2-g7ff095cca
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1375
-        (#342)...'
-      sha: 663b8ef5be1300df88f9604457e4d4d5335bc734
+      commitTitle: 'refactor(core): make network fee rate mandatory (#348)...'
+      sha: 7ff095ccada4d24329aa64bfab1ac6194092ce88
       tags:
-      - 0.21.120-2-g663b8ef5b
+      - 0.21.121-2-g7ff095cca
     path: schemas
   - git:
-      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1375
-        (#342)...'
-      sha: 663b8ef5be1300df88f9604457e4d4d5335bc734
+      commitTitle: 'refactor(core): make network fee rate mandatory (#348)...'
+      sha: 7ff095ccada4d24329aa64bfab1ac6194092ce88
       tags:
-      - 0.21.121
+      - 0.21.121-2-g7ff095cca
     path: gql
   path: graphql
 kind: LockConfig
