@@ -11,6 +11,7 @@ import TransactionsIcon from "./icons/transactions.svg"
 import GlobeIcon from "./icons/search-globe.svg"
 import LogoutIcon from "./icons/logout.svg"
 import ComposeIcon from "./icons/compose.svg"
+import SendIcon from "./icons/send.svg"
 
 const dashboardRoutes = [
   {
@@ -32,6 +33,11 @@ const dashboardRoutes = [
     name: "Notifications",
     icon: ComposeIcon,
     path: "/notifications",
+  },
+  {
+    name: "Invitations",
+    icon: SendIcon,
+    path: "/invitations",
   },
 ]
 
