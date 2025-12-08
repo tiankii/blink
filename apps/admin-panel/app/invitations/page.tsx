@@ -10,17 +10,13 @@ import { Pagination } from "../../components/shared/pagination"
 import { TextInput, SelectInput } from "../../components/shared/form-controls"
 import { InvitationStatusBadge } from "../../components/invitations/status-badge"
 
-import {
-  InvitationStatusFilter,
-  InvitationRow,
-  StatusFilter,
-} from "./types"
+import { InvitationStatusOptions, InvitationRow, StatusFilter } from "./types"
 
 const statusFilterOptions: Array<{ value: StatusFilter; label: string }> = [
-  { value: InvitationStatusFilter.All, label: "All Statuses" },
-  { value: InvitationStatusFilter.Pending, label: "Pending" },
-  { value: InvitationStatusFilter.Accepted, label: "Accepted" },
-  { value: InvitationStatusFilter.Revoked, label: "Revoked" },
+  { value: InvitationStatusOptions.All, label: "All Statuses" },
+  { value: InvitationStatusOptions.Pending, label: "Pending" },
+  { value: InvitationStatusOptions.Accepted, label: "Accepted" },
+  { value: InvitationStatusOptions.Revoked, label: "Revoked" },
 ]
 
 export default function InvitationsPage() {
@@ -29,7 +25,7 @@ export default function InvitationsPage() {
 
   const [search, setSearch] = useState("")
   const [statusFilter, setStatusFilter] = useState<StatusFilter>(
-    InvitationStatusFilter.All,
+    InvitationStatusOptions.All,
   )
   const [dateFilter, setDateFilter] = useState("")
   const [pageItems, setPageItems] = useState<InvitationRow[]>([])
@@ -127,32 +123,34 @@ export default function InvitationsPage() {
           </thead>
           <tbody className="divide-y divide-gray-100 bg-white">
             {hasInvitations ? (
-              pageItems.map((row) => {
-                const formattedDate = formatDateDisplay(row.lastActivity)
+              pageItems.map((invitation) => {
+                const formattedDate = formatDateDisplay(invitation.lastActivity)
 
                 return (
                   <tr
-                    key={row.id}
+                    key={invitation.id}
                     className="cursor-pointer hover:bg-gray-50"
-                    onClick={() => handleRowClick(row.id)}
+                    onClick={() => handleRowClick(invitation.id)}
                   >
                     <td className="whitespace-nowrap px-6 py-4 text-gray-900">
-                      {row.id}
+                      {invitation.id}
                     </td>
                     <td className="px-6 py-4">
-                      <InvitationStatusBadge status={row.status} />
+                      <InvitationStatusBadge status={invitation.status} />
                     </td>
                     <td className="px-6 py-4 text-gray-700">{formattedDate}</td>
-                    <td className="px-6 py-4 text-gray-700">{row.sentBy}</td>
+                    <td className="px-6 py-4 text-gray-700">{invitation.sentBy}</td>
                     <td className="px-6 py-4" onClick={(e) => e.stopPropagation()}>
                       <div className="flex items-center gap-2">
                         <Button
                           variant="outline-blue"
-                          onClick={() => handleRowClick(row.id)}
+                          onClick={() => handleRowClick(invitation.id)}
                         >
                           View
                         </Button>
-                        <Button variant="outline-red">Revoke</Button>
+                        {invitation.status === InvitationStatusOptions.Pending && (
+                          <Button variant="outline-red">Revoke</Button>
+                        )}
                       </div>
                     </td>
                   </tr>

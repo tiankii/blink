@@ -7,7 +7,7 @@ export type InvitationRow = {
   sentBy: string
 }
 
-export const InvitationStatusFilter = {
+export const InvitationStatusOptions = {
   All: "all",
   Pending: "pending",
   Accepted: "accepted",
@@ -15,7 +15,7 @@ export const InvitationStatusFilter = {
 } as const
 
 export type StatusFilter =
-  (typeof InvitationStatusFilter)[keyof typeof InvitationStatusFilter]
+  (typeof InvitationStatusOptions)[keyof typeof InvitationStatusOptions]
 
 export const TemplateIcon = {
   Star: "star",
