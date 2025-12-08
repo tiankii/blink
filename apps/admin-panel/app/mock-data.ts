@@ -19,19 +19,19 @@ export const visaInvitationsMock: InvitationRow[] = [
   },
   {
     id: "satoshi",
-    status: "pending",
+    status: "accepted",
     lastActivity: "2025-11-25",
     sentBy: "Admin",
   },
   {
     id: "newuser2",
-    status: "pending",
+    status: "accepted",
     lastActivity: "2025-11-23",
     sentBy: "Admin",
   },
   {
     id: "josenakamoto",
-    status: "pending",
+    status: "revoked",
     lastActivity: "2025-11-15",
     sentBy: "Admin",
   },
@@ -55,13 +55,13 @@ export const visaInvitationsMock: InvitationRow[] = [
   },
   {
     id: "olduser1",
-    status: "pending",
+    status: "revoked",
     lastActivity: "2025-09-26",
     sentBy: "Admin",
   },
   {
     id: "olduser2",
-    status: "pending",
+    status: "revoked",
     lastActivity: "2025-09-11",
     sentBy: "Admin",
   },

@@ -4,24 +4,33 @@ import { useMemo, useState, useCallback, useTransition } from "react"
 import { useRouter } from "next/navigation"
 
 import { formatDateDisplay } from "../utils"
+import { visaInvitationsMock } from "../mock-data"
 import { Button } from "../../components/shared/button"
 import { Pagination } from "../../components/shared/pagination"
 import { TextInput, SelectInput } from "../../components/shared/form-controls"
-import { visaInvitationsMock } from "../mock-data"
+import { InvitationStatusBadge } from "../../components/invitations/status-badge"
 
 import {
-  invitationStatusMeta,
-  INVITATION_FILTER_ALL,
+  InvitationStatusFilter,
   InvitationRow,
   StatusFilter,
 } from "./types"
+
+const statusFilterOptions: Array<{ value: StatusFilter; label: string }> = [
+  { value: InvitationStatusFilter.All, label: "All Statuses" },
+  { value: InvitationStatusFilter.Pending, label: "Pending" },
+  { value: InvitationStatusFilter.Accepted, label: "Accepted" },
+  { value: InvitationStatusFilter.Revoked, label: "Revoked" },
+]
 
 export default function InvitationsPage() {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
 
   const [search, setSearch] = useState("")
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>(INVITATION_FILTER_ALL)
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>(
+    InvitationStatusFilter.All,
+  )
   const [dateFilter, setDateFilter] = useState("")
   const [pageItems, setPageItems] = useState<InvitationRow[]>([])
 
@@ -80,10 +89,9 @@ export default function InvitationsPage() {
           className="h-10 md:w-48"
           aria-label="Filter by status"
         >
-          <option value={INVITATION_FILTER_ALL}>All Statuses</option>
-          {Object.entries(invitationStatusMeta).map(([value, meta]) => (
-            <option key={value} value={value}>
-              {meta.label}
+          {statusFilterOptions.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
             </option>
           ))}
         </SelectInput>
@@ -120,7 +128,6 @@ export default function InvitationsPage() {
           <tbody className="divide-y divide-gray-100 bg-white">
             {hasInvitations ? (
               pageItems.map((row) => {
-                const meta = invitationStatusMeta[row.status]
                 const formattedDate = formatDateDisplay(row.lastActivity)
 
                 return (
@@ -133,11 +140,7 @@ export default function InvitationsPage() {
                       {row.id}
                     </td>
                     <td className="px-6 py-4">
-                      <span
-                        className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${meta.className}`}
-                      >
-                        {meta.label}
-                      </span>
+                      <InvitationStatusBadge status={row.status} />
                     </td>
                     <td className="px-6 py-4 text-gray-700">{formattedDate}</td>
                     <td className="px-6 py-4 text-gray-700">{row.sentBy}</td>

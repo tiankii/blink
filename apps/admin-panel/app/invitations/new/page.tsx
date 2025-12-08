@@ -20,7 +20,7 @@ export default function NewInvitationPage() {
   const [body, setBody] = useState("")
   const [sendPush, setSendPush] = useState(true)
   const [addHistory, setAddHistory] = useState(true)
-  const [addBulletin, setAddBulletin] = useState(false)
+  const [addBulletin, setAddBulletin] = useState(true)
 
   const selectedTemplate = useMemo(
     () => visaTemplatesMock.find((template) => template.id === templateId),
