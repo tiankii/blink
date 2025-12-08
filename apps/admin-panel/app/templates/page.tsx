@@ -16,7 +16,7 @@ export default function TemplatesPage() {
     ({ offset, limit }: { offset: number; limit: number }) => {
       setPageItems(visaTemplatesMock.slice(offset, offset + limit))
     },
-    [visaTemplatesMock],
+    [],
   )
 
   return (

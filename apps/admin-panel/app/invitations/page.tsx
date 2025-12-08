@@ -25,11 +25,6 @@ export default function InvitationsPage() {
   const [dateFilter, setDateFilter] = useState("")
   const [pageItems, setPageItems] = useState<InvitationRow[]>([])
 
-  const filteredInvitations = useMemo(
-    () => visaInvitationsMock,
-    [visaInvitationsMock],
-  )
-
   const resetKey = useMemo(
     () => `${search}|${statusFilter}|${dateFilter}`,
     [search, statusFilter, dateFilter],
@@ -46,9 +41,9 @@ export default function InvitationsPage() {
 
   const handlePageChange = useCallback(
     ({ offset, limit }: { offset: number; limit: number }) => {
-      setPageItems(filteredInvitations.slice(offset, offset + limit))
+      setPageItems(visaInvitationsMock.slice(offset, offset + limit))
     },
-    [filteredInvitations],
+    [],
   )
 
   const handleCreateNew = useCallback(() => {
@@ -172,7 +167,7 @@ export default function InvitationsPage() {
       </div>
 
       <Pagination
-        totalItems={filteredInvitations.length}
+        totalItems={visaInvitationsMock.length}
         resetKey={resetKey}
         onPageChange={handlePageChange}
       />
