@@ -1,4 +1,4 @@
-export type InvitationStatus = "pending" | "accepted" | "revoked"
+export type InvitationStatus = "pending" | "accepted" | "revoked" | "active"
 
 export type InvitationRow = {
   id: string
@@ -12,6 +12,7 @@ export const InvitationStatusOptions = {
   Pending: "pending",
   Accepted: "accepted",
   Revoked: "revoked",
+  Active: "active",
 } as const
 
 export type StatusFilter =
@@ -32,3 +33,16 @@ export type TemplateRow = {
   title: string
   body: string
 }
+
+export type Event = {
+  id: string
+  type: string
+  timestamp: string
+  description: string
+  sentBy?: string
+}
+
+export type EditableContent = {
+  title: string
+  body: string
+} | null

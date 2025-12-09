@@ -23,6 +23,10 @@ const invitationStatusMeta: Record<
     label: "Revoked",
     className: "bg-red-100 text-red-700",
   },
+  active: {
+    label: "Active",
+    className: "bg-orange-600 text-white",
+  },
 }
 
 export function InvitationStatusBadge({ status, label }: InvitationStatusBadgeProps) {

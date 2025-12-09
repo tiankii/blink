@@ -7,7 +7,7 @@ import { InvitationRow, TemplateRow } from "./invitations/types"
 export const visaInvitationsMock: InvitationRow[] = [
   {
     id: "joedoe",
-    status: "pending",
+    status: "active",
     lastActivity: "2025-12-03",
     sentBy: "Admin",
   },
