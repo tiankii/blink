@@ -21,6 +21,7 @@ export type StatusFilter =
 export const TemplateIcon = {
   Star: "star",
   Check: "check",
+  Bell: "bell",
 }
 
 export type TemplateIcon = (typeof TemplateIcon)[keyof typeof TemplateIcon]
