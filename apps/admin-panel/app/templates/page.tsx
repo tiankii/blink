@@ -12,13 +12,11 @@ export default function TemplatesPage() {
   const router = useRouter()
   const [pageItems, setPageItems] = useState<TemplateRow[]>(visaTemplatesMock.slice(0, 0))
   const [isCreateOpen, setIsCreateOpen] = useState(false)
-  // create modal form state
   const [createAction, setCreateAction] = useState<string>("Open Deep Link")
   const [createDeepLinkScreen, setCreateDeepLinkScreen] = useState<string>("Wallet")
   const [createDeepLinkAction, setCreateDeepLinkAction] = useState<string>("None")
   const [createLanguage, setCreateLanguage] = useState<string>("English")
 
-  // lock body scroll & hide sidebar while create modal open
   useEffect(() => {
     if (isCreateOpen) {
       document.body.classList.add("hide-sidebar")

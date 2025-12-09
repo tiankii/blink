@@ -37,10 +37,8 @@ export default function TemplateEditPage() {
     }
   }, [id])
 
-  // Hide the global sidebar while this fullscreen edit view is mounted
   useEffect(() => {
     document.body.classList.add("hide-sidebar")
-    // prevent background scroll while modal is open
     const prevOverflow = document.body.style.overflow
     document.body.style.overflow = "hidden"
     return () => {
@@ -66,7 +64,6 @@ export default function TemplateEditPage() {
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center overflow-auto bg-black/60 p-0">
       <div className="w-full h-full overflow-auto bg-white">
-        {/* Full-width header: title at left, close button at right */}
         <div className="w-full border-b border-gray-100 bg-white px-6 py-5">
           <div className="mx-auto flex w-full max-w-6xl items-center justify-between">
             <h2 className="text-2xl font-semibold">Edit Template</h2>

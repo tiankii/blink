@@ -25,7 +25,7 @@ const invitationStatusMeta: Record<
   },
   active: {
     label: "Active",
-    className: "bg-orange-600 text-white",
+    className: "bg-orange-500 text-white",
   },
 }
 
