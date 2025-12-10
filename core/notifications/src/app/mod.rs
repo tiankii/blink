@@ -10,7 +10,8 @@ use std::{collections::HashSet, sync::Arc};
 use crate::{
     email_executor::EmailExecutor, email_reminder_projection::EmailReminderProjection, history::*,
     job, notification_cool_off_tracker::*, notification_event::*, primitives::*, push_executor::*,
-    user_notification_settings::*, msg_messages::MsgMessageRepository,
+    user_notification_settings::*, msg_templates::MsgTemplateRepository,
+    msg_messages::MsgMessageRepository,
 };
 
 pub use config::*;
@@ -23,6 +24,7 @@ pub struct NotificationsApp {
     email_reminder_projection: EmailReminderProjection,
     history: NotificationHistory,
     pool: Pool<Postgres>,
+    msg_template_repository: MsgTemplateRepository,
     msg_message_repository: MsgMessageRepository,
     _runner: Arc<Option<JobRunnerHandle>>,
 }
@@ -40,6 +42,7 @@ impl NotificationsApp {
         let email_reminder_projection =
             EmailReminderProjection::new(&pool, config.link_email_reminder.clone());
         let history = NotificationHistory::new(&pool, &read_pool, settings.clone());
+        let msg_template_repository = MsgTemplateRepository::new(&pool, &read_pool);
         let msg_message_repository = MsgMessageRepository::new(&pool, &read_pool);
         let runner = job::start_job_runner(
             &pool,
@@ -62,6 +65,7 @@ impl NotificationsApp {
             settings,
             history,
             email_reminder_projection,
+            msg_template_repository,
             msg_message_repository,
             _runner: Arc::new(runner),
         })
@@ -383,6 +387,62 @@ impl NotificationsApp {
             }
         });
         Ok(())
+    }
+
+    #[instrument(name = "app.msg_template_create", skip(self), err)]
+    pub async fn msg_template_create(
+        &self,
+        name: String,
+        language_code: String,
+        icon_name: String,
+        title: String,
+        body: String,
+    ) -> Result<crate::msg_templates::MsgTemplate, ApplicationError> {
+        let template = self
+            .msg_template_repository
+            .create_template(name, language_code, icon_name, title, body)
+            .await?;
+        Ok(template)
+    }
+
+    #[instrument(name = "app.msg_template_update", skip(self), err)]
+    pub async fn msg_template_update(
+        &self,
+        id: uuid::Uuid,
+        name: String,
+        language_code: String,
+        icon_name: String,
+        title: String,
+        body: String,
+    ) -> Result<crate::msg_templates::MsgTemplate, ApplicationError> {
+        let template = self
+            .msg_template_repository
+            .update_template(id, name, language_code, icon_name, title, body)
+            .await?;
+        Ok(template)
+    }
+
+    #[instrument(name = "app.msg_template_delete", skip(self), err)]
+    pub async fn msg_template_delete(
+        &self,
+        id: uuid::Uuid,
+    ) -> Result<uuid::Uuid, ApplicationError> {
+        let deleted_id = self.msg_template_repository.delete_template(id).await?;
+        Ok(deleted_id)
+    }
+
+    #[instrument(name = "app.msg_templates_list", skip(self), err)]
+    pub async fn list_msg_templates(
+        &self,
+        _language_code: Option<String>,
+        limit: Option<i64>,
+        offset: Option<i64>,
+    ) -> Result<Vec<crate::msg_templates::MsgTemplate>, ApplicationError> {
+        let templates = self
+            .msg_template_repository
+            .list_templates(limit, offset)
+            .await?;
+        Ok(templates)
     }
 
     #[instrument(name = "app.msg_message_create", skip(self), err)]
