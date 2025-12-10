@@ -3,8 +3,14 @@
 import { useEffect, useMemo, useState, useCallback } from "react"
 import { useRouter } from "next/navigation"
 
-import { visaTemplatesMock } from "../../mock-data"
+import { DeepLinkScreen, DeepLinkAction, NotificationIcon } from "../../../generated"
+import { notificationContentMock, InvitationContent } from "../../mock-data"
 import { Button } from "../../../components/shared/button"
+import {
+  userIdByUsername,
+  triggerMarketingNotification,
+} from "../../../components/notification/notification-actions"
+
 import {
   TextInput,
   SelectInput,
@@ -22,10 +28,37 @@ export default function NewInvitationPage() {
   const [addHistory, setAddHistory] = useState(true)
   const [addBulletin, setAddBulletin] = useState(true)
 
+  const [loading, setLoading] = useState(false)
+  const [success, setSuccess] = useState(false)
+  const [error, setError] = useState<string | undefined>(undefined)
+
   const selectedTemplate = useMemo(
-    () => visaTemplatesMock.find((template) => template.id === templateId),
+    () => notificationContentMock.find((template) => template.id === templateId),
     [templateId],
   )
+
+  const invitationTemplate = useMemo(
+    () =>
+      selectedTemplate
+        ? {
+            ...selectedTemplate,
+            localizedNotificationContents: [
+              {
+                ...selectedTemplate.localizedNotificationContents[0],
+                title,
+                body,
+              },
+            ],
+            shouldSendPush: sendPush,
+            shouldAddToHistory: addHistory,
+            shouldAddToBulletin: addBulletin,
+          }
+        : undefined,
+    [selectedTemplate, title, body, sendPush, addHistory, addBulletin],
+  )
+
+  console.log("Selected Template:", selectedTemplate)
+  console.log("Modified Template (temporary):", invitationTemplate)
 
   useEffect(() => {
     if (!selectedTemplate) {
@@ -33,20 +66,60 @@ export default function NewInvitationPage() {
       setBody("")
       return
     }
-    setTitle(selectedTemplate.title)
-    setBody(selectedTemplate.body)
+    const firstContent = selectedTemplate.localizedNotificationContents[0]
+    setTitle(firstContent?.title || "")
+    setBody(firstContent?.body || "")
+    setSendPush(selectedTemplate.shouldSendPush)
+    setAddHistory(selectedTemplate.shouldAddToHistory)
+    setAddBulletin(selectedTemplate.shouldAddToBulletin)
   }, [selectedTemplate])
 
   const canSend = useMemo(
     () => Boolean(userQuery.trim() && templateId),
     [userQuery, templateId],
   )
+  console.log("Can Send Invitation:", canSend)
 
-  const handleSend = useCallback(() => {
-    if (!canSend) return
+  const InvitationSender = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setLoading(true)
+    setSuccess(false)
+    setError(undefined)
 
-    router.push("/invitations")
-  }, [canSend, router])
+    console.log("Entró aquí")
+    const userIdRes = await userIdByUsername(userQuery.trim())
+
+    if (userIdRes.userId === undefined) {
+      setLoading(false)
+      setError(userIdRes.message || "User not found.")
+      return
+    }
+
+    if (!invitationTemplate) {
+      setLoading(false)
+      setError("Invitation template is not selected.")
+      return
+    }
+
+    const res = await triggerMarketingNotification({
+      userIdsFilter: [userIdRes.userId],
+      openDeepLink: invitationTemplate.openDeepLink,
+      openExternalUrl: invitationTemplate.openExternalUrl,
+      icon: invitationTemplate.icon,
+      shouldSendPush: invitationTemplate.shouldSendPush,
+      shouldAddToBulletin: invitationTemplate.shouldAddToBulletin,
+      shouldAddToHistory: invitationTemplate.shouldAddToHistory,
+      localizedNotificationContents: invitationTemplate.localizedNotificationContents,
+    })
+    setLoading(false)
+
+    if (res.success) {
+      setSuccess(true)
+      return
+    } else {
+      setError(res.message || "Failed to send invitation.")
+    }
+  }
 
   return (
     <div className="px-6 py-6 lg:px-10">
@@ -92,11 +165,14 @@ export default function NewInvitationPage() {
               onChange={(event) => setTemplateId(event.target.value)}
             >
               <option value="">Select a template</option>
-              {visaTemplatesMock.map((template) => (
-                <option key={template.id} value={template.id}>
-                  {template.name} ({template.language})
-                </option>
-              ))}
+              {notificationContentMock.map((template) => {
+                const firstContent = template.localizedNotificationContents[0]
+                return (
+                  <option key={template.id} value={template.id}>
+                    {firstContent?.title} ({firstContent?.language})
+                  </option>
+                )
+              })}
             </SelectInput>
           </div>
           {templateId && (
@@ -157,10 +233,13 @@ export default function NewInvitationPage() {
         </div>
 
         <div className="flex justify-start">
-          <Button onClick={handleSend} disabled={!canSend}>
+          <Button onClick={InvitationSender} disabled={!canSend}>
             <span className="mr-2">➤</span>
             <span>Send Invite</span>
           </Button>
+          {loading && <p>Sending...</p>}
+          {error && <p className="text-red-500">{error}</p>}
+          {success && <p className="text-green-500">Notification sent successfully</p>}
         </div>
       </div>
     </div>

@@ -33,6 +33,9 @@ export type TemplateRow = {
   icon: TemplateIcon
   title: string
   body: string
+  sendPush: boolean
+  addHistory: boolean
+  addBulletin: boolean
 }
 
 export type Event = {

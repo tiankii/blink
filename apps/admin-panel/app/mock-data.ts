@@ -3,6 +3,29 @@
 // Delete this file after API integration is complete
 
 import { InvitationRow, TemplateRow } from "./invitations/types"
+import {
+  NotificationContent,
+  LocalizedNotificationContent,
+} from "../components/notification/builder"
+import { NotificationIcon, DeepLinkScreen, DeepLinkAction } from "../generated"
+import { NotificationAction } from "../components/notification/types"
+
+export type InvitationContent = {
+  id: string
+  localizedNotificationContents: LocalizedNotificationContent[]
+  action?: NotificationAction
+  openDeepLink?: {
+    screen?: DeepLinkScreen | undefined
+    action?: DeepLinkAction | undefined
+  }
+  openExternalUrl?: {
+    url: string
+  }
+  icon?: NotificationIcon | undefined
+  shouldSendPush: boolean
+  shouldAddToHistory: boolean
+  shouldAddToBulletin: boolean
+}
 
 export const visaInvitationsMock: InvitationRow[] = [
   {
@@ -75,6 +98,9 @@ export const visaTemplatesMock: TemplateRow[] = [
     icon: "star",
     title: "Blink Private is here!",
     body: "Sign up to get your Visa card and more",
+    sendPush: true,
+    addHistory: false,
+    addBulletin: true,
   },
   {
     id: "blink-private-es",
@@ -83,6 +109,9 @@ export const visaTemplatesMock: TemplateRow[] = [
     icon: "star",
     title: "¡Blink Private ya está aquí!",
     body: "Regístrate para obtener tu tarjeta Visa y más",
+    sendPush: true,
+    addHistory: false,
+    addBulletin: false,
   },
   {
     id: "blink-private-fr",
@@ -91,6 +120,9 @@ export const visaTemplatesMock: TemplateRow[] = [
     icon: "star",
     title: "Blink Private est arrivé !",
     body: "Inscrivez-vous pour obtenir votre carte Visa et plus encore",
+    sendPush: true,
+    addHistory: true,
+    addBulletin: true,
   },
   {
     id: "blink-private-de",
@@ -99,6 +131,9 @@ export const visaTemplatesMock: TemplateRow[] = [
     icon: "star",
     title: "Blink Private ist da!",
     body: "Melden Sie sich an, um Ihre Visa-Karte und mehr zu erhalten",
+    sendPush: true,
+    addHistory: true,
+    addBulletin: true,
   },
   {
     id: "card-active-en",
@@ -107,5 +142,96 @@ export const visaTemplatesMock: TemplateRow[] = [
     icon: "check",
     title: "Your Blink Private Card is Active!",
     body: "Your card is now active and ready to use.",
+    sendPush: true,
+    addHistory: false,
+    addBulletin: false,
+  },
+]
+
+export const notificationContentMock: InvitationContent[] = [
+  {
+    id: "blink-private-en",
+    localizedNotificationContents: [
+      {
+        language: "en",
+        title: "Blink Private is here!",
+        body: "Sign up to get your Visa card and more",
+      },
+    ],
+    openDeepLink: {
+      screen: "CHAT",
+    },
+    icon: "BELL",
+    shouldSendPush: true,
+    shouldAddToHistory: false,
+    shouldAddToBulletin: true,
+  },
+  {
+    id: "blink-private-es",
+    localizedNotificationContents: [
+      {
+        language: "es",
+        title: "¡Blink Private ya está aquí!",
+        body: "Regístrate para obtener tu tarjeta Visa y más",
+      },
+    ],
+    openDeepLink: {
+      screen: "CHAT",
+    },
+    icon: "BELL",
+    shouldSendPush: true,
+    shouldAddToHistory: false,
+    shouldAddToBulletin: false,
+  },
+  {
+    id: "blink-private-fr",
+    localizedNotificationContents: [
+      {
+        language: "fr",
+        title: "Blink Private est arrivé !",
+        body: "Inscrivez-vous pour obtenir votre carte Visa et plus encore",
+      },
+    ],
+    openDeepLink: {
+      screen: "CHAT",
+    },
+    icon: "BELL",
+    shouldSendPush: true,
+    shouldAddToHistory: true,
+    shouldAddToBulletin: true,
+  },
+  {
+    id: "blink-private-de",
+    localizedNotificationContents: [
+      {
+        language: "de",
+        title: "Blink Private ist da!",
+        body: "Melden Sie sich an, um Ihre Visa-Karte und mehr zu erhalten",
+      },
+    ],
+    openDeepLink: {
+      screen: "CHAT",
+    },
+    icon: "BELL",
+    shouldSendPush: true,
+    shouldAddToHistory: true,
+    shouldAddToBulletin: true,
+  },
+  {
+    id: "card-active-en",
+    localizedNotificationContents: [
+      {
+        language: "en",
+        title: "Your Blink Private Card is Active!",
+        body: "Your card is now active and ready to use.",
+      },
+    ],
+    openDeepLink: {
+      screen: "CHAT",
+    },
+    icon: "CHECK",
+    shouldSendPush: true,
+    shouldAddToHistory: false,
+    shouldAddToBulletin: false,
   },
 ]
