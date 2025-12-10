@@ -10,7 +10,7 @@ use std::{collections::HashSet, sync::Arc};
 use crate::{
     email_executor::EmailExecutor, email_reminder_projection::EmailReminderProjection, history::*,
     job, notification_cool_off_tracker::*, notification_event::*, primitives::*, push_executor::*,
-    user_notification_settings::*,
+    user_notification_settings::*, msg_messages::MsgMessageRepository,
 };
 
 pub use config::*;
@@ -23,6 +23,7 @@ pub struct NotificationsApp {
     email_reminder_projection: EmailReminderProjection,
     history: NotificationHistory,
     pool: Pool<Postgres>,
+    msg_message_repository: MsgMessageRepository,
     _runner: Arc<Option<JobRunnerHandle>>,
 }
 
@@ -39,6 +40,7 @@ impl NotificationsApp {
         let email_reminder_projection =
             EmailReminderProjection::new(&pool, config.link_email_reminder.clone());
         let history = NotificationHistory::new(&pool, &read_pool, settings.clone());
+        let msg_message_repository = MsgMessageRepository::new(&pool, &read_pool);
         let runner = job::start_job_runner(
             &pool,
             push_executor,
@@ -60,6 +62,7 @@ impl NotificationsApp {
             settings,
             history,
             email_reminder_projection,
+            msg_message_repository,
             _runner: Arc::new(runner),
         })
     }
@@ -380,5 +383,47 @@ impl NotificationsApp {
             }
         });
         Ok(())
+    }
+
+    #[instrument(name = "app.msg_message_create", skip(self), err)]
+    pub async fn msg_message_create(
+        &self,
+        username: String,
+        status: String,
+        sent_by: String,
+    ) -> Result<crate::msg_messages::MsgMessage, ApplicationError> {
+        let message = self
+            .msg_message_repository
+            .create_message(username, status, sent_by)
+            .await?;
+        Ok(message)
+    }
+
+    #[instrument(name = "app.msg_message_update_status", skip(self), err)]
+    pub async fn msg_message_update_status(
+        &self,
+        id: uuid::Uuid,
+        status: String,
+    ) -> Result<crate::msg_messages::MsgMessage, ApplicationError> {
+        let message = self
+            .msg_message_repository
+            .update_message_status(id, status)
+            .await?;
+        Ok(message)
+    }
+
+    #[instrument(name = "app.msg_messages_list", skip(self), err)]
+    pub async fn list_msg_messages(
+        &self,
+        _username: Option<String>,
+        _status: Option<String>,
+        limit: Option<i64>,
+        offset: Option<i64>,
+    ) -> Result<Vec<crate::msg_messages::MsgMessage>, ApplicationError> {
+        let messages = self
+            .msg_message_repository
+            .list_messages(limit, offset)
+            .await?;
+        Ok(messages)
     }
 }
