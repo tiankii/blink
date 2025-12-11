@@ -137,7 +137,7 @@ export default function NewInvitationPage() {
           error: undefined,
         })
         await SaveInvitation({
-          sentBy: userIdRes.userId,
+          sentBy: "admin", // Should be username from session user
           username: formState.userQuery,
           status: "pending",
         })

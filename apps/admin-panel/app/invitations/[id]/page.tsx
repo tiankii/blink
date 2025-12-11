@@ -48,7 +48,7 @@ const formatDateTime = (date: Date | string) => {
 export default function InvitationDetailPage() {
   const params = useParams()
   const router = useRouter()
-  const invitationId = Array.isArray(params.id) ? params.id[0] : params.id
+  const invitationUsername = params.username as string
 
   const [invitation, setInvitation] = useState<InvitationRow | null>(null)
   const [userInvitation, setUserInvitation] = useState<AuditedAccountMainValues | null>(
@@ -66,11 +66,13 @@ export default function InvitationDetailPage() {
   const [addHistory, setAddHistory] = useState(true)
 
   useEffect(() => {
-    const foundInvitation = visaInvitationsMock.find((inv) => inv.id === invitationId)
+    const foundInvitation = visaInvitationsMock.find(
+      (inv) => inv.id === invitationUsername,
+    )
 
-    const fetchUserData = async (invitationId: string) => {
+    const fetchUserData = async (invitationUsername: string) => {
       try {
-        const data = await accountSearchInvitation(invitationId)
+        const data = await accountSearchInvitation(invitationUsername)
         setUserInvitation(data)
       } catch (error) {
         console.error("Error fetching user data:", error)
@@ -79,7 +81,7 @@ export default function InvitationDetailPage() {
       }
     }
 
-    fetchUserData(invitationId)
+    fetchUserData(invitationUsername)
 
     if (foundInvitation) {
       setInvitation(foundInvitation)
@@ -116,7 +118,7 @@ export default function InvitationDetailPage() {
 
       setEvents(initialEvents)
     }
-  }, [invitationId])
+  }, [invitationUsername])
 
   const handleContentChange = (field: "title" | "body", value: string) => {
     setEditableContent((prev) => {
