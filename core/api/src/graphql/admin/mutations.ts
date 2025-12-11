@@ -9,6 +9,7 @@ import AccountUpdateStatusMutation from "./root/mutation/account-update-status"
 import AccountForceDeleteMutation from "./root/mutation/account-force-delete"
 
 import TriggerMarketingNotificationMutation from "./root/mutation/marketing-notification-trigger"
+import NotificationTemplateCreateMutation from "./root/mutation/notification-template-create"
 
 import { GT } from "@/graphql/index"
 
@@ -23,6 +24,7 @@ export const mutationFields = {
     merchantMapValidate: MerchantMapValidateMutation,
     merchantMapDelete: MerchantMapDeleteMutation,
     marketingNotificationTrigger: TriggerMarketingNotificationMutation,
+    notificationTemplateCreate: NotificationTemplateCreateMutation,
   },
 }
 
