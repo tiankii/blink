@@ -1,16 +1,22 @@
 "use client"
 
-import { useMemo, useState, useCallback, useTransition } from "react"
+import { useMemo, useState, useCallback, useTransition, useEffect } from "react"
 import { useRouter } from "next/navigation"
 
 import { formatDateDisplay } from "../utils"
-import { visaInvitationsMock } from "../mock-data"
 import { Button } from "../../components/shared/button"
 import { Pagination } from "../../components/shared/pagination"
 import { TextInput, SelectInput } from "../../components/shared/form-controls"
 import { InvitationStatusBadge } from "../../components/invitations/status-badge"
 
-import { InvitationStatusOptions, InvitationRow, StatusFilter } from "./types"
+import {
+  InvitationStatusOptions,
+  InvitationRow,
+  StatusFilter,
+  InvitationStatus,
+} from "./types"
+import { getInvitations } from "./getMessages"
+import { NotificationMessagesQuery } from "../../generated"
 
 const statusFilterOptions: Array<{ value: StatusFilter; label: string }> = [
   { value: InvitationStatusOptions.All, label: "All Statuses" },
@@ -22,6 +28,8 @@ const statusFilterOptions: Array<{ value: StatusFilter; label: string }> = [
 export default function InvitationsPage() {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
+  const [data, setData] = useState<NotificationMessagesQuery | null>(null)
+  const [loading, setLoading] = useState(true)
 
   const [search, setSearch] = useState("")
   const [statusFilter, setStatusFilter] = useState<StatusFilter>(
@@ -29,6 +37,50 @@ export default function InvitationsPage() {
   )
   const [dateFilter, setDateFilter] = useState("")
   const [pageItems, setPageItems] = useState<InvitationRow[]>([])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const result = await getInvitations()
+        setData(result)
+        console.warn(result)
+      } catch (error) {
+        console.error("Error fetching invitations:", error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchData()
+  }, [])
+
+  const invitations: InvitationRow[] = useMemo(() => {
+    if (!data?.notificationMessages) return []
+
+    return data.notificationMessages.map((message) => ({
+      id: message.id,
+      status: message.status as InvitationStatus,
+      lastActivity: message.updatedAt.toString(),
+      sentBy: message.sentBy,
+      username: message.username,
+    }))
+  }, [data])
+
+  const filteredInvitations = useMemo(() => {
+    return invitations.filter((invitation) => {
+      const matchesSearch = invitation.username
+        .toLowerCase()
+        .includes(search.toLowerCase())
+
+      const matchesStatus =
+        statusFilter === InvitationStatusOptions.All || invitation.status === statusFilter
+
+      const matchesDate =
+        !dateFilter ||
+        new Date(invitation.lastActivity).toISOString().split("T")[0] === dateFilter
+
+      return matchesSearch && matchesStatus && matchesDate
+    })
+  }, [invitations, search, statusFilter, dateFilter])
 
   const resetKey = useMemo(
     () => `${search}|${statusFilter}|${dateFilter}`,
@@ -46,9 +98,9 @@ export default function InvitationsPage() {
 
   const handlePageChange = useCallback(
     ({ offset, limit }: { offset: number; limit: number }) => {
-      setPageItems(visaInvitationsMock.slice(offset, offset + limit))
+      setPageItems(filteredInvitations.slice(offset, offset + limit))
     },
-    [],
+    [filteredInvitations],
   )
 
   const handleCreateNew = useCallback(() => {
@@ -58,6 +110,14 @@ export default function InvitationsPage() {
   }, [router])
 
   const hasInvitations = pageItems.length > 0
+
+  if (loading) {
+    return (
+      <div className="flex h-96 items-center justify-center">
+        <div className="text-lg text-gray-500">Loading invitations...</div>
+      </div>
+    )
+  }
 
   return (
     <div className="px-6 py-6 lg:px-10">
@@ -133,7 +193,7 @@ export default function InvitationsPage() {
                     onClick={() => handleRowClick(invitation.id)}
                   >
                     <td className="whitespace-nowrap px-6 py-4 text-gray-900">
-                      {invitation.id}
+                      {invitation.username}
                     </td>
                     <td className="px-6 py-4">
                       <InvitationStatusBadge status={invitation.status} />
@@ -168,7 +228,7 @@ export default function InvitationsPage() {
       </div>
 
       <Pagination
-        totalItems={visaInvitationsMock.length}
+        totalItems={filteredInvitations.length}
         resetKey={resetKey}
         onPageChange={handlePageChange}
       />

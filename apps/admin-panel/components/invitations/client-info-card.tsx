@@ -1,8 +1,9 @@
 import { InvitationStatusBadge } from "./status-badge"
-import type { InvitationRow } from "../../app/invitations/types"
+import type { InvitationStatus } from "../../app/invitations/types"
+import { AuditedAccountMainValues } from "../../app/types"
 
 interface ClientInfoCardProps {
-  invitation: InvitationRow
+  invitation: AuditedAccountMainValues | null
 }
 
 export function ClientInfoCard({ invitation }: ClientInfoCardProps) {
@@ -13,16 +14,16 @@ export function ClientInfoCard({ invitation }: ClientInfoCardProps) {
         <tbody className="divide-y divide-gray-200">
           <tr>
             <td className="py-2 font-medium text-gray-700">User ID</td>
-            <td className="py-2 text-gray-900">{invitation.id}</td>
+            <td className="py-2 text-gray-900">{invitation?.id}</td>
           </tr>
           <tr>
             <td className="py-2 font-medium tex-gray-700">LN Address</td>
-            <td className="py-2 text-gray-900">{invitation.id}@blink.sv</td>
+            <td className="py-2 text-gray-900">{invitation?.username}@blink.sv</td>
           </tr>
           <tr>
             <td className="py-2 font-medium text-gray-700">Status</td>
             <td className="py-2">
-              <InvitationStatusBadge status={invitation.status} />
+              <InvitationStatusBadge status={invitation?.status as InvitationStatus} />
             </td>
           </tr>
         </tbody>
