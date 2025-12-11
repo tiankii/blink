@@ -397,10 +397,22 @@ impl NotificationsApp {
         icon_name: String,
         title: String,
         body: String,
+        should_send_push: bool,
+        should_add_to_history: bool,
+        should_add_to_bulletin: bool,
     ) -> Result<crate::msg_templates::MsgTemplate, ApplicationError> {
         let template = self
             .msg_template_repository
-            .create_template(name, language_code, icon_name, title, body)
+            .create_template(
+                name,
+                language_code,
+                icon_name,
+                title,
+                body,
+                should_send_push,
+                should_add_to_history,
+                should_add_to_bulletin,
+            )
             .await?;
         Ok(template)
     }
@@ -414,10 +426,23 @@ impl NotificationsApp {
         icon_name: String,
         title: String,
         body: String,
+        should_send_push: bool,
+        should_add_to_history: bool,
+        should_add_to_bulletin: bool,
     ) -> Result<crate::msg_templates::MsgTemplate, ApplicationError> {
         let template = self
             .msg_template_repository
-            .update_template(id, name, language_code, icon_name, title, body)
+            .update_template(
+                id,
+                name,
+                language_code,
+                icon_name,
+                title,
+                body,
+                should_send_push,
+                should_add_to_history,
+                should_add_to_bulletin,
+            )
             .await?;
         Ok(template)
     }

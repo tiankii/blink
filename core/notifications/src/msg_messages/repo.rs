@@ -2,7 +2,6 @@ use chrono::{DateTime, Utc};
 use sqlx::{FromRow, PgPool};
 use uuid::Uuid;
 
-
 use crate::primitives::ReadPool;
 
 #[derive(Debug, Clone, FromRow)]

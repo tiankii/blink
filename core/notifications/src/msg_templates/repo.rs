@@ -11,6 +11,9 @@ pub struct MsgTemplate {
     pub icon_name: String,
     pub title: String,
     pub body: String,
+    pub should_send_push: bool,
+    pub should_add_to_history: bool,
+    pub should_add_to_bulletin: bool,
 }
 
 #[derive(Debug, Clone)]
@@ -34,12 +37,33 @@ impl MsgTemplateRepository {
         icon_name: String,
         title: String,
         body: String,
+        should_send_push: bool,
+        should_add_to_history: bool,
+        should_add_to_bulletin: bool,
     ) -> Result<MsgTemplate, sqlx::Error> {
         let template = sqlx::query_as::<_, MsgTemplate>(
             r#"
-            INSERT INTO msg_templates (name, language_code, icon_name, title, body)
-            VALUES ($1, $2, $3, $4, $5)
-            RETURNING id, name, language_code, icon_name, title, body
+            INSERT INTO msg_templates (
+                name,
+                language_code,
+                icon_name,
+                title,
+                body,
+                should_send_push,
+                should_add_to_history,
+                should_add_to_bulletin
+            )
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+            RETURNING
+                id,
+                name,
+                language_code,
+                icon_name,
+                title,
+                body,
+                should_send_push,
+                should_add_to_history,
+                should_add_to_bulletin
             "#,
         )
         .bind(name)
@@ -47,6 +71,9 @@ impl MsgTemplateRepository {
         .bind(icon_name)
         .bind(title)
         .bind(body)
+        .bind(should_send_push)
+        .bind(should_add_to_history)
+        .bind(should_add_to_bulletin)
         .fetch_one(&self.pool)
         .await?;
         Ok(template)
@@ -60,6 +87,9 @@ impl MsgTemplateRepository {
         icon_name: String,
         title: String,
         body: String,
+        should_send_push: bool,
+        should_add_to_history: bool,
+        should_add_to_bulletin: bool,
     ) -> Result<MsgTemplate, sqlx::Error> {
         let template = sqlx::query_as::<_, MsgTemplate>(
             r#"
@@ -68,9 +98,21 @@ impl MsgTemplateRepository {
                 language_code = $3,
                 icon_name = $4,
                 title = $5,
-                body = $6
+                body = $6,
+                should_send_push = $7,
+                should_add_to_history = $8,
+                should_add_to_bulletin = $9
             WHERE id = $1
-            RETURNING id, name, language_code, icon_name, title, body
+            RETURNING
+                id,
+                name,
+                language_code,
+                icon_name,
+                title,
+                body,
+                should_send_push,
+                should_add_to_history,
+                should_add_to_bulletin
             "#,
         )
         .bind(id)
@@ -79,6 +121,9 @@ impl MsgTemplateRepository {
         .bind(icon_name)
         .bind(title)
         .bind(body)
+        .bind(should_send_push)
+        .bind(should_add_to_history)
+        .bind(should_add_to_bulletin)
         .fetch_one(&self.pool)
         .await?;
         Ok(template)
@@ -107,7 +152,16 @@ impl MsgTemplateRepository {
             (Some(limit), Some(offset)) => {
                 let templates = sqlx::query_as::<_, MsgTemplate>(
                     r#"
-                    SELECT id, name, language_code, icon_name, title, body
+                    SELECT
+                        id,
+                        name,
+                        language_code,
+                        icon_name,
+                        title,
+                        body,
+                        should_send_push,
+                        should_add_to_history,
+                        should_add_to_bulletin
                     FROM msg_templates
                     ORDER BY name, language_code
                     LIMIT $1 OFFSET $2
@@ -122,7 +176,16 @@ impl MsgTemplateRepository {
             (Some(limit), None) => {
                 let templates = sqlx::query_as::<_, MsgTemplate>(
                     r#"
-                    SELECT id, name, language_code, icon_name, title, body
+                    SELECT
+                        id,
+                        name,
+                        language_code,
+                        icon_name,
+                        title,
+                        body,
+                        should_send_push,
+                        should_add_to_history,
+                        should_add_to_bulletin
                     FROM msg_templates
                     ORDER BY name, language_code
                     LIMIT $1
@@ -136,7 +199,16 @@ impl MsgTemplateRepository {
             (None, Some(offset)) => {
                 let templates = sqlx::query_as::<_, MsgTemplate>(
                     r#"
-                    SELECT id, name, language_code, icon_name, title, body
+                    SELECT
+                        id,
+                        name,
+                        language_code,
+                        icon_name,
+                        title,
+                        body,
+                        should_send_push,
+                        should_add_to_history,
+                        should_add_to_bulletin
                     FROM msg_templates
                     ORDER BY name, language_code
                     OFFSET $1
@@ -150,7 +222,16 @@ impl MsgTemplateRepository {
             (None, None) => {
                 let templates = sqlx::query_as::<_, MsgTemplate>(
                     r#"
-                    SELECT id, name, language_code, icon_name, title, body
+                    SELECT
+                        id,
+                        name,
+                        language_code,
+                        icon_name,
+                        title,
+                        body,
+                        should_send_push,
+                        should_add_to_history,
+                        should_add_to_bulletin
                     FROM msg_templates
                     ORDER BY name, language_code
                     "#,

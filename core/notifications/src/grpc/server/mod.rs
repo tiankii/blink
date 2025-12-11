@@ -114,6 +114,9 @@ impl NotificationsService for Notifications {
                 request.icon_name,
                 request.title,
                 request.body,
+                request.should_send_push,
+                request.should_add_to_history,
+                request.should_add_to_bulletin,
             )
             .await
             .map_err(Status::from)?;
@@ -145,6 +148,9 @@ impl NotificationsService for Notifications {
                 request.icon_name,
                 request.title,
                 request.body,
+                request.should_send_push,
+                request.should_add_to_history,
+                request.should_add_to_bulletin,
             )
             .await
             .map_err(Status::from)?;

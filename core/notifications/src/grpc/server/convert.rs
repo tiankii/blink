@@ -356,6 +356,9 @@ impl From<crate::msg_templates::MsgTemplate> for proto::MsgTemplate {
             icon_name: template.icon_name,
             title: template.title,
             body: template.body,
+            should_send_push: template.should_send_push,
+            should_add_to_history: template.should_add_to_history,
+            should_add_to_bulletin: template.should_add_to_bulletin,
         }
     }
 }
