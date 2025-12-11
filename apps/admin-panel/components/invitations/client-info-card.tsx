@@ -23,7 +23,10 @@ export function ClientInfoCard({ invitation }: ClientInfoCardProps) {
           <tr>
             <td className="py-2 font-medium text-gray-700">Status</td>
             <td className="py-2">
-              <InvitationStatusBadge status={invitation?.status as InvitationStatus} />
+              <InvitationStatusBadge
+                status={invitation?.status as InvitationStatus}
+                label={invitation?.status}
+              />
             </td>
           </tr>
         </tbody>

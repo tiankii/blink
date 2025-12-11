@@ -18,6 +18,7 @@ import {
 } from "../../../components/shared/form-controls"
 
 import { FormState, SubmitState } from "../types"
+import { SaveInvitation } from "./save-invitation"
 
 export default function NewInvitationPage() {
   const router = useRouter()
@@ -135,6 +136,12 @@ export default function NewInvitationPage() {
           success: true,
           error: undefined,
         })
+        await SaveInvitation({
+          sentBy: userIdRes.userId,
+          username: formState.userQuery,
+          status: "pending",
+        })
+
         return
       } else {
         setSubmitState({

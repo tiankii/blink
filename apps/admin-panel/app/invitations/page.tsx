@@ -43,7 +43,6 @@ export default function InvitationsPage() {
       try {
         const result = await getInvitations()
         setData(result)
-        console.warn(result)
       } catch (error) {
         console.error("Error fetching invitations:", error)
       } finally {
@@ -204,7 +203,7 @@ export default function InvitationsPage() {
                       <div className="flex items-center gap-2">
                         <Button
                           variant="outline-blue"
-                          onClick={() => handleRowClick(invitation.id)}
+                          onClick={() => handleRowClick(invitation.username)}
                         >
                           View
                         </Button>

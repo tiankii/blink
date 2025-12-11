@@ -202,7 +202,9 @@ export default function InvitationDetailPage() {
       ) : (
         <>
           <header className="mb-6 flex items-center justify-between">
-            <h1 className="text-2xl font-semibold text-gray-900">{invitation.id}</h1>
+            <h1 className="text-2xl font-semibold text-gray-900">
+              {userInvitation?.username}
+            </h1>
             <button
               onClick={() => router.push("/invitations")}
               className="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
