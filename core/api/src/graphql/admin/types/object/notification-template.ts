@@ -8,6 +8,9 @@ const NotificationTemplate = GT.Object<{
   iconName: string
   title: string
   body: string
+  shouldSendPush: boolean
+  shouldAddToHistory: boolean
+  shouldAddToBulletin: boolean
 }>({
   name: "NotificationTemplate",
   fields: () => ({
@@ -28,6 +31,15 @@ const NotificationTemplate = GT.Object<{
     },
     body: {
       type: GT.NonNull(GT.String),
+    },
+    shouldSendPush: {
+      type: GT.NonNull(GT.Boolean),
+    },
+    shouldAddToHistory: {
+      type: GT.NonNull(GT.Boolean),
+    },
+    shouldAddToBulletin: {
+      type: GT.NonNull(GT.Boolean),
     },
   }),
 })

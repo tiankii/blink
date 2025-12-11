@@ -13,6 +13,9 @@ const NotificationTemplateUpdateInput = GT.Input({
     iconName: { type: GT.NonNull(GT.String) },
     title: { type: GT.NonNull(GT.String) },
     body: { type: GT.NonNull(GT.String) },
+    shouldSendPush: { type: GT.NonNull(GT.Boolean) },
+    shouldAddToHistory: { type: GT.NonNull(GT.Boolean) },
+    shouldAddToBulletin: { type: GT.NonNull(GT.Boolean) },
   }),
 })
 
@@ -27,6 +30,9 @@ const NotificationTemplateUpdateMutation = GT.Field<
       iconName: string
       title: string
       body: string
+      shouldSendPush: boolean
+      shouldAddToHistory: boolean
+      shouldAddToBulletin: boolean
     }
   }
 >({
@@ -38,7 +44,17 @@ const NotificationTemplateUpdateMutation = GT.Field<
     input: { type: GT.NonNull(NotificationTemplateUpdateInput) },
   },
   resolve: async (_, args) => {
-    const { id, name, languageCode, iconName, title, body } = args.input
+    const {
+      id,
+      name,
+      languageCode,
+      iconName,
+      title,
+      body,
+      shouldSendPush,
+      shouldAddToHistory,
+      shouldAddToBulletin,
+    } = args.input
 
     if (id instanceof Error) {
       return { errors: [{ message: id.message }], success: false }
@@ -57,6 +73,9 @@ const NotificationTemplateUpdateMutation = GT.Field<
       iconName,
       title,
       body,
+      shouldSendPush,
+      shouldAddToHistory,
+      shouldAddToBulletin,
     })
 
     if (res instanceof Error) {

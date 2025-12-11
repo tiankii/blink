@@ -7,7 +7,7 @@ const NotificationMessageCreateInput = GT.Input({
   name: "NotificationMessageCreateInput",
   fields: () => ({
     username: { type: GT.NonNull(GT.String) },
-    status: { type: GT.NonNull(GT.String) },
+    status: { type: GT.String },
     sentBy: { type: GT.NonNull(GT.String) },
   }),
 })
@@ -18,7 +18,7 @@ const NotificationMessageCreateMutation = GT.Field<
   {
     input: {
       username: string
-      status: string
+      status?: string
       sentBy: string
     }
   }

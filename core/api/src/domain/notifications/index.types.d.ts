@@ -90,6 +90,9 @@ type MsgTemplate = {
   iconName: string
   title: string
   body: string
+  shouldSendPush: boolean
+  shouldAddToHistory: boolean
+  shouldAddToBulletin: boolean
 }
 
 type MsgMessage = {
@@ -164,6 +167,9 @@ interface INotificationsService {
     iconName: string
     title: string
     body: string
+    shouldSendPush?: boolean
+    shouldAddToHistory?: boolean
+    shouldAddToBulletin?: boolean
   }): Promise<true | NotificationsServiceError>
 
   msgTemplateUpdate(args: {
@@ -173,6 +179,9 @@ interface INotificationsService {
     iconName: string
     title: string
     body: string
+    shouldSendPush?: boolean
+    shouldAddToHistory?: boolean
+    shouldAddToBulletin?: boolean
   }): Promise<true | NotificationsServiceError>
 
   msgTemplateDelete(args: { id: string }): Promise<true | NotificationsServiceError>
@@ -185,7 +194,7 @@ interface INotificationsService {
 
   msgMessageCreate(args: {
     username: string
-    status: MsgMessageStatus | string
+    status?: MsgMessageStatus | string
     sentBy: string
   }): Promise<true | NotificationsServiceError>
 

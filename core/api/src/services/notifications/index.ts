@@ -35,7 +35,6 @@ import {
   MsgMessageCreateRequest,
   MsgMessageUpdateStatusRequest,
   MsgMessagesListRequest,
-  MsgMessageStatus as ProtoMsgMessageStatus,
 } from "./proto/notifications_pb"
 
 import * as notificationsGrpc from "./grpc-client"
@@ -68,27 +67,6 @@ import { PubSubService } from "@/services/pubsub"
 import { CallbackService } from "@/services/svix"
 import { wrapAsyncFunctionsToRunInSpan, wrapAsyncToRunInSpan } from "@/services/tracing"
 import { getPhoneProviderTransactionalService } from "@/services/phone-provider"
-
-const msgMessageStatusFromProto = (status: ProtoMsgMessageStatus): MsgMessageStatus => {
-  switch (status) {
-    case ProtoMsgMessageStatus.PENDING:
-      return "pending"
-    case ProtoMsgMessageStatus.ACCEPTED:
-      return "accepted"
-    case ProtoMsgMessageStatus.REVOKED:
-      return "revoked"
-    default:
-      return "pending"
-  }
-}
-
-const msgMessageStatusToProto = (
-  status: MsgMessageStatus | string,
-): ProtoMsgMessageStatus => {
-  if (status === "accepted") return ProtoMsgMessageStatus.ACCEPTED
-  if (status === "revoked") return ProtoMsgMessageStatus.REVOKED
-  return ProtoMsgMessageStatus.PENDING
-}
 
 export const NotificationsService = (): INotificationsService => {
   const pubsub = PubSubService()
@@ -740,12 +718,18 @@ export const NotificationsService = (): INotificationsService => {
     iconName,
     title,
     body,
+    shouldSendPush,
+    shouldAddToHistory,
+    shouldAddToBulletin,
   }: {
     name: string
     languageCode: string
     iconName: string
     title: string
     body: string
+    shouldSendPush?: boolean
+    shouldAddToHistory?: boolean
+    shouldAddToBulletin?: boolean
   }): Promise<true | NotificationsServiceError> => {
     try {
       const request = new MsgTemplateCreateRequest()
@@ -754,6 +738,15 @@ export const NotificationsService = (): INotificationsService => {
       request.setIconName(iconName)
       request.setTitle(title)
       request.setBody(body)
+      if (typeof shouldSendPush === "boolean") {
+        request.setShouldSendPush(shouldSendPush)
+      }
+      if (typeof shouldAddToHistory === "boolean") {
+        request.setShouldAddToHistory(shouldAddToHistory)
+      }
+      if (typeof shouldAddToBulletin === "boolean") {
+        request.setShouldAddToBulletin(shouldAddToBulletin)
+      }
 
       await notificationsGrpc.msgTemplateCreate(
         request,
@@ -773,6 +766,9 @@ export const NotificationsService = (): INotificationsService => {
     iconName,
     title,
     body,
+    shouldSendPush,
+    shouldAddToHistory,
+    shouldAddToBulletin,
   }: {
     id: string
     name: string
@@ -780,6 +776,9 @@ export const NotificationsService = (): INotificationsService => {
     iconName: string
     title: string
     body: string
+    shouldSendPush?: boolean
+    shouldAddToHistory?: boolean
+    shouldAddToBulletin?: boolean
   }): Promise<true | NotificationsServiceError> => {
     try {
       const request = new MsgTemplateUpdateRequest()
@@ -789,6 +788,15 @@ export const NotificationsService = (): INotificationsService => {
       request.setIconName(iconName)
       request.setTitle(title)
       request.setBody(body)
+      if (typeof shouldSendPush === "boolean") {
+        request.setShouldSendPush(shouldSendPush)
+      }
+      if (typeof shouldAddToHistory === "boolean") {
+        request.setShouldAddToHistory(shouldAddToHistory)
+      }
+      if (typeof shouldAddToBulletin === "boolean") {
+        request.setShouldAddToBulletin(shouldAddToBulletin)
+      }
 
       await notificationsGrpc.msgTemplateUpdate(
         request,
@@ -848,6 +856,9 @@ export const NotificationsService = (): INotificationsService => {
         iconName: template.getIconName(),
         title: template.getTitle(),
         body: template.getBody(),
+        shouldSendPush: template.getShouldSendPush(),
+        shouldAddToHistory: template.getShouldAddToHistory(),
+        shouldAddToBulletin: template.getShouldAddToBulletin(),
       }))
 
       return templates
@@ -862,13 +873,13 @@ export const NotificationsService = (): INotificationsService => {
     sentBy,
   }: {
     username: string
-    status: MsgMessageStatus | string
+    status?: MsgMessageStatus | string
     sentBy: string
   }): Promise<true | NotificationsServiceError> => {
     try {
       const request = new MsgMessageCreateRequest()
       request.setUsername(username)
-      request.setStatus(msgMessageStatusToProto(status) as unknown as string)
+      if (typeof status === "string") request.setStatus(status)
       request.setSentBy(sentBy)
 
       await notificationsGrpc.msgMessageCreate(
@@ -892,7 +903,7 @@ export const NotificationsService = (): INotificationsService => {
     try {
       const request = new MsgMessageUpdateStatusRequest()
       request.setId(id)
-      request.setStatus(msgMessageStatusToProto(status) as unknown as string)
+      request.setStatus(status)
 
       await notificationsGrpc.msgMessageUpdateStatus(
         request,
@@ -922,13 +933,20 @@ export const NotificationsService = (): INotificationsService => {
         notificationsGrpc.notificationsMetadata,
       )
 
-      const messages = response.getMessagesList().map<MsgMessage>((message) => ({
-        id: message.getId(),
-        username: message.getUsername(),
-        status: msgMessageStatusFromProto(message.getStatus()),
-        sentBy: message.getSentBy(),
-        updatedAt: message.getUpdatedAt(),
-      }))
+      const messages = response.getMessagesList().map<MsgMessage>((message) => {
+        const statusProto = message.getStatus()
+
+        const status: MsgMessageStatus =
+          statusProto === 1 ? "accepted" : statusProto === 2 ? "revoked" : "pending"
+
+        return {
+          id: message.getId(),
+          username: message.getUsername(),
+          status,
+          sentBy: message.getSentBy(),
+          updatedAt: message.getUpdatedAt(),
+        }
+      })
 
       return messages
     } catch (err) {
