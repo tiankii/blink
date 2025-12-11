@@ -7,13 +7,16 @@ CREATE TABLE msg_templates (
   icon_name VARCHAR NOT NULL,
   title TEXT NOT NULL,
   body TEXT NOT NULL,
+  should_send_push BOOLEAN NOT NULL DEFAULT FALSE,
+  should_add_to_history BOOLEAN NOT NULL DEFAULT FALSE,
+  should_add_to_bulletin BOOLEAN NOT NULL DEFAULT FALSE,
   UNIQUE (name, language_code)
 );
 
 CREATE TABLE msg_messages (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   username VARCHAR NOT NULL,
-  status VARCHAR NOT NULL CHECK (status IN ('pending', 'accepted', 'revoked')),
+  status VARCHAR NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'accepted', 'revoked')),
   sent_by VARCHAR NOT NULL,
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
