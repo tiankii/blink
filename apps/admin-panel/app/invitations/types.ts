@@ -5,6 +5,7 @@ export type InvitationRow = {
   status: InvitationStatus
   lastActivity: string
   sentBy: string
+  username: string
 }
 
 export const InvitationStatusOptions = {

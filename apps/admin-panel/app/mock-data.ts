@@ -29,7 +29,7 @@ export type InvitationContent = {
 
 export const visaInvitationsMock: InvitationRow[] = [
   {
-    id: "joedoe",
+    id: "720377a1-bfa2-477b-89da-21c46d908370",
     status: "active",
     lastActivity: "2025-12-03",
     sentBy: "Admin",

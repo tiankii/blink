@@ -30,7 +30,7 @@ const invitationStatusMeta: Record<
 }
 
 export function InvitationStatusBadge({ status, label }: InvitationStatusBadgeProps) {
-  const meta = invitationStatusMeta[status]
+  const meta = invitationStatusMeta[status] || "pending"
 
   return (
     <span

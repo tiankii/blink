@@ -10,6 +10,9 @@ import { ClientInfoCard } from "../../../components/invitations/client-info-card
 import { StatusHistoryCard } from "../../../components/invitations/status-history-card"
 import { ChangeStatusModal } from "../../../components/invitations/change-status-modal"
 
+import { accountSearchInvitation } from "./search-invitation"
+import { AuditedAccountMainValues } from "../../types"
+
 type EditableContent = {
   title: string
   body: string
@@ -48,6 +51,10 @@ export default function InvitationDetailPage() {
   const invitationId = Array.isArray(params.id) ? params.id[0] : params.id
 
   const [invitation, setInvitation] = useState<InvitationRow | null>(null)
+  const [userInvitation, setUserInvitation] = useState<AuditedAccountMainValues | null>(
+    null,
+  )
+  const [loading, setLoading] = useState<boolean>(true)
   const [template, setTemplate] = useState<TemplateRow | null>(null)
   const [events, setEvents] = useState<Event[]>([])
   const [editableContent, setEditableContent] = useState<EditableContent>(null)
@@ -61,9 +68,21 @@ export default function InvitationDetailPage() {
   useEffect(() => {
     const foundInvitation = visaInvitationsMock.find((inv) => inv.id === invitationId)
 
+    const fetchUserData = async (invitationId: string) => {
+      try {
+        const data = await accountSearchInvitation(invitationId)
+        setUserInvitation(data)
+      } catch (error) {
+        console.error("Error fetching user data:", error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchUserData(invitationId)
+
     if (foundInvitation) {
       setInvitation(foundInvitation)
-
       const defaultTemplate = visaTemplatesMock[0]
       if (defaultTemplate) {
         setTemplate(defaultTemplate)
@@ -176,41 +195,49 @@ export default function InvitationDetailPage() {
 
   return (
     <div className="px-6 py-6 lg:px-10">
-      <header className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-gray-900">{invitation.id}</h1>
-        <button
-          onClick={() => router.push("/invitations")}
-          className="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-        >
-          Back
-        </button>
-      </header>
-
-      <div className="space-y-6">
-        {template && editableContent && (
-          <InvitationCard
-            editableContent={editableContent}
-            isEditing={isEditing}
-            sendPush={sendPush}
-            addHistory={addHistory}
-            onChangeStatus={handleChangeStatusClick}
-            onResend={handleResendInvitation}
-            onContentChange={handleContentChange}
-            onSendPushChange={setSendPush}
-            onAddHistoryChange={setAddHistory}
-          />
-        )}
-
-        <div className="grid gap-6 lg:grid-cols-3">
-          <ClientInfoCard invitation={invitation} />
-
-          <StatusHistoryCard
-            events={events}
-            getActor={getActor}
-            formatDate={formatDate}
-          />
+      {loading ? (
+        <div className="flex items-center justify-center py-12">
+          <p className="text-gray-500">Loading invitation details...</p>
         </div>
-      </div>
+      ) : (
+        <>
+          <header className="mb-6 flex items-center justify-between">
+            <h1 className="text-2xl font-semibold text-gray-900">{invitation.id}</h1>
+            <button
+              onClick={() => router.push("/invitations")}
+              className="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+            >
+              Back
+            </button>
+          </header>
+
+          <div className="space-y-6">
+            {template && editableContent && (
+              <InvitationCard
+                editableContent={editableContent}
+                isEditing={isEditing}
+                sendPush={sendPush}
+                addHistory={addHistory}
+                onChangeStatus={handleChangeStatusClick}
+                onResend={handleResendInvitation}
+                onContentChange={handleContentChange}
+                onSendPushChange={setSendPush}
+                onAddHistoryChange={setAddHistory}
+              />
+            )}
+
+            <div className="grid gap-6 lg:grid-cols-3">
+              <ClientInfoCard invitation={userInvitation} />
+
+              <StatusHistoryCard
+                events={events}
+                getActor={getActor}
+                formatDate={formatDate}
+              />
+            </div>
+          </div>
+        </>
+      )}
 
       <ChangeStatusModal
         isOpen={isModalOpen}
