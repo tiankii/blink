@@ -15,7 +15,7 @@ import {
   StatusFilter,
   InvitationStatus,
 } from "./types"
-import { getInvitations } from "./getMessages"
+import { getInvitations, RevokeInvitation } from "./getMessages"
 import { NotificationMessagesQuery } from "../../generated"
 
 const statusFilterOptions: Array<{ value: StatusFilter; label: string }> = [
@@ -30,6 +30,7 @@ export default function InvitationsPage() {
   const [isPending, startTransition] = useTransition()
   const [data, setData] = useState<NotificationMessagesQuery | null>(null)
   const [loading, setLoading] = useState(true)
+  const [revokingId, setRevokingId] = useState<string | null>(null)
 
   const [search, setSearch] = useState("")
   const [statusFilter, setStatusFilter] = useState<StatusFilter>(
@@ -108,6 +109,23 @@ export default function InvitationsPage() {
     })
   }, [router])
 
+  const handleRevokeInvitation = useCallback(async (invitationId: string) => {
+    setRevokingId(invitationId)
+    try {
+      await RevokeInvitation({
+        id: invitationId,
+        status: "cancelled",
+      })
+
+      const result = await getInvitations()
+      setData(result)
+    } catch (error) {
+      console.error("Error revoking invitation:", error)
+    } finally {
+      setRevokingId(null)
+    }
+  }, [])
+
   const hasInvitations = pageItems.length > 0
 
   if (loading) {
@@ -184,6 +202,7 @@ export default function InvitationsPage() {
             {hasInvitations ? (
               pageItems.map((invitation) => {
                 const formattedDate = formatDateDisplay(invitation.lastActivity)
+                const isRevoking = revokingId === invitation.id
 
                 return (
                   <tr
@@ -204,11 +223,18 @@ export default function InvitationsPage() {
                         <Button
                           variant="outline-blue"
                           onClick={() => handleRowClick(invitation.username)}
+                          disabled={isRevoking}
                         >
                           View
                         </Button>
                         {invitation.status === InvitationStatusOptions.Pending && (
-                          <Button variant="outline-red">Revoke</Button>
+                          <Button
+                            variant="outline-red"
+                            onClick={() => handleRevokeInvitation(invitation.id)}
+                            disabled={isRevoking}
+                          >
+                            {isRevoking ? "Revoking..." : "Revoke"}
+                          </Button>
                         )}
                       </div>
                     </td>
