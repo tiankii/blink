@@ -80,6 +80,26 @@ type LocalizedNotificationContent = {
   body: LocalizedNotificationBody
   language: UserLanguage
 }
+
+type MsgMessageStatus = "pending" | "accepted" | "revoked"
+
+type MsgTemplate = {
+  id: string
+  name: string
+  languageCode: string
+  iconName: string
+  title: string
+  body: string
+}
+
+type MsgMessage = {
+  id: string
+  username: string
+  status: MsgMessageStatus
+  sentBy: string
+  updatedAt: number
+}
+
 interface INotificationsService {
   sendTransaction: (
     args: NotificatioSendTransactionArgs,
@@ -137,6 +157,47 @@ interface INotificationsService {
   triggerMarketingNotification(
     args: TriggerMarketingNotificationArgs,
   ): Promise<true | NotificationsServiceError>
+
+  msgTemplateCreate(args: {
+    name: string
+    languageCode: string
+    iconName: string
+    title: string
+    body: string
+  }): Promise<true | NotificationsServiceError>
+
+  msgTemplateUpdate(args: {
+    id: string
+    name: string
+    languageCode: string
+    iconName: string
+    title: string
+    body: string
+  }): Promise<true | NotificationsServiceError>
+
+  msgTemplateDelete(args: { id: string }): Promise<true | NotificationsServiceError>
+
+  msgTemplatesList(args: {
+    languageCode?: string
+    limit?: number
+    offset?: number
+  }): Promise<MsgTemplate[] | NotificationsServiceError>
+
+  msgMessageCreate(args: {
+    username: string
+    status: MsgMessageStatus | string
+    sentBy: string
+  }): Promise<true | NotificationsServiceError>
+
+  msgMessageUpdateStatus(args: {
+    id: string
+    status: MsgMessageStatus | string
+  }): Promise<true | NotificationsServiceError>
+
+  msgMessagesList(args: {
+    limit?: number
+    offset?: number
+  }): Promise<MsgMessage[] | NotificationsServiceError>
 }
 
 type TriggerMarketingNotificationArgs = {
