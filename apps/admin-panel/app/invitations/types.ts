@@ -50,3 +50,19 @@ export type EditableContent = {
   title: string
   body: string
 } | null
+
+export type FormState = {
+  userQuery: string
+  templateId: string
+  title: string
+  body: string
+  sendPush: boolean
+  addHistory: boolean
+  addBulletin: boolean
+}
+
+export type SubmitState = {
+  loading: boolean
+  success: boolean
+  error?: string
+}

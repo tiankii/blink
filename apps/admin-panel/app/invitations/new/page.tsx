@@ -1,10 +1,9 @@
 "use client"
 
-import { useEffect, useMemo, useState, useCallback } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useRouter } from "next/navigation"
 
-import { DeepLinkScreen, DeepLinkAction, NotificationIcon } from "../../../generated"
-import { notificationContentMock, InvitationContent } from "../../mock-data"
+import { notificationContentMock } from "../../mock-data"
 import { Button } from "../../../components/shared/button"
 import {
   userIdByUsername,
@@ -18,107 +17,143 @@ import {
   Checkbox,
 } from "../../../components/shared/form-controls"
 
+import { FormState, SubmitState } from "../types"
+
 export default function NewInvitationPage() {
   const router = useRouter()
-  const [userQuery, setUserQuery] = useState("")
-  const [templateId, setTemplateId] = useState<string>("")
-  const [title, setTitle] = useState("")
-  const [body, setBody] = useState("")
-  const [sendPush, setSendPush] = useState(true)
-  const [addHistory, setAddHistory] = useState(true)
-  const [addBulletin, setAddBulletin] = useState(true)
 
-  const [loading, setLoading] = useState(false)
-  const [success, setSuccess] = useState(false)
-  const [error, setError] = useState<string | undefined>(undefined)
+  const [formState, setFormState] = useState<FormState>({
+    userQuery: "",
+    templateId: "",
+    title: "",
+    body: "",
+    sendPush: true,
+    addHistory: true,
+    addBulletin: true,
+  })
+
+  const [submitState, setSubmitState] = useState<SubmitState>({
+    loading: false,
+    success: false,
+    error: undefined,
+  })
 
   const selectedTemplate = useMemo(
-    () => notificationContentMock.find((template) => template.id === templateId),
-    [templateId],
-  )
-
-  const invitationTemplate = useMemo(
     () =>
-      selectedTemplate
-        ? {
-            ...selectedTemplate,
-            localizedNotificationContents: [
-              {
-                ...selectedTemplate.localizedNotificationContents[0],
-                title,
-                body,
-              },
-            ],
-            shouldSendPush: sendPush,
-            shouldAddToHistory: addHistory,
-            shouldAddToBulletin: addBulletin,
-          }
-        : undefined,
-    [selectedTemplate, title, body, sendPush, addHistory, addBulletin],
+      notificationContentMock.find((template) => template.id === formState.templateId),
+    [formState.templateId],
   )
 
-  console.log("Selected Template:", selectedTemplate)
-  console.log("Modified Template (temporary):", invitationTemplate)
+  const invitationTemplate = useMemo(() => {
+    if (!selectedTemplate) return undefined
+    return {
+      ...selectedTemplate,
+      localizedNotificationContents: [
+        {
+          ...selectedTemplate.localizedNotificationContents[0],
+          title: formState.title,
+          body: formState.body,
+        },
+      ],
+      shouldSendPush: formState.sendPush,
+      shouldAddToHistory: formState.addHistory,
+      shouldAddToBulletin: formState.addBulletin,
+    }
+  }, [
+    selectedTemplate,
+    formState.title,
+    formState.body,
+    formState.sendPush,
+    formState.addHistory,
+    formState.addBulletin,
+  ])
 
   useEffect(() => {
     if (!selectedTemplate) {
-      setTitle("")
-      setBody("")
+      setFormState((prev) => ({ ...prev, title: "", body: "" }))
       return
     }
+
     const firstContent = selectedTemplate.localizedNotificationContents[0]
-    setTitle(firstContent?.title || "")
-    setBody(firstContent?.body || "")
-    setSendPush(selectedTemplate.shouldSendPush)
-    setAddHistory(selectedTemplate.shouldAddToHistory)
-    setAddBulletin(selectedTemplate.shouldAddToBulletin)
+    setFormState((prev) => ({
+      ...prev,
+      title: firstContent?.title || "",
+      body: firstContent?.body || "",
+      sendPush: selectedTemplate.shouldSendPush,
+      addHistory: selectedTemplate.shouldAddToHistory,
+      addBulletin: selectedTemplate.shouldAddToBulletin,
+    }))
   }, [selectedTemplate])
 
   const canSend = useMemo(
-    () => Boolean(userQuery.trim() && templateId),
-    [userQuery, templateId],
+    () => Boolean(formState.userQuery.trim() && formState.templateId),
+    [formState.userQuery, formState.templateId],
   )
-  console.log("Can Send Invitation:", canSend)
 
   const InvitationSender = async (e: React.FormEvent) => {
     e.preventDefault()
-    setLoading(true)
-    setSuccess(false)
-    setError(undefined)
 
-    console.log("Entró aquí")
-    const userIdRes = await userIdByUsername(userQuery.trim())
+    if (!canSend) return
 
-    if (userIdRes.userId === undefined) {
-      setLoading(false)
-      setError(userIdRes.message || "User not found.")
-      return
+    setSubmitState({ loading: true, success: false, error: undefined })
+
+    try {
+      const userIdRes = await userIdByUsername(formState.userQuery)
+
+      if (userIdRes.userId === undefined) {
+        setSubmitState({
+          loading: false,
+          success: false,
+          error: userIdRes.message || "User not found",
+        })
+        return
+      }
+
+      if (!invitationTemplate) {
+        setSubmitState({
+          loading: false,
+          success: false,
+          error: "Invitation template is not selected.",
+        })
+        return
+      }
+
+      const res = await triggerMarketingNotification({
+        userIdsFilter: [userIdRes.userId],
+        openDeepLink: invitationTemplate.openDeepLink,
+        openExternalUrl: invitationTemplate.openExternalUrl,
+        icon: invitationTemplate.icon,
+        shouldSendPush: invitationTemplate.shouldSendPush,
+        shouldAddToBulletin: invitationTemplate.shouldAddToBulletin,
+        shouldAddToHistory: invitationTemplate.shouldAddToHistory,
+        localizedNotificationContents: invitationTemplate.localizedNotificationContents,
+      })
+
+      if (res.success) {
+        setSubmitState({
+          loading: false,
+          success: true,
+          error: undefined,
+        })
+        return
+      } else {
+        setSubmitState({
+          loading: false,
+          success: false,
+          error: res.message || "Failed to send invitation.",
+        })
+      }
+    } catch (error) {
+      setSubmitState({
+        loading: false,
+        success: false,
+        error: "Error sending invitation.",
+      })
     }
+  }
 
-    if (!invitationTemplate) {
-      setLoading(false)
-      setError("Invitation template is not selected.")
-      return
-    }
-
-    const res = await triggerMarketingNotification({
-      userIdsFilter: [userIdRes.userId],
-      openDeepLink: invitationTemplate.openDeepLink,
-      openExternalUrl: invitationTemplate.openExternalUrl,
-      icon: invitationTemplate.icon,
-      shouldSendPush: invitationTemplate.shouldSendPush,
-      shouldAddToBulletin: invitationTemplate.shouldAddToBulletin,
-      shouldAddToHistory: invitationTemplate.shouldAddToHistory,
-      localizedNotificationContents: invitationTemplate.localizedNotificationContents,
-    })
-    setLoading(false)
-
-    if (res.success) {
-      setSuccess(true)
-      return
-    } else {
-      setError(res.message || "Failed to send invitation.")
-    }
+  const updateFormField = <K extends keyof FormState>(key: K, value: FormState[K]) => {
+    setFormState((prev) => ({ ...prev, [key]: value }))
   }
 
   return (
@@ -142,8 +177,8 @@ export default function NewInvitationPage() {
               id="user-search"
               type="text"
               placeholder="Search or add a username or email"
-              value={userQuery}
-              onChange={(event) => setUserQuery(event.target.value)}
+              value={formState.userQuery}
+              onChange={(event) => updateFormField("userQuery", event.target.value)}
             />
           </div>
         </div>
@@ -161,8 +196,8 @@ export default function NewInvitationPage() {
             </label>
             <SelectInput
               id="template"
-              value={templateId}
-              onChange={(event) => setTemplateId(event.target.value)}
+              value={formState.templateId}
+              onChange={(event) => updateFormField("templateId", event.target.value)}
             >
               <option value="">Select a template</option>
               {notificationContentMock.map((template) => {
@@ -175,7 +210,7 @@ export default function NewInvitationPage() {
               })}
             </SelectInput>
           </div>
-          {templateId && (
+          {formState.templateId && (
             <div className="space-y-4">
               <div>
                 <label
@@ -187,8 +222,8 @@ export default function NewInvitationPage() {
                 <TextInput
                   id="title"
                   type="text"
-                  value={title}
-                  onChange={(event) => setTitle(event.target.value)}
+                  value={formState.title}
+                  onChange={(event) => updateFormField("title", event.target.value)}
                 />
               </div>
               <div>
@@ -201,29 +236,35 @@ export default function NewInvitationPage() {
                 <TextArea
                   id="body"
                   rows={4}
-                  value={body}
-                  onChange={(event) => setBody(event.target.value)}
+                  value={formState.body}
+                  onChange={(event) => updateFormField("body", event.target.value)}
                 />
               </div>
               <div className="flex flex-wrap gap-4 pt-1 text-sm text-gray-800">
                 <label className="flex items-center gap-2">
                   <Checkbox
-                    checked={sendPush}
-                    onChange={(event) => setSendPush(event.target.checked)}
+                    checked={formState.sendPush}
+                    onChange={(event) =>
+                      updateFormField("sendPush", event.target.checked)
+                    }
                   />
                   <span>Send Push Notification</span>
                 </label>
                 <label className="flex items-center gap-2">
                   <Checkbox
-                    checked={addHistory}
-                    onChange={(event) => setAddHistory(event.target.checked)}
+                    checked={formState.addHistory}
+                    onChange={(event) =>
+                      updateFormField("addHistory", event.target.checked)
+                    }
                   />
                   <span>Add to History</span>
                 </label>
                 <label className="flex items-center gap-2">
                   <Checkbox
-                    checked={addBulletin}
-                    onChange={(event) => setAddBulletin(event.target.checked)}
+                    checked={formState.addBulletin}
+                    onChange={(event) =>
+                      updateFormField("addBulletin", event.target.checked)
+                    }
                   />
                   <span>Add to Bulletin</span>
                 </label>
@@ -237,10 +278,12 @@ export default function NewInvitationPage() {
             <span className="mr-2">➤</span>
             <span>Send Invite</span>
           </Button>
-          {loading && <p>Sending...</p>}
-          {error && <p className="text-red-500">{error}</p>}
-          {success && <p className="text-green-500">Notification sent successfully</p>}
         </div>
+        {submitState.loading && <p>Sending...</p>}
+        {submitState.error && <p className="text-red-500">{submitState.error}</p>}
+        {submitState.success && (
+          <p className="text-green-500">Notification sent successfully</p>
+        )}
       </div>
     </div>
   )
