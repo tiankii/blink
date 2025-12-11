@@ -11,6 +11,7 @@ import AccountForceDeleteMutation from "./root/mutation/account-force-delete"
 import TriggerMarketingNotificationMutation from "./root/mutation/marketing-notification-trigger"
 import NotificationTemplateCreateMutation from "./root/mutation/notification-template-create"
 import NotificationTemplateUpdateMutation from "./root/mutation/notification-template-update"
+import NotificationTemplateDeleteMutation from "./root/mutation/notification-template-delete"
 
 import { GT } from "@/graphql/index"
 
@@ -27,6 +28,7 @@ export const mutationFields = {
     marketingNotificationTrigger: TriggerMarketingNotificationMutation,
     notificationTemplateCreate: NotificationTemplateCreateMutation,
     notificationTemplateUpdate: NotificationTemplateUpdateMutation,
+    notificationTemplateDelete: NotificationTemplateDeleteMutation,
   },
 }
 
