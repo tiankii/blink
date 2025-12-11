@@ -8329,7 +8329,10 @@ name: jspb.Message.getFieldWithDefault(msg, 2, ""),
 languageCode: jspb.Message.getFieldWithDefault(msg, 3, ""),
 iconName: jspb.Message.getFieldWithDefault(msg, 4, ""),
 title: jspb.Message.getFieldWithDefault(msg, 5, ""),
-body: jspb.Message.getFieldWithDefault(msg, 6, "")
+body: jspb.Message.getFieldWithDefault(msg, 6, ""),
+shouldSendPush: jspb.Message.getBooleanFieldWithDefault(msg, 7, false),
+shouldAddToHistory: jspb.Message.getBooleanFieldWithDefault(msg, 8, false),
+shouldAddToBulletin: jspb.Message.getBooleanFieldWithDefault(msg, 9, false)
   };
 
   if (includeInstance) {
@@ -8389,6 +8392,18 @@ proto.services.notifications.v1.MsgTemplate.deserializeBinaryFromReader = functi
     case 6:
       var value = /** @type {string} */ (reader.readString());
       msg.setBody(value);
+      break;
+    case 7:
+      var value = /** @type {boolean} */ (reader.readBool());
+      msg.setShouldSendPush(value);
+      break;
+    case 8:
+      var value = /** @type {boolean} */ (reader.readBool());
+      msg.setShouldAddToHistory(value);
+      break;
+    case 9:
+      var value = /** @type {boolean} */ (reader.readBool());
+      msg.setShouldAddToBulletin(value);
       break;
     default:
       reader.skipField();
@@ -8458,6 +8473,27 @@ proto.services.notifications.v1.MsgTemplate.serializeBinaryToWriter = function(m
   if (f.length > 0) {
     writer.writeString(
       6,
+      f
+    );
+  }
+  f = message.getShouldSendPush();
+  if (f) {
+    writer.writeBool(
+      7,
+      f
+    );
+  }
+  f = message.getShouldAddToHistory();
+  if (f) {
+    writer.writeBool(
+      8,
+      f
+    );
+  }
+  f = message.getShouldAddToBulletin();
+  if (f) {
+    writer.writeBool(
+      9,
       f
     );
   }
@@ -8569,6 +8605,60 @@ proto.services.notifications.v1.MsgTemplate.prototype.getBody = function() {
  */
 proto.services.notifications.v1.MsgTemplate.prototype.setBody = function(value) {
   return jspb.Message.setProto3StringField(this, 6, value);
+};
+
+
+/**
+ * optional bool should_send_push = 7;
+ * @return {boolean}
+ */
+proto.services.notifications.v1.MsgTemplate.prototype.getShouldSendPush = function() {
+  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 7, false));
+};
+
+
+/**
+ * @param {boolean} value
+ * @return {!proto.services.notifications.v1.MsgTemplate} returns this
+ */
+proto.services.notifications.v1.MsgTemplate.prototype.setShouldSendPush = function(value) {
+  return jspb.Message.setProto3BooleanField(this, 7, value);
+};
+
+
+/**
+ * optional bool should_add_to_history = 8;
+ * @return {boolean}
+ */
+proto.services.notifications.v1.MsgTemplate.prototype.getShouldAddToHistory = function() {
+  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 8, false));
+};
+
+
+/**
+ * @param {boolean} value
+ * @return {!proto.services.notifications.v1.MsgTemplate} returns this
+ */
+proto.services.notifications.v1.MsgTemplate.prototype.setShouldAddToHistory = function(value) {
+  return jspb.Message.setProto3BooleanField(this, 8, value);
+};
+
+
+/**
+ * optional bool should_add_to_bulletin = 9;
+ * @return {boolean}
+ */
+proto.services.notifications.v1.MsgTemplate.prototype.getShouldAddToBulletin = function() {
+  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 9, false));
+};
+
+
+/**
+ * @param {boolean} value
+ * @return {!proto.services.notifications.v1.MsgTemplate} returns this
+ */
+proto.services.notifications.v1.MsgTemplate.prototype.setShouldAddToBulletin = function(value) {
+  return jspb.Message.setProto3BooleanField(this, 9, value);
 };
 
 
@@ -8858,7 +8948,10 @@ name: jspb.Message.getFieldWithDefault(msg, 1, ""),
 languageCode: jspb.Message.getFieldWithDefault(msg, 2, ""),
 iconName: jspb.Message.getFieldWithDefault(msg, 3, ""),
 title: jspb.Message.getFieldWithDefault(msg, 4, ""),
-body: jspb.Message.getFieldWithDefault(msg, 5, "")
+body: jspb.Message.getFieldWithDefault(msg, 5, ""),
+shouldSendPush: jspb.Message.getBooleanFieldWithDefault(msg, 6, false),
+shouldAddToHistory: jspb.Message.getBooleanFieldWithDefault(msg, 7, false),
+shouldAddToBulletin: jspb.Message.getBooleanFieldWithDefault(msg, 8, false)
   };
 
   if (includeInstance) {
@@ -8914,6 +9007,18 @@ proto.services.notifications.v1.MsgTemplateCreateRequest.deserializeBinaryFromRe
     case 5:
       var value = /** @type {string} */ (reader.readString());
       msg.setBody(value);
+      break;
+    case 6:
+      var value = /** @type {boolean} */ (reader.readBool());
+      msg.setShouldSendPush(value);
+      break;
+    case 7:
+      var value = /** @type {boolean} */ (reader.readBool());
+      msg.setShouldAddToHistory(value);
+      break;
+    case 8:
+      var value = /** @type {boolean} */ (reader.readBool());
+      msg.setShouldAddToBulletin(value);
       break;
     default:
       reader.skipField();
@@ -8976,6 +9081,27 @@ proto.services.notifications.v1.MsgTemplateCreateRequest.serializeBinaryToWriter
   if (f.length > 0) {
     writer.writeString(
       5,
+      f
+    );
+  }
+  f = message.getShouldSendPush();
+  if (f) {
+    writer.writeBool(
+      6,
+      f
+    );
+  }
+  f = message.getShouldAddToHistory();
+  if (f) {
+    writer.writeBool(
+      7,
+      f
+    );
+  }
+  f = message.getShouldAddToBulletin();
+  if (f) {
+    writer.writeBool(
+      8,
       f
     );
   }
@@ -9069,6 +9195,60 @@ proto.services.notifications.v1.MsgTemplateCreateRequest.prototype.getBody = fun
  */
 proto.services.notifications.v1.MsgTemplateCreateRequest.prototype.setBody = function(value) {
   return jspb.Message.setProto3StringField(this, 5, value);
+};
+
+
+/**
+ * optional bool should_send_push = 6;
+ * @return {boolean}
+ */
+proto.services.notifications.v1.MsgTemplateCreateRequest.prototype.getShouldSendPush = function() {
+  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 6, false));
+};
+
+
+/**
+ * @param {boolean} value
+ * @return {!proto.services.notifications.v1.MsgTemplateCreateRequest} returns this
+ */
+proto.services.notifications.v1.MsgTemplateCreateRequest.prototype.setShouldSendPush = function(value) {
+  return jspb.Message.setProto3BooleanField(this, 6, value);
+};
+
+
+/**
+ * optional bool should_add_to_history = 7;
+ * @return {boolean}
+ */
+proto.services.notifications.v1.MsgTemplateCreateRequest.prototype.getShouldAddToHistory = function() {
+  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 7, false));
+};
+
+
+/**
+ * @param {boolean} value
+ * @return {!proto.services.notifications.v1.MsgTemplateCreateRequest} returns this
+ */
+proto.services.notifications.v1.MsgTemplateCreateRequest.prototype.setShouldAddToHistory = function(value) {
+  return jspb.Message.setProto3BooleanField(this, 7, value);
+};
+
+
+/**
+ * optional bool should_add_to_bulletin = 8;
+ * @return {boolean}
+ */
+proto.services.notifications.v1.MsgTemplateCreateRequest.prototype.getShouldAddToBulletin = function() {
+  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 8, false));
+};
+
+
+/**
+ * @param {boolean} value
+ * @return {!proto.services.notifications.v1.MsgTemplateCreateRequest} returns this
+ */
+proto.services.notifications.v1.MsgTemplateCreateRequest.prototype.setShouldAddToBulletin = function(value) {
+  return jspb.Message.setProto3BooleanField(this, 8, value);
 };
 
 
@@ -9260,7 +9440,10 @@ name: jspb.Message.getFieldWithDefault(msg, 2, ""),
 languageCode: jspb.Message.getFieldWithDefault(msg, 3, ""),
 iconName: jspb.Message.getFieldWithDefault(msg, 4, ""),
 title: jspb.Message.getFieldWithDefault(msg, 5, ""),
-body: jspb.Message.getFieldWithDefault(msg, 6, "")
+body: jspb.Message.getFieldWithDefault(msg, 6, ""),
+shouldSendPush: jspb.Message.getBooleanFieldWithDefault(msg, 7, false),
+shouldAddToHistory: jspb.Message.getBooleanFieldWithDefault(msg, 8, false),
+shouldAddToBulletin: jspb.Message.getBooleanFieldWithDefault(msg, 9, false)
   };
 
   if (includeInstance) {
@@ -9320,6 +9503,18 @@ proto.services.notifications.v1.MsgTemplateUpdateRequest.deserializeBinaryFromRe
     case 6:
       var value = /** @type {string} */ (reader.readString());
       msg.setBody(value);
+      break;
+    case 7:
+      var value = /** @type {boolean} */ (reader.readBool());
+      msg.setShouldSendPush(value);
+      break;
+    case 8:
+      var value = /** @type {boolean} */ (reader.readBool());
+      msg.setShouldAddToHistory(value);
+      break;
+    case 9:
+      var value = /** @type {boolean} */ (reader.readBool());
+      msg.setShouldAddToBulletin(value);
       break;
     default:
       reader.skipField();
@@ -9389,6 +9584,27 @@ proto.services.notifications.v1.MsgTemplateUpdateRequest.serializeBinaryToWriter
   if (f.length > 0) {
     writer.writeString(
       6,
+      f
+    );
+  }
+  f = message.getShouldSendPush();
+  if (f) {
+    writer.writeBool(
+      7,
+      f
+    );
+  }
+  f = message.getShouldAddToHistory();
+  if (f) {
+    writer.writeBool(
+      8,
+      f
+    );
+  }
+  f = message.getShouldAddToBulletin();
+  if (f) {
+    writer.writeBool(
+      9,
       f
     );
   }
@@ -9500,6 +9716,60 @@ proto.services.notifications.v1.MsgTemplateUpdateRequest.prototype.getBody = fun
  */
 proto.services.notifications.v1.MsgTemplateUpdateRequest.prototype.setBody = function(value) {
   return jspb.Message.setProto3StringField(this, 6, value);
+};
+
+
+/**
+ * optional bool should_send_push = 7;
+ * @return {boolean}
+ */
+proto.services.notifications.v1.MsgTemplateUpdateRequest.prototype.getShouldSendPush = function() {
+  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 7, false));
+};
+
+
+/**
+ * @param {boolean} value
+ * @return {!proto.services.notifications.v1.MsgTemplateUpdateRequest} returns this
+ */
+proto.services.notifications.v1.MsgTemplateUpdateRequest.prototype.setShouldSendPush = function(value) {
+  return jspb.Message.setProto3BooleanField(this, 7, value);
+};
+
+
+/**
+ * optional bool should_add_to_history = 8;
+ * @return {boolean}
+ */
+proto.services.notifications.v1.MsgTemplateUpdateRequest.prototype.getShouldAddToHistory = function() {
+  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 8, false));
+};
+
+
+/**
+ * @param {boolean} value
+ * @return {!proto.services.notifications.v1.MsgTemplateUpdateRequest} returns this
+ */
+proto.services.notifications.v1.MsgTemplateUpdateRequest.prototype.setShouldAddToHistory = function(value) {
+  return jspb.Message.setProto3BooleanField(this, 8, value);
+};
+
+
+/**
+ * optional bool should_add_to_bulletin = 9;
+ * @return {boolean}
+ */
+proto.services.notifications.v1.MsgTemplateUpdateRequest.prototype.getShouldAddToBulletin = function() {
+  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 9, false));
+};
+
+
+/**
+ * @param {boolean} value
+ * @return {!proto.services.notifications.v1.MsgTemplateUpdateRequest} returns this
+ */
+proto.services.notifications.v1.MsgTemplateUpdateRequest.prototype.setShouldAddToBulletin = function(value) {
+  return jspb.Message.setProto3BooleanField(this, 9, value);
 };
 
 

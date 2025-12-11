@@ -1041,6 +1041,12 @@ export class MsgTemplate extends jspb.Message {
     setTitle(value: string): MsgTemplate;
     getBody(): string;
     setBody(value: string): MsgTemplate;
+    getShouldSendPush(): boolean;
+    setShouldSendPush(value: boolean): MsgTemplate;
+    getShouldAddToHistory(): boolean;
+    setShouldAddToHistory(value: boolean): MsgTemplate;
+    getShouldAddToBulletin(): boolean;
+    setShouldAddToBulletin(value: boolean): MsgTemplate;
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): MsgTemplate.AsObject;
@@ -1060,6 +1066,9 @@ export namespace MsgTemplate {
         iconName: string,
         title: string,
         body: string,
+        shouldSendPush: boolean,
+        shouldAddToHistory: boolean,
+        shouldAddToBulletin: boolean,
     }
 }
 
@@ -1106,6 +1115,12 @@ export class MsgTemplateCreateRequest extends jspb.Message {
     setTitle(value: string): MsgTemplateCreateRequest;
     getBody(): string;
     setBody(value: string): MsgTemplateCreateRequest;
+    getShouldSendPush(): boolean;
+    setShouldSendPush(value: boolean): MsgTemplateCreateRequest;
+    getShouldAddToHistory(): boolean;
+    setShouldAddToHistory(value: boolean): MsgTemplateCreateRequest;
+    getShouldAddToBulletin(): boolean;
+    setShouldAddToBulletin(value: boolean): MsgTemplateCreateRequest;
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): MsgTemplateCreateRequest.AsObject;
@@ -1124,6 +1139,9 @@ export namespace MsgTemplateCreateRequest {
         iconName: string,
         title: string,
         body: string,
+        shouldSendPush: boolean,
+        shouldAddToHistory: boolean,
+        shouldAddToBulletin: boolean,
     }
 }
 
@@ -1163,6 +1181,12 @@ export class MsgTemplateUpdateRequest extends jspb.Message {
     setTitle(value: string): MsgTemplateUpdateRequest;
     getBody(): string;
     setBody(value: string): MsgTemplateUpdateRequest;
+    getShouldSendPush(): boolean;
+    setShouldSendPush(value: boolean): MsgTemplateUpdateRequest;
+    getShouldAddToHistory(): boolean;
+    setShouldAddToHistory(value: boolean): MsgTemplateUpdateRequest;
+    getShouldAddToBulletin(): boolean;
+    setShouldAddToBulletin(value: boolean): MsgTemplateUpdateRequest;
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): MsgTemplateUpdateRequest.AsObject;
@@ -1182,6 +1206,9 @@ export namespace MsgTemplateUpdateRequest {
         iconName: string,
         title: string,
         body: string,
+        shouldSendPush: boolean,
+        shouldAddToHistory: boolean,
+        shouldAddToBulletin: boolean,
     }
 }
 

@@ -366,6 +366,9 @@ message MsgTemplate {
   string icon_name = 4;
   string title = 5;
   string body = 6;
+  bool should_send_push = 7;
+  bool should_add_to_history = 8;
+  bool should_add_to_bulletin = 9;
 }
 
 message MsgMessage {
@@ -382,6 +385,9 @@ message MsgTemplateCreateRequest {
   string icon_name = 3;
   string title = 4;
   string body = 5;
+  bool should_send_push = 6;
+  bool should_add_to_history = 7;
+  bool should_add_to_bulletin = 8;
 }
 
 message MsgTemplateCreateResponse {
@@ -395,6 +401,9 @@ message MsgTemplateUpdateRequest {
   string icon_name = 4;
   string title = 5;
   string body = 6;
+  bool should_send_push = 7;
+  bool should_add_to_history = 8;
+  bool should_add_to_bulletin = 9;
 }
 
 message MsgTemplateUpdateResponse {
