@@ -12,6 +12,7 @@ import TriggerMarketingNotificationMutation from "./root/mutation/marketing-noti
 import NotificationTemplateCreateMutation from "./root/mutation/notification-template-create"
 import NotificationTemplateUpdateMutation from "./root/mutation/notification-template-update"
 import NotificationTemplateDeleteMutation from "./root/mutation/notification-template-delete"
+import NotificationMessageCreateMutation from "./root/mutation/notification-message-create"
 
 import { GT } from "@/graphql/index"
 
@@ -29,6 +30,7 @@ export const mutationFields = {
     notificationTemplateCreate: NotificationTemplateCreateMutation,
     notificationTemplateUpdate: NotificationTemplateUpdateMutation,
     notificationTemplateDelete: NotificationTemplateDeleteMutation,
+    notificationMessageCreate: NotificationMessageCreateMutation,
   },
 }
 
