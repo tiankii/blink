@@ -2,27 +2,27 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1375
-        (#342)...'
-      sha: 663b8ef5be1300df88f9604457e4d4d5335bc734
+      commitTitle: 'fix(core): use transaction fee when sender is exempt from bank
+        fees (#350)...'
+      sha: 02cc67bfbd308ad41553ea7a8c95b5dabd3e3cb3
       tags:
-      - 0.21.120-2-g663b8ef5b
+      - 0.21.122-2-g02cc67bfb
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1375
-        (#342)...'
-      sha: 663b8ef5be1300df88f9604457e4d4d5335bc734
+      commitTitle: 'fix(core): use transaction fee when sender is exempt from bank
+        fees (#350)...'
+      sha: 02cc67bfbd308ad41553ea7a8c95b5dabd3e3cb3
       tags:
-      - 0.21.120-2-g663b8ef5b
+      - 0.21.122-2-g02cc67bfb
     path: schemas
   - git:
-      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1375
-        (#342)...'
-      sha: 663b8ef5be1300df88f9604457e4d4d5335bc734
+      commitTitle: 'fix(core): use transaction fee when sender is exempt from bank
+        fees (#350)...'
+      sha: 02cc67bfbd308ad41553ea7a8c95b5dabd3e3cb3
       tags:
-      - 0.21.121
+      - 0.21.122-2-g02cc67bfb
     path: gql
   path: graphql
 kind: LockConfig
