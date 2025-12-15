@@ -2,27 +2,24 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'fix(core): use transaction fee when sender is exempt from bank
-        fees (#350)...'
-      sha: 02cc67bfbd308ad41553ea7a8c95b5dabd3e3cb3
+      commitTitle: 'chore: bump lnd version to v0.19.3-beta (#133)...'
+      sha: bf8ee20fbe05b0743f7ae486680ed58e07b4b509
       tags:
-      - 0.21.122-2-g02cc67bfb
+      - 0.21.123-1-gbf8ee20fb
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'fix(core): use transaction fee when sender is exempt from bank
-        fees (#350)...'
-      sha: 02cc67bfbd308ad41553ea7a8c95b5dabd3e3cb3
+      commitTitle: 'chore: bump lnd version to v0.19.3-beta (#133)...'
+      sha: bf8ee20fbe05b0743f7ae486680ed58e07b4b509
       tags:
-      - 0.21.122-2-g02cc67bfb
+      - 0.21.123-1-gbf8ee20fb
     path: schemas
   - git:
-      commitTitle: 'fix(core): use transaction fee when sender is exempt from bank
-        fees (#350)...'
-      sha: 02cc67bfbd308ad41553ea7a8c95b5dabd3e3cb3
+      commitTitle: 'chore: bump lnd version to v0.19.3-beta (#133)...'
+      sha: bf8ee20fbe05b0743f7ae486680ed58e07b4b509
       tags:
-      - 0.21.122-2-g02cc67bfb
+      - 0.21.123-1-gbf8ee20fb
     path: gql
   path: graphql
 kind: LockConfig
