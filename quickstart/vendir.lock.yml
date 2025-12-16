@@ -2,24 +2,24 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'chore: bump lnd version to v0.19.3-beta (#133)...'
-      sha: bf8ee20fbe05b0743f7ae486680ed58e07b4b509
+      commitTitle: 'feat(core): add exponential decay fee strategy (#355)'
+      sha: 4b77e91e4299c00c5f9e4018d1084131eff66929
       tags:
-      - 0.21.123-1-gbf8ee20fb
+      - 0.21.124-1-g4b77e91e4
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'chore: bump lnd version to v0.19.3-beta (#133)...'
-      sha: bf8ee20fbe05b0743f7ae486680ed58e07b4b509
+      commitTitle: 'feat(core): add exponential decay fee strategy (#355)'
+      sha: 4b77e91e4299c00c5f9e4018d1084131eff66929
       tags:
-      - 0.21.123-1-gbf8ee20fb
+      - 0.21.124-1-g4b77e91e4
     path: schemas
   - git:
-      commitTitle: 'chore: bump lnd version to v0.19.3-beta (#133)...'
-      sha: bf8ee20fbe05b0743f7ae486680ed58e07b4b509
+      commitTitle: 'feat(core): add exponential decay fee strategy (#355)'
+      sha: 4b77e91e4299c00c5f9e4018d1084131eff66929
       tags:
-      - 0.21.123-1-gbf8ee20fb
+      - 0.21.124-1-g4b77e91e4
     path: gql
   path: graphql
 kind: LockConfig
