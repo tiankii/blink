@@ -35,7 +35,7 @@ export const visaInvitationsMock: InvitationRow[] = [
     sentBy: "Admin",
   },
   {
-    id: "newuser1",
+    id: "test_user_a",
     status: "pending",
     lastActivity: "2025-12-01",
     sentBy: "Admin",

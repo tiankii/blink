@@ -208,7 +208,7 @@ export default function InvitationsPage() {
                   <tr
                     key={invitation.id}
                     className="cursor-pointer hover:bg-gray-50"
-                    onClick={() => handleRowClick(invitation.id)}
+                    onClick={() => handleRowClick(invitation.username)}
                   >
                     <td className="whitespace-nowrap px-6 py-4 text-gray-900">
                       {invitation.username}

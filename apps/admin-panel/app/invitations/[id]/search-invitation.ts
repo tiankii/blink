@@ -29,7 +29,7 @@ export const accountSearchInvitation = async (
     })
     const uuid = dataId.data.accountDetailsByUsername.id
 
-    if (uuid) {
+    if (!uuid) {
       console.error("Account not found")
     }
 
@@ -38,7 +38,7 @@ export const accountSearchInvitation = async (
       AccountDetailsByAccountIdQueryVariables
     >({
       query: AccountDetailsByAccountIdDocument,
-      variables: { accountId: uuid },
+      variables: { accountId: uuid.toString() },
     })
 
     if (!data.accountDetailsByAccountId) {

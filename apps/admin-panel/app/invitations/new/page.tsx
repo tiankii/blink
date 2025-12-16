@@ -9,6 +9,7 @@ import {
   userIdByUsername,
   triggerMarketingNotification,
 } from "../../../components/notification/notification-actions"
+import { TemplateRow } from "../types"
 
 import {
   TextInput,
@@ -17,8 +18,10 @@ import {
   Checkbox,
 } from "../../../components/shared/form-controls"
 
+import { NotificationIcon } from "../../../generated"
 import { FormState, SubmitState } from "../types"
 import { SaveInvitation } from "./save-invitation"
+import { getTemplates } from "../../templates/getTemplates"
 
 export default function NewInvitationPage() {
   const router = useRouter()
@@ -39,10 +42,39 @@ export default function NewInvitationPage() {
     error: undefined,
   })
 
+  const [templates, setTemplates] = useState<TemplateRow[]>([])
+
+  const [loading, setLoading] = useState<boolean>(true)
+
+  const fetchTemplates = async () => {
+    try {
+      const data = await getTemplates()
+
+      const mapped: TemplateRow[] =
+        data.notificationTemplates?.map((template) => ({
+          id: template.id,
+          name: template.name,
+          language: template.languageCode,
+          icon: template.iconName,
+          title: template.title,
+          body: template.body,
+          sendPush: template.shouldSendPush,
+          addHistory: template.shouldAddToHistory,
+          addBulletin: template.shouldAddToBulletin,
+        })) ?? []
+
+      setTemplates(mapped)
+    } catch (error) {
+      console.error("Error fetching templates", error)
+      setTemplates([])
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const selectedTemplate = useMemo(
-    () =>
-      notificationContentMock.find((template) => template.id === formState.templateId),
-    [formState.templateId],
+    () => templates.find((template) => template.id === formState.templateId),
+    [templates, formState.templateId],
   )
 
   const invitationTemplate = useMemo(() => {
@@ -51,9 +83,9 @@ export default function NewInvitationPage() {
       ...selectedTemplate,
       localizedNotificationContents: [
         {
-          ...selectedTemplate.localizedNotificationContents[0],
           title: formState.title,
           body: formState.body,
+          language: "en",
         },
       ],
       shouldSendPush: formState.sendPush,
@@ -70,19 +102,23 @@ export default function NewInvitationPage() {
   ])
 
   useEffect(() => {
+    fetchTemplates()
+  }, [])
+
+  useEffect(() => {
     if (!selectedTemplate) {
       setFormState((prev) => ({ ...prev, title: "", body: "" }))
       return
     }
 
-    const firstContent = selectedTemplate.localizedNotificationContents[0]
+    const firstContent = selectedTemplate
     setFormState((prev) => ({
       ...prev,
       title: firstContent?.title || "",
       body: firstContent?.body || "",
-      sendPush: selectedTemplate.shouldSendPush,
-      addHistory: selectedTemplate.shouldAddToHistory,
-      addBulletin: selectedTemplate.shouldAddToBulletin,
+      sendPush: selectedTemplate.sendPush,
+      addHistory: selectedTemplate.addHistory,
+      addBulletin: selectedTemplate.addBulletin,
     }))
   }, [selectedTemplate])
 
@@ -121,9 +157,8 @@ export default function NewInvitationPage() {
 
       const res = await triggerMarketingNotification({
         userIdsFilter: [userIdRes.userId],
-        openDeepLink: invitationTemplate.openDeepLink,
-        openExternalUrl: invitationTemplate.openExternalUrl,
-        icon: invitationTemplate.icon,
+        openDeepLink: { action: "SET_DEFAULT_ACCOUNT_MODAL", screen: "CHAT" },
+        icon: invitationTemplate.icon as NotificationIcon,
         shouldSendPush: invitationTemplate.shouldSendPush,
         shouldAddToBulletin: invitationTemplate.shouldAddToBulletin,
         shouldAddToHistory: invitationTemplate.shouldAddToHistory,
@@ -161,6 +196,14 @@ export default function NewInvitationPage() {
 
   const updateFormField = <K extends keyof FormState>(key: K, value: FormState[K]) => {
     setFormState((prev) => ({ ...prev, [key]: value }))
+  }
+
+  if (loading) {
+    return (
+      <div className="flex h-96 items-center justify-center">
+        <div className="text-lg text-gray-500">Loading templates...</div>
+      </div>
+    )
   }
 
   return (
@@ -207,11 +250,10 @@ export default function NewInvitationPage() {
               onChange={(event) => updateFormField("templateId", event.target.value)}
             >
               <option value="">Select a template</option>
-              {notificationContentMock.map((template) => {
-                const firstContent = template.localizedNotificationContents[0]
+              {templates.map((template) => {
                 return (
                   <option key={template.id} value={template.id}>
-                    {firstContent?.title} ({firstContent?.language})
+                    {template.title} ({template.language})
                   </option>
                 )
               })}

@@ -48,7 +48,7 @@ const formatDateTime = (date: Date | string) => {
 export default function InvitationDetailPage() {
   const params = useParams()
   const router = useRouter()
-  const invitationUsername = params.username as string
+  const invitationUsername = params.id as string
 
   const [invitation, setInvitation] = useState<InvitationRow | null>(null)
   const [userInvitation, setUserInvitation] = useState<AuditedAccountMainValues | null>(
@@ -187,7 +187,7 @@ export default function InvitationDetailPage() {
     return event.sentBy || "System"
   }
 
-  if (!invitation) {
+  if (!userInvitation && !loading) {
     return (
       <div className="flex items-center justify-center py-12">
         <p className="text-gray-500">Invitation not found</p>

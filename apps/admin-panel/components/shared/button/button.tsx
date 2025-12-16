@@ -11,6 +11,8 @@ const variantClasses: Record<ButtonVariant, string> = {
     "border border-blue-500 px-3 py-1 text-xs font-medium text-blue-500 hover:bg-blue-50",
   "outline-red":
     "border border-red-500 px-3 py-1 text-xs font-medium text-red-500 hover:bg-red-50",
+  "outline":
+    "border border-gray-200 px-3 py-1 text-sx font-medium text-black hover:bg-gray-50",
 }
 
 export function Button({ variant = "primary", className, ...rest }: ButtonProps) {

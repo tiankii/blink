@@ -1,6 +1,7 @@
 import { InvitationStatusBadge } from "./status-badge"
 import type { InvitationStatus } from "../../app/invitations/types"
 import { AuditedAccountMainValues } from "../../app/types"
+import { InvitationRow } from "../../app/invitations/types"
 
 interface ClientInfoCardProps {
   invitation: AuditedAccountMainValues | null
