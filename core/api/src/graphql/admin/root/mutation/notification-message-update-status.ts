@@ -2,12 +2,13 @@ import { GT } from "@/graphql/index"
 import SuccessPayload from "@/graphql/shared/types/payload/success-payload"
 import { NotificationsService } from "@/services/notifications"
 import { mapAndParseErrorForGqlResponse } from "@/graphql/error-map"
+import NotificationMessageStatus from "@/graphql/admin/types/scalar/notification-message-status"
 
 const NotificationMessageUpdateStatusInput = GT.Input({
   name: "NotificationMessageUpdateStatusInput",
   fields: () => ({
     id: { type: GT.NonNullID },
-    status: { type: GT.NonNull(GT.String) },
+    status: { type: GT.NonNull(NotificationMessageStatus) },
   }),
 })
 
@@ -17,7 +18,7 @@ const NotificationMessageUpdateStatusMutation = GT.Field<
   {
     input: {
       id: string | Error
-      status: string
+      status: MsgMessageStatus
     }
   }
 >({
@@ -26,7 +27,9 @@ const NotificationMessageUpdateStatusMutation = GT.Field<
   },
   type: GT.NonNull(SuccessPayload),
   args: {
-    input: { type: GT.NonNull(NotificationMessageUpdateStatusInput) },
+    input: {
+      type: GT.NonNull(NotificationMessageUpdateStatusInput),
+    },
   },
   resolve: async (_, args) => {
     const { id, status } = args.input

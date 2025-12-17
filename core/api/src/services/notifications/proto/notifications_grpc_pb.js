@@ -180,6 +180,28 @@ function deserialize_services_notifications_v1_MsgMessageCreateResponse(buffer_a
   return notifications_pb.MsgMessageCreateResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_services_notifications_v1_MsgMessageHistoryListRequest(arg) {
+  if (!(arg instanceof notifications_pb.MsgMessageHistoryListRequest)) {
+    throw new Error('Expected argument of type services.notifications.v1.MsgMessageHistoryListRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_services_notifications_v1_MsgMessageHistoryListRequest(buffer_arg) {
+  return notifications_pb.MsgMessageHistoryListRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_services_notifications_v1_MsgMessageHistoryListResponse(arg) {
+  if (!(arg instanceof notifications_pb.MsgMessageHistoryListResponse)) {
+    throw new Error('Expected argument of type services.notifications.v1.MsgMessageHistoryListResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_services_notifications_v1_MsgMessageHistoryListResponse(buffer_arg) {
+  return notifications_pb.MsgMessageHistoryListResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_services_notifications_v1_MsgMessageUpdateStatusRequest(arg) {
   if (!(arg instanceof notifications_pb.MsgMessageUpdateStatusRequest)) {
     throw new Error('Expected argument of type services.notifications.v1.MsgMessageUpdateStatusRequest');
@@ -599,6 +621,17 @@ var NotificationsServiceService = exports.NotificationsServiceService = {
     requestDeserialize: deserialize_services_notifications_v1_MsgMessagesListRequest,
     responseSerialize: serialize_services_notifications_v1_MsgMessagesListResponse,
     responseDeserialize: deserialize_services_notifications_v1_MsgMessagesListResponse,
+  },
+  msgMessageHistoryList: {
+    path: '/services.notifications.v1.NotificationsService/MsgMessageHistoryList',
+    requestStream: false,
+    responseStream: false,
+    requestType: notifications_pb.MsgMessageHistoryListRequest,
+    responseType: notifications_pb.MsgMessageHistoryListResponse,
+    requestSerialize: serialize_services_notifications_v1_MsgMessageHistoryListRequest,
+    requestDeserialize: deserialize_services_notifications_v1_MsgMessageHistoryListRequest,
+    responseSerialize: serialize_services_notifications_v1_MsgMessageHistoryListResponse,
+    responseDeserialize: deserialize_services_notifications_v1_MsgMessageHistoryListResponse,
   },
 };
 

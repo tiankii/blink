@@ -371,23 +371,18 @@ impl From<crate::msg_templates::MsgTemplate> for proto::MsgTemplate {
             should_send_push: template.should_send_push,
             should_add_to_history: template.should_add_to_history,
             should_add_to_bulletin: template.should_add_to_bulletin,
+            notification_action: template.notification_action,
+            deeplink_screen: template.deeplink_screen,
         }
     }
 }
 
 impl From<crate::msg_messages::MsgMessage> for proto::MsgMessage {
     fn from(message: crate::msg_messages::MsgMessage) -> Self {
-        let status = match message.status.as_str() {
-            "pending" => proto::MsgMessageStatus::Pending,
-            "accepted" => proto::MsgMessageStatus::Accepted,
-            "revoked" => proto::MsgMessageStatus::Revoked,
-            _ => proto::MsgMessageStatus::Pending,
-        };
-
         proto::MsgMessage {
             id: message.id.to_string(),
             username: message.username,
-            status: status.into(),
+            status: message.status,
             sent_by: message.sent_by,
             updated_at: message.updated_at.timestamp(),
         }

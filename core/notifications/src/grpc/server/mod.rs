@@ -8,6 +8,7 @@ pub mod proto {
 
 use std::collections::{HashMap, HashSet};
 
+use chrono::{TimeZone, Utc};
 use tonic::{transport::Server, Request, Response, Status};
 use tracing::{grpc, instrument};
 use uuid::Uuid;
@@ -27,6 +28,14 @@ use crate::{
 
 pub struct Notifications {
     app: NotificationsApp,
+}
+
+fn normalize_msg_message_status_input(status: String) -> String {
+    if status.is_empty() {
+        "invited".to_string()
+    } else {
+        status
+    }
 }
 
 #[tonic::async_trait]
@@ -224,9 +233,11 @@ impl NotificationsService for Notifications {
         grpc::extract_tracing(&request);
         let request = request.into_inner();
 
+        let status = normalize_msg_message_status_input(request.status);
+
         let message = self
             .app
-            .msg_message_create(request.username, request.status, request.sent_by)
+            .msg_message_create(request.username, status, request.sent_by)
             .await
             .map_err(Status::from)?;
 
@@ -248,9 +259,11 @@ impl NotificationsService for Notifications {
         let id = Uuid::parse_str(&request.id)
             .map_err(|_| Status::invalid_argument("invalid message id"))?;
 
+        let status = normalize_msg_message_status_input(request.status);
+
         let message = self
             .app
-            .msg_message_update_status(id, request.status)
+            .msg_message_update_status(id, status)
             .await
             .map_err(Status::from)?;
 
@@ -269,20 +282,80 @@ impl NotificationsService for Notifications {
         grpc::extract_tracing(&request);
         let request = request.into_inner();
 
+        let username = (!request.username.is_empty()).then_some(request.username);
+
+        let updated_at_from_ts = (request.updated_at_from > 0).then_some(request.updated_at_from);
+        let updated_at_to_ts = (request.updated_at_to > 0).then_some(request.updated_at_to);
+
+        let updated_at_from = match updated_at_from_ts {
+            Some(ts) => Some(
+                Utc.timestamp_opt(ts, 0)
+                    .single()
+                    .ok_or_else(|| Status::invalid_argument("invalid updated_at_from"))?,
+            ),
+            None => None,
+        };
+
+        let updated_at_to = match updated_at_to_ts {
+            Some(ts) => Some(
+                Utc.timestamp_opt(ts, 0)
+                    .single()
+                    .ok_or_else(|| Status::invalid_argument("invalid updated_at_to"))?,
+            ),
+            None => None,
+        };
+
         let limit = (request.limit > 0).then_some(request.limit);
         let offset = (request.offset > 0).then_some(request.offset);
 
+        let status = if request.status.is_empty() {
+            None
+        } else {
+            Some(request.status)
+        };
+
         let messages = self
             .app
-            .list_msg_messages(None, None, limit, offset)
+            .list_msg_messages(username, status, updated_at_from, updated_at_to, limit, offset)
             .await
             .map_err(Status::from)?;
 
         let messages = messages.into_iter().map(MsgMessage::from).collect();
 
-        let response = MsgMessagesListResponse { messages };
+        Ok(Response::new(MsgMessagesListResponse { messages }))
+    }
 
-        Ok(Response::new(response))
+    #[instrument(name = "notifications.msg_message_history_list", skip_all, err)]
+    async fn msg_message_history_list(
+        &self,
+        request: Request<MsgMessageHistoryListRequest>,
+    ) -> Result<Response<MsgMessageHistoryListResponse>, Status> {
+        grpc::extract_tracing(&request);
+        let request = request.into_inner();
+
+        if request.id.is_empty() {
+            return Err(Status::invalid_argument("id is required"));
+        }
+
+        let msg_message_id = Uuid::parse_str(&request.id)
+            .map_err(|_| Status::invalid_argument("invalid id"))?;
+
+        let history = self
+            .app
+            .list_msg_message_history_by_message_id(msg_message_id)
+            .await
+            .map_err(Status::from)?;
+
+        let history = history
+            .into_iter()
+            .map(|h| MsgMessageHistoryItem {
+                id: h.id.to_string(),
+                status: h.status,
+                created_at: h.created_at.timestamp(),
+            })
+            .collect();
+
+        Ok(Response::new(MsgMessageHistoryListResponse { history }))
     }
 
     #[instrument(name = "notifications.disable_notification_category", skip_all, err)]

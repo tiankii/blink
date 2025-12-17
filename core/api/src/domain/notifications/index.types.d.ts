@@ -81,7 +81,17 @@ type LocalizedNotificationContent = {
   language: UserLanguage
 }
 
-type MsgMessageStatus = "pending" | "accepted" | "revoked"
+type MsgMessageStatus =
+  | "invited"
+  | "banner_clicked"
+  | "invitation_info_completed"
+  | "kyc_initiated"
+  | "kyc_passed"
+  | "card_info_submitted"
+  | "card_approved"
+  | "invite_withdrawn"
+  | "kyc_failed"
+  | "card_denied"
 
 type MsgTemplate = {
   id: string
@@ -93,6 +103,8 @@ type MsgTemplate = {
   shouldSendPush: boolean
   shouldAddToHistory: boolean
   shouldAddToBulletin: boolean
+  notificationAction?: string
+  deeplinkScreen?: string
 }
 
 type MsgMessage = {
@@ -101,6 +113,12 @@ type MsgMessage = {
   status: MsgMessageStatus
   sentBy: string
   updatedAt: number
+}
+
+type MsgMessageHistoryItem = {
+  id: string
+  status: MsgMessageStatus
+  createdAt: number
 }
 
 interface INotificationsService {
@@ -170,6 +188,8 @@ interface INotificationsService {
     shouldSendPush?: boolean
     shouldAddToHistory?: boolean
     shouldAddToBulletin?: boolean
+    notificationAction?: string
+    deeplinkScreen?: string
   }): Promise<true | NotificationsServiceError>
 
   msgTemplateUpdate(args: {
@@ -182,6 +202,8 @@ interface INotificationsService {
     shouldSendPush?: boolean
     shouldAddToHistory?: boolean
     shouldAddToBulletin?: boolean
+    notificationAction?: string
+    deeplinkScreen?: string
   }): Promise<true | NotificationsServiceError>
 
   msgTemplateDelete(args: { id: string }): Promise<true | NotificationsServiceError>
@@ -194,19 +216,23 @@ interface INotificationsService {
 
   msgMessageCreate(args: {
     username: string
-    status?: MsgMessageStatus | string
+    status?: MsgMessageStatus
     sentBy: string
   }): Promise<true | NotificationsServiceError>
 
   msgMessageUpdateStatus(args: {
     id: string
-    status: MsgMessageStatus | string
+    status: MsgMessageStatus
   }): Promise<true | NotificationsServiceError>
 
   msgMessagesList(args: {
     limit?: number
     offset?: number
   }): Promise<MsgMessage[] | NotificationsServiceError>
+
+  msgMessageHistoryList(args: {
+    id: string
+  }): Promise<MsgMessageHistoryItem[] | NotificationsServiceError>
 }
 
 type TriggerMarketingNotificationArgs = {

@@ -14,6 +14,8 @@ pub struct MsgTemplate {
     pub should_send_push: bool,
     pub should_add_to_history: bool,
     pub should_add_to_bulletin: bool,
+    pub notification_action: Option<String>,
+    pub deeplink_screen: Option<String>,
 }
 
 #[derive(Debug, Clone)]
@@ -40,6 +42,8 @@ impl MsgTemplateRepository {
         should_send_push: bool,
         should_add_to_history: bool,
         should_add_to_bulletin: bool,
+        notification_action: Option<String>,
+        deeplink_screen: Option<String>,
     ) -> Result<MsgTemplate, sqlx::Error> {
         let template = sqlx::query_as::<_, MsgTemplate>(
             r#"
@@ -51,9 +55,11 @@ impl MsgTemplateRepository {
                 body,
                 should_send_push,
                 should_add_to_history,
-                should_add_to_bulletin
+                should_add_to_bulletin,
+                notification_action,
+                deeplink_screen
             )
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
             RETURNING
                 id,
                 name,
@@ -63,7 +69,9 @@ impl MsgTemplateRepository {
                 body,
                 should_send_push,
                 should_add_to_history,
-                should_add_to_bulletin
+                should_add_to_bulletin,
+                notification_action,
+                deeplink_screen
             "#,
         )
         .bind(name)
@@ -74,6 +82,8 @@ impl MsgTemplateRepository {
         .bind(should_send_push)
         .bind(should_add_to_history)
         .bind(should_add_to_bulletin)
+        .bind(notification_action)
+        .bind(deeplink_screen)
         .fetch_one(&self.pool)
         .await?;
         Ok(template)
@@ -90,6 +100,8 @@ impl MsgTemplateRepository {
         should_send_push: bool,
         should_add_to_history: bool,
         should_add_to_bulletin: bool,
+        notification_action: Option<String>,
+        deeplink_screen: Option<String>,
     ) -> Result<MsgTemplate, sqlx::Error> {
         let template = sqlx::query_as::<_, MsgTemplate>(
             r#"
@@ -101,7 +113,9 @@ impl MsgTemplateRepository {
                 body = $6,
                 should_send_push = $7,
                 should_add_to_history = $8,
-                should_add_to_bulletin = $9
+                should_add_to_bulletin = $9,
+                notification_action = $10,
+                deeplink_screen = $11
             WHERE id = $1
             RETURNING
                 id,
@@ -112,7 +126,9 @@ impl MsgTemplateRepository {
                 body,
                 should_send_push,
                 should_add_to_history,
-                should_add_to_bulletin
+                should_add_to_bulletin,
+                notification_action,
+                deeplink_screen
             "#,
         )
         .bind(id)
@@ -124,6 +140,8 @@ impl MsgTemplateRepository {
         .bind(should_send_push)
         .bind(should_add_to_history)
         .bind(should_add_to_bulletin)
+        .bind(notification_action)
+        .bind(deeplink_screen)
         .fetch_one(&self.pool)
         .await?;
         Ok(template)
@@ -148,98 +166,30 @@ impl MsgTemplateRepository {
         limit: Option<i64>,
         offset: Option<i64>,
     ) -> Result<Vec<MsgTemplate>, sqlx::Error> {
-        match (limit, offset) {
-            (Some(limit), Some(offset)) => {
-                let templates = sqlx::query_as::<_, MsgTemplate>(
-                    r#"
-                    SELECT
-                        id,
-                        name,
-                        language_code,
-                        icon_name,
-                        title,
-                        body,
-                        should_send_push,
-                        should_add_to_history,
-                        should_add_to_bulletin
-                    FROM msg_templates
-                    ORDER BY name, language_code
-                    LIMIT $1 OFFSET $2
-                    "#,
-                )
-                .bind(limit)
-                .bind(offset)
-                .fetch_all(self.read_pool.inner())
-                .await?;
-                Ok(templates)
-            }
-            (Some(limit), None) => {
-                let templates = sqlx::query_as::<_, MsgTemplate>(
-                    r#"
-                    SELECT
-                        id,
-                        name,
-                        language_code,
-                        icon_name,
-                        title,
-                        body,
-                        should_send_push,
-                        should_add_to_history,
-                        should_add_to_bulletin
-                    FROM msg_templates
-                    ORDER BY name, language_code
-                    LIMIT $1
-                    "#,
-                )
-                .bind(limit)
-                .fetch_all(self.read_pool.inner())
-                .await?;
-                Ok(templates)
-            }
-            (None, Some(offset)) => {
-                let templates = sqlx::query_as::<_, MsgTemplate>(
-                    r#"
-                    SELECT
-                        id,
-                        name,
-                        language_code,
-                        icon_name,
-                        title,
-                        body,
-                        should_send_push,
-                        should_add_to_history,
-                        should_add_to_bulletin
-                    FROM msg_templates
-                    ORDER BY name, language_code
-                    OFFSET $1
-                    "#,
-                )
-                .bind(offset)
-                .fetch_all(self.read_pool.inner())
-                .await?;
-                Ok(templates)
-            }
-            (None, None) => {
-                let templates = sqlx::query_as::<_, MsgTemplate>(
-                    r#"
-                    SELECT
-                        id,
-                        name,
-                        language_code,
-                        icon_name,
-                        title,
-                        body,
-                        should_send_push,
-                        should_add_to_history,
-                        should_add_to_bulletin
-                    FROM msg_templates
-                    ORDER BY name, language_code
-                    "#,
-                )
-                .fetch_all(self.read_pool.inner())
-                .await?;
-                Ok(templates)
-            }
-        }
+        let templates = sqlx::query_as::<_, MsgTemplate>(
+            r#"
+            SELECT
+                id,
+                name,
+                language_code,
+                icon_name,
+                title,
+                body,
+                should_send_push,
+                should_add_to_history,
+                should_add_to_bulletin,
+                notification_action,
+                deeplink_screen
+            FROM msg_templates
+            ORDER BY name, language_code
+            LIMIT COALESCE($1, 9223372036854775807)
+            OFFSET COALESCE($2, 0)
+            "#,
+        )
+        .bind(limit)
+        .bind(offset)
+        .fetch_all(self.read_pool.inner())
+        .await?;
+        Ok(templates)
     }
 }

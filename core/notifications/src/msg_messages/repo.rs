@@ -1,5 +1,5 @@
 use chrono::{DateTime, Utc};
-use sqlx::{FromRow, PgPool};
+use sqlx::{FromRow, PgPool, Postgres, Transaction};
 use uuid::Uuid;
 
 use crate::primitives::ReadPool;
@@ -15,6 +15,7 @@ pub struct MsgMessage {
 
 #[derive(Debug, Clone)]
 pub struct MsgMessageRepository {
+    #[allow(dead_code)]
     pool: PgPool,
     read_pool: ReadPool,
 }
@@ -27,8 +28,9 @@ impl MsgMessageRepository {
         }
     }
 
-    pub async fn create_message(
+    pub async fn create_message_in_tx(
         &self,
+        tx: &mut Transaction<'_, Postgres>,
         username: String,
         status: String,
         sent_by: String,
@@ -43,13 +45,14 @@ impl MsgMessageRepository {
         .bind(username)
         .bind(status)
         .bind(sent_by)
-        .fetch_one(&self.pool)
+        .fetch_one(&mut **tx)
         .await?;
         Ok(message)
     }
 
-    pub async fn update_message_status(
+    pub async fn update_message_status_in_tx(
         &self,
+        tx: &mut Transaction<'_, Postgres>,
         id: Uuid,
         status: String,
     ) -> Result<MsgMessage, sqlx::Error> {
@@ -64,72 +67,41 @@ impl MsgMessageRepository {
         )
         .bind(id)
         .bind(status)
-        .fetch_one(&self.pool)
+        .fetch_one(&mut **tx)
         .await?;
         Ok(message)
     }
 
     pub async fn list_messages(
         &self,
+        username: Option<String>,
+        status: Option<String>,
+        updated_at_from: Option<DateTime<Utc>>,
+        updated_at_to: Option<DateTime<Utc>>,
         limit: Option<i64>,
         offset: Option<i64>,
     ) -> Result<Vec<MsgMessage>, sqlx::Error> {
-        match (limit, offset) {
-            (Some(limit), Some(offset)) => {
-                let messages = sqlx::query_as::<_, MsgMessage>(
-                    r#"
-                    SELECT id, username, status, sent_by, updated_at
-                    FROM msg_messages
-                    ORDER BY updated_at DESC
-                    LIMIT $1 OFFSET $2
-                    "#,
-                )
-                .bind(limit)
-                .bind(offset)
-                .fetch_all(self.read_pool.inner())
-                .await?;
-                Ok(messages)
-            }
-            (Some(limit), None) => {
-                let messages = sqlx::query_as::<_, MsgMessage>(
-                    r#"
-                    SELECT id, username, status, sent_by, updated_at
-                    FROM msg_messages
-                    ORDER BY updated_at DESC
-                    LIMIT $1
-                    "#,
-                )
-                .bind(limit)
-                .fetch_all(self.read_pool.inner())
-                .await?;
-                Ok(messages)
-            }
-            (None, Some(offset)) => {
-                let messages = sqlx::query_as::<_, MsgMessage>(
-                    r#"
-                    SELECT id, username, status, sent_by, updated_at
-                    FROM msg_messages
-                    ORDER BY updated_at DESC
-                    OFFSET $1
-                    "#,
-                )
-                .bind(offset)
-                .fetch_all(self.read_pool.inner())
-                .await?;
-                Ok(messages)
-            }
-            (None, None) => {
-                let messages = sqlx::query_as::<_, MsgMessage>(
-                    r#"
-                    SELECT id, username, status, sent_by, updated_at
-                    FROM msg_messages
-                    ORDER BY updated_at DESC
-                    "#,
-                )
-                .fetch_all(self.read_pool.inner())
-                .await?;
-                Ok(messages)
-            }
-        }
+        let messages = sqlx::query_as::<_, MsgMessage>(
+            r#"
+            SELECT id, username, status, sent_by, updated_at
+            FROM msg_messages
+            WHERE ($1::text IS NULL OR username = $1)
+                AND ($2::text IS NULL OR status = $2)
+                AND ($3::timestamptz IS NULL OR updated_at >= $3)
+                AND ($4::timestamptz IS NULL OR updated_at <= $4)
+            ORDER BY updated_at DESC
+            LIMIT COALESCE($5, 9223372036854775807)
+            OFFSET COALESCE($6, 0)
+            "#,
+        )
+        .bind(username)
+        .bind(status)
+        .bind(updated_at_from)
+        .bind(updated_at_to)
+        .bind(limit)
+        .bind(offset)
+        .fetch_all(self.read_pool.inner())
+        .await?;
+        Ok(messages)
     }
 }

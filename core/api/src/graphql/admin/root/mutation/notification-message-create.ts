@@ -2,12 +2,13 @@ import { GT } from "@/graphql/index"
 import SuccessPayload from "@/graphql/shared/types/payload/success-payload"
 import { NotificationsService } from "@/services/notifications"
 import { mapAndParseErrorForGqlResponse } from "@/graphql/error-map"
+import NotificationMessageStatus from "@/graphql/admin/types/scalar/notification-message-status"
 
 const NotificationMessageCreateInput = GT.Input({
   name: "NotificationMessageCreateInput",
   fields: () => ({
     username: { type: GT.NonNull(GT.String) },
-    status: { type: GT.String },
+    status: { type: NotificationMessageStatus },
     sentBy: { type: GT.NonNull(GT.String) },
   }),
 })
@@ -18,7 +19,7 @@ const NotificationMessageCreateMutation = GT.Field<
   {
     input: {
       username: string
-      status?: string
+      status?: MsgMessageStatus
       sentBy: string
     }
   }
@@ -28,7 +29,9 @@ const NotificationMessageCreateMutation = GT.Field<
   },
   type: GT.NonNull(SuccessPayload),
   args: {
-    input: { type: GT.NonNull(NotificationMessageCreateInput) },
+    input: {
+      type: GT.NonNull(NotificationMessageCreateInput),
+    },
   },
   resolve: async (_, args) => {
     const { username, status, sentBy } = args.input

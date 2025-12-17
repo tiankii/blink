@@ -26,6 +26,7 @@ interface INotificationsServiceService extends grpc.ServiceDefinition<grpc.Untyp
     msgMessageCreate: INotificationsServiceService_IMsgMessageCreate;
     msgMessageUpdateStatus: INotificationsServiceService_IMsgMessageUpdateStatus;
     msgMessagesList: INotificationsServiceService_IMsgMessagesList;
+    msgMessageHistoryList: INotificationsServiceService_IMsgMessageHistoryList;
 }
 
 interface INotificationsServiceService_IEnableNotificationChannel extends grpc.MethodDefinition<notifications_pb.EnableNotificationChannelRequest, notifications_pb.EnableNotificationChannelResponse> {
@@ -190,6 +191,15 @@ interface INotificationsServiceService_IMsgMessagesList extends grpc.MethodDefin
     responseSerialize: grpc.serialize<notifications_pb.MsgMessagesListResponse>;
     responseDeserialize: grpc.deserialize<notifications_pb.MsgMessagesListResponse>;
 }
+interface INotificationsServiceService_IMsgMessageHistoryList extends grpc.MethodDefinition<notifications_pb.MsgMessageHistoryListRequest, notifications_pb.MsgMessageHistoryListResponse> {
+    path: "/services.notifications.v1.NotificationsService/MsgMessageHistoryList";
+    requestStream: false;
+    responseStream: false;
+    requestSerialize: grpc.serialize<notifications_pb.MsgMessageHistoryListRequest>;
+    requestDeserialize: grpc.deserialize<notifications_pb.MsgMessageHistoryListRequest>;
+    responseSerialize: grpc.serialize<notifications_pb.MsgMessageHistoryListResponse>;
+    responseDeserialize: grpc.deserialize<notifications_pb.MsgMessageHistoryListResponse>;
+}
 
 export const NotificationsServiceService: INotificationsServiceService;
 
@@ -212,6 +222,7 @@ export interface INotificationsServiceServer extends grpc.UntypedServiceImplemen
     msgMessageCreate: grpc.handleUnaryCall<notifications_pb.MsgMessageCreateRequest, notifications_pb.MsgMessageCreateResponse>;
     msgMessageUpdateStatus: grpc.handleUnaryCall<notifications_pb.MsgMessageUpdateStatusRequest, notifications_pb.MsgMessageUpdateStatusResponse>;
     msgMessagesList: grpc.handleUnaryCall<notifications_pb.MsgMessagesListRequest, notifications_pb.MsgMessagesListResponse>;
+    msgMessageHistoryList: grpc.handleUnaryCall<notifications_pb.MsgMessageHistoryListRequest, notifications_pb.MsgMessageHistoryListResponse>;
 }
 
 export interface INotificationsServiceClient {
@@ -269,6 +280,9 @@ export interface INotificationsServiceClient {
     msgMessagesList(request: notifications_pb.MsgMessagesListRequest, callback: (error: grpc.ServiceError | null, response: notifications_pb.MsgMessagesListResponse) => void): grpc.ClientUnaryCall;
     msgMessagesList(request: notifications_pb.MsgMessagesListRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: notifications_pb.MsgMessagesListResponse) => void): grpc.ClientUnaryCall;
     msgMessagesList(request: notifications_pb.MsgMessagesListRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: notifications_pb.MsgMessagesListResponse) => void): grpc.ClientUnaryCall;
+    msgMessageHistoryList(request: notifications_pb.MsgMessageHistoryListRequest, callback: (error: grpc.ServiceError | null, response: notifications_pb.MsgMessageHistoryListResponse) => void): grpc.ClientUnaryCall;
+    msgMessageHistoryList(request: notifications_pb.MsgMessageHistoryListRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: notifications_pb.MsgMessageHistoryListResponse) => void): grpc.ClientUnaryCall;
+    msgMessageHistoryList(request: notifications_pb.MsgMessageHistoryListRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: notifications_pb.MsgMessageHistoryListResponse) => void): grpc.ClientUnaryCall;
 }
 
 export class NotificationsServiceClient extends grpc.Client implements INotificationsServiceClient {
@@ -327,4 +341,7 @@ export class NotificationsServiceClient extends grpc.Client implements INotifica
     public msgMessagesList(request: notifications_pb.MsgMessagesListRequest, callback: (error: grpc.ServiceError | null, response: notifications_pb.MsgMessagesListResponse) => void): grpc.ClientUnaryCall;
     public msgMessagesList(request: notifications_pb.MsgMessagesListRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: notifications_pb.MsgMessagesListResponse) => void): grpc.ClientUnaryCall;
     public msgMessagesList(request: notifications_pb.MsgMessagesListRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: notifications_pb.MsgMessagesListResponse) => void): grpc.ClientUnaryCall;
+    public msgMessageHistoryList(request: notifications_pb.MsgMessageHistoryListRequest, callback: (error: grpc.ServiceError | null, response: notifications_pb.MsgMessageHistoryListResponse) => void): grpc.ClientUnaryCall;
+    public msgMessageHistoryList(request: notifications_pb.MsgMessageHistoryListRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: notifications_pb.MsgMessageHistoryListResponse) => void): grpc.ClientUnaryCall;
+    public msgMessageHistoryList(request: notifications_pb.MsgMessageHistoryListRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: notifications_pb.MsgMessageHistoryListResponse) => void): grpc.ClientUnaryCall;
 }

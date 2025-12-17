@@ -11,6 +11,8 @@ const NotificationTemplate = GT.Object<{
   shouldSendPush: boolean
   shouldAddToHistory: boolean
   shouldAddToBulletin: boolean
+  notificationAction?: string
+  deeplinkScreen?: string
 }>({
   name: "NotificationTemplate",
   fields: () => ({
@@ -40,6 +42,12 @@ const NotificationTemplate = GT.Object<{
     },
     shouldAddToBulletin: {
       type: GT.NonNull(GT.Boolean),
+    },
+    notificationAction: {
+      type: GT.String,
+    },
+    deeplinkScreen: {
+      type: GT.String,
     },
   }),
 })

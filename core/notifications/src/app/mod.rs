@@ -12,6 +12,7 @@ use crate::{
     job, notification_cool_off_tracker::*, notification_event::*, primitives::*, push_executor::*,
     user_notification_settings::*, msg_templates::MsgTemplateRepository,
     msg_messages::MsgMessageRepository,
+    msg_message_history::MsgMessageHistoryRepository,
 };
 
 pub use config::*;
@@ -26,6 +27,7 @@ pub struct NotificationsApp {
     pool: Pool<Postgres>,
     msg_template_repository: MsgTemplateRepository,
     msg_message_repository: MsgMessageRepository,
+    msg_message_history_repository: MsgMessageHistoryRepository,
     _runner: Arc<Option<JobRunnerHandle>>,
 }
 
@@ -44,6 +46,7 @@ impl NotificationsApp {
         let history = NotificationHistory::new(&pool, &read_pool, settings.clone());
         let msg_template_repository = MsgTemplateRepository::new(&pool, &read_pool);
         let msg_message_repository = MsgMessageRepository::new(&pool, &read_pool);
+        let msg_message_history_repository = MsgMessageHistoryRepository::new(&pool, &read_pool);
         let runner = job::start_job_runner(
             &pool,
             push_executor,
@@ -67,6 +70,7 @@ impl NotificationsApp {
             email_reminder_projection,
             msg_template_repository,
             msg_message_repository,
+            msg_message_history_repository,
             _runner: Arc::new(runner),
         })
     }
@@ -412,6 +416,8 @@ impl NotificationsApp {
                 should_send_push,
                 should_add_to_history,
                 should_add_to_bulletin,
+                None,
+                None,
             )
             .await?;
         Ok(template)
@@ -442,6 +448,8 @@ impl NotificationsApp {
                 should_send_push,
                 should_add_to_history,
                 should_add_to_bulletin,
+                None,
+                None,
             )
             .await?;
         Ok(template)
@@ -477,10 +485,24 @@ impl NotificationsApp {
         status: String,
         sent_by: String,
     ) -> Result<crate::msg_messages::MsgMessage, ApplicationError> {
+        let mut tx = self.pool.begin().await?;
+
+        let status = if status.is_empty() {
+            "invited".to_string()
+        } else {
+            status
+        };
+
         let message = self
             .msg_message_repository
-            .create_message(username, status, sent_by)
+            .create_message_in_tx(&mut tx, username, status.clone(), sent_by)
             .await?;
+
+        self.msg_message_history_repository
+            .create_history_in_tx(&mut tx, message.id, status)
+            .await?;
+
+        tx.commit().await?;
         Ok(message)
     }
 
@@ -490,25 +512,47 @@ impl NotificationsApp {
         id: uuid::Uuid,
         status: String,
     ) -> Result<crate::msg_messages::MsgMessage, ApplicationError> {
+        let mut tx = self.pool.begin().await?;
+
         let message = self
             .msg_message_repository
-            .update_message_status(id, status)
+            .update_message_status_in_tx(&mut tx, id, status.clone())
             .await?;
+
+        self.msg_message_history_repository
+            .create_history_in_tx(&mut tx, message.id, status)
+            .await?;
+
+        tx.commit().await?;
         Ok(message)
     }
 
     #[instrument(name = "app.msg_messages_list", skip(self), err)]
     pub async fn list_msg_messages(
         &self,
-        _username: Option<String>,
-        _status: Option<String>,
+        username: Option<String>,
+        status: Option<String>,
+        updated_at_from: Option<chrono::DateTime<chrono::Utc>>,
+        updated_at_to: Option<chrono::DateTime<chrono::Utc>>,
         limit: Option<i64>,
         offset: Option<i64>,
     ) -> Result<Vec<crate::msg_messages::MsgMessage>, ApplicationError> {
         let messages = self
             .msg_message_repository
-            .list_messages(limit, offset)
+            .list_messages(username, status, updated_at_from, updated_at_to, limit, offset)
             .await?;
         Ok(messages)
+    }
+
+    #[instrument(name = "app.msg_message_history_list_by_message_id", skip(self), err)]
+    pub async fn list_msg_message_history_by_message_id(
+        &self,
+        msg_message_id: uuid::Uuid,
+    ) -> Result<Vec<crate::msg_message_history::MsgMessageHistory>, ApplicationError> {
+        let rows = self
+            .msg_message_history_repository
+            .list_history_by_message_id(msg_message_id)
+            .await?;
+        Ok(rows)
     }
 }

@@ -15,6 +15,8 @@ const NotificationTemplateCreateInput = GT.Input({
     shouldSendPush: { type: GT.NonNull(GT.Boolean) },
     shouldAddToHistory: { type: GT.NonNull(GT.Boolean) },
     shouldAddToBulletin: { type: GT.NonNull(GT.Boolean) },
+    notificationAction: { type: GT.String },
+    deeplinkScreen: { type: GT.String },
   }),
 })
 
@@ -31,6 +33,8 @@ const NotificationTemplateCreateMutation = GT.Field<
       shouldSendPush: boolean
       shouldAddToHistory: boolean
       shouldAddToBulletin: boolean
+      notificationAction?: string
+      deeplinkScreen?: string
     }
   }
 >({
@@ -51,6 +55,8 @@ const NotificationTemplateCreateMutation = GT.Field<
       shouldSendPush,
       shouldAddToHistory,
       shouldAddToBulletin,
+      notificationAction,
+      deeplinkScreen,
     } = args.input
 
     if (languageCode instanceof Error) {
@@ -68,6 +74,8 @@ const NotificationTemplateCreateMutation = GT.Field<
       shouldSendPush,
       shouldAddToHistory,
       shouldAddToBulletin,
+      notificationAction,
+      deeplinkScreen,
     })
 
     if (res instanceof Error) {

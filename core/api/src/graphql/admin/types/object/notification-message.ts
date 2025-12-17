@@ -1,10 +1,11 @@
 import { GT } from "@/graphql/index"
 import Timestamp from "@/graphql/shared/types/scalar/timestamp"
+import NotificationMessageStatus from "@/graphql/admin/types/scalar/notification-message-status"
 
 const NotificationMessage = GT.Object<{
   id: string
   username: string
-  status: string
+  status: MsgMessageStatus
   sentBy: string
   updatedAt: number
 }>({
@@ -17,7 +18,7 @@ const NotificationMessage = GT.Object<{
       type: GT.NonNull(GT.String),
     },
     status: {
-      type: GT.NonNull(GT.String),
+      type: GT.NonNull(NotificationMessageStatus),
     },
     sentBy: {
       type: GT.NonNull(GT.String),

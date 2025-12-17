@@ -35,6 +35,8 @@ import {
   MsgMessageCreateRequest,
   MsgMessageUpdateStatusRequest,
   MsgMessagesListRequest,
+  MsgMessageHistoryListRequest,
+  MsgMessageStatus as ProtoMsgMessageStatus,
 } from "./proto/notifications_pb"
 
 import * as notificationsGrpc from "./grpc-client"
@@ -67,6 +69,68 @@ import { PubSubService } from "@/services/pubsub"
 import { CallbackService } from "@/services/svix"
 import { wrapAsyncFunctionsToRunInSpan, wrapAsyncToRunInSpan } from "@/services/tracing"
 import { getPhoneProviderTransactionalService } from "@/services/phone-provider"
+
+const protoMsgMessageStatusToDomain = (
+  status: string | ProtoMsgMessageStatus,
+): MsgMessageStatus => {
+  if (typeof status === "string") return status as MsgMessageStatus
+
+  switch (status) {
+    case ProtoMsgMessageStatus.INVITED:
+      return "invited" as MsgMessageStatus
+    case ProtoMsgMessageStatus.BANNER_CLICKED:
+      return "banner_clicked" as MsgMessageStatus
+    case ProtoMsgMessageStatus.INVITATION_INFO_COMPLETED:
+      return "invitation_info_completed" as MsgMessageStatus
+    case ProtoMsgMessageStatus.KYC_INITIATED:
+      return "kyc_initiated" as MsgMessageStatus
+    case ProtoMsgMessageStatus.KYC_PASSED:
+      return "kyc_passed" as MsgMessageStatus
+    case ProtoMsgMessageStatus.CARD_INFO_SUBMITTED:
+      return "card_info_submitted" as MsgMessageStatus
+    case ProtoMsgMessageStatus.CARD_APPROVED:
+      return "card_approved" as MsgMessageStatus
+    case ProtoMsgMessageStatus.INVITE_WITHDRAWN:
+      return "invite_withdrawn" as MsgMessageStatus
+    case ProtoMsgMessageStatus.KYC_FAILED:
+      return "kyc_failed" as MsgMessageStatus
+    case ProtoMsgMessageStatus.CARD_DENIED:
+      return "card_denied" as MsgMessageStatus
+    default:
+      return "invited" as MsgMessageStatus
+  }
+}
+
+const domainMsgMessageStatusToProto = (
+  status: MsgMessageStatus | ProtoMsgMessageStatus,
+): string => {
+  if (typeof status === "number") return protoMsgMessageStatusToDomain(status)
+
+  switch (status as unknown as string) {
+    case "invited":
+      return "invited"
+    case "banner_clicked":
+      return "banner_clicked"
+    case "invitation_info_completed":
+      return "invitation_info_completed"
+    case "kyc_initiated":
+      return "kyc_initiated"
+    case "kyc_passed":
+      return "kyc_passed"
+    case "card_info_submitted":
+      return "card_info_submitted"
+    case "card_approved":
+      return "card_approved"
+    case "invite_withdrawn":
+      return "invite_withdrawn"
+    case "kyc_failed":
+      return "kyc_failed"
+    case "card_denied":
+      return "card_denied"
+    default:
+      return "invited"
+  }
+}
 
 export const NotificationsService = (): INotificationsService => {
   const pubsub = PubSubService()
@@ -721,6 +785,8 @@ export const NotificationsService = (): INotificationsService => {
     shouldSendPush,
     shouldAddToHistory,
     shouldAddToBulletin,
+    notificationAction,
+    deeplinkScreen,
   }: {
     name: string
     languageCode: string
@@ -730,6 +796,8 @@ export const NotificationsService = (): INotificationsService => {
     shouldSendPush?: boolean
     shouldAddToHistory?: boolean
     shouldAddToBulletin?: boolean
+    notificationAction?: string
+    deeplinkScreen?: string
   }): Promise<true | NotificationsServiceError> => {
     try {
       const request = new MsgTemplateCreateRequest()
@@ -738,15 +806,14 @@ export const NotificationsService = (): INotificationsService => {
       request.setIconName(iconName)
       request.setTitle(title)
       request.setBody(body)
-      if (typeof shouldSendPush === "boolean") {
-        request.setShouldSendPush(shouldSendPush)
-      }
-      if (typeof shouldAddToHistory === "boolean") {
+      if (typeof shouldSendPush === "boolean") request.setShouldSendPush(shouldSendPush)
+      if (typeof shouldAddToHistory === "boolean")
         request.setShouldAddToHistory(shouldAddToHistory)
-      }
-      if (typeof shouldAddToBulletin === "boolean") {
+      if (typeof shouldAddToBulletin === "boolean")
         request.setShouldAddToBulletin(shouldAddToBulletin)
-      }
+      if (typeof notificationAction === "string")
+        request.setNotificationAction(notificationAction)
+      if (typeof deeplinkScreen === "string") request.setDeeplinkScreen(deeplinkScreen)
 
       await notificationsGrpc.msgTemplateCreate(
         request,
@@ -769,6 +836,8 @@ export const NotificationsService = (): INotificationsService => {
     shouldSendPush,
     shouldAddToHistory,
     shouldAddToBulletin,
+    notificationAction,
+    deeplinkScreen,
   }: {
     id: string
     name: string
@@ -779,6 +848,8 @@ export const NotificationsService = (): INotificationsService => {
     shouldSendPush?: boolean
     shouldAddToHistory?: boolean
     shouldAddToBulletin?: boolean
+    notificationAction?: string
+    deeplinkScreen?: string
   }): Promise<true | NotificationsServiceError> => {
     try {
       const request = new MsgTemplateUpdateRequest()
@@ -788,15 +859,14 @@ export const NotificationsService = (): INotificationsService => {
       request.setIconName(iconName)
       request.setTitle(title)
       request.setBody(body)
-      if (typeof shouldSendPush === "boolean") {
-        request.setShouldSendPush(shouldSendPush)
-      }
-      if (typeof shouldAddToHistory === "boolean") {
+      if (typeof shouldSendPush === "boolean") request.setShouldSendPush(shouldSendPush)
+      if (typeof shouldAddToHistory === "boolean")
         request.setShouldAddToHistory(shouldAddToHistory)
-      }
-      if (typeof shouldAddToBulletin === "boolean") {
+      if (typeof shouldAddToBulletin === "boolean")
         request.setShouldAddToBulletin(shouldAddToBulletin)
-      }
+      if (typeof notificationAction === "string")
+        request.setNotificationAction(notificationAction)
+      if (typeof deeplinkScreen === "string") request.setDeeplinkScreen(deeplinkScreen)
 
       await notificationsGrpc.msgTemplateUpdate(
         request,
@@ -840,7 +910,7 @@ export const NotificationsService = (): INotificationsService => {
   }): Promise<MsgTemplate[] | NotificationsServiceError> => {
     try {
       const request = new MsgTemplatesListRequest()
-      if (languageCode) request.setLanguageCode(languageCode)
+      if (typeof languageCode === "string") request.setLanguageCode(languageCode)
       if (typeof limit === "number") request.setLimit(limit)
       if (typeof offset === "number") request.setOffset(offset)
 
@@ -859,6 +929,8 @@ export const NotificationsService = (): INotificationsService => {
         shouldSendPush: template.getShouldSendPush(),
         shouldAddToHistory: template.getShouldAddToHistory(),
         shouldAddToBulletin: template.getShouldAddToBulletin(),
+        notificationAction: template.getNotificationAction(),
+        deeplinkScreen: template.getDeeplinkScreen(),
       }))
 
       return templates
@@ -873,14 +945,14 @@ export const NotificationsService = (): INotificationsService => {
     sentBy,
   }: {
     username: string
-    status?: MsgMessageStatus | string
+    status?: MsgMessageStatus | ProtoMsgMessageStatus
     sentBy: string
   }): Promise<true | NotificationsServiceError> => {
     try {
       const request = new MsgMessageCreateRequest()
       request.setUsername(username)
-      if (typeof status === "string") request.setStatus(status)
       request.setSentBy(sentBy)
+      if (status !== undefined) request.setStatus(domainMsgMessageStatusToProto(status))
 
       await notificationsGrpc.msgMessageCreate(
         request,
@@ -898,12 +970,12 @@ export const NotificationsService = (): INotificationsService => {
     status,
   }: {
     id: string
-    status: MsgMessageStatus | string
+    status: MsgMessageStatus | ProtoMsgMessageStatus
   }): Promise<true | NotificationsServiceError> => {
     try {
       const request = new MsgMessageUpdateStatusRequest()
       request.setId(id)
-      request.setStatus(status)
+      request.setStatus(domainMsgMessageStatusToProto(status))
 
       await notificationsGrpc.msgMessageUpdateStatus(
         request,
@@ -917,14 +989,26 @@ export const NotificationsService = (): INotificationsService => {
   }
 
   const msgMessagesList = async ({
+    username,
+    status,
+    updatedAtFrom,
+    updatedAtTo,
     limit,
     offset,
   }: {
+    username?: string
+    status?: MsgMessageStatus | ProtoMsgMessageStatus
+    updatedAtFrom?: number
+    updatedAtTo?: number
     limit?: number
     offset?: number
   }): Promise<MsgMessage[] | NotificationsServiceError> => {
     try {
       const request = new MsgMessagesListRequest()
+      if (typeof username === "string") request.setUsername(username)
+      if (status !== undefined) request.setStatus(domainMsgMessageStatusToProto(status))
+      if (typeof updatedAtFrom === "number") request.setUpdatedAtFrom(updatedAtFrom)
+      if (typeof updatedAtTo === "number") request.setUpdatedAtTo(updatedAtTo)
       if (typeof limit === "number") request.setLimit(limit)
       if (typeof offset === "number") request.setOffset(offset)
 
@@ -933,20 +1017,13 @@ export const NotificationsService = (): INotificationsService => {
         notificationsGrpc.notificationsMetadata,
       )
 
-      const messages = response.getMessagesList().map<MsgMessage>((message) => {
-        const statusProto = message.getStatus()
-
-        const status: MsgMessageStatus =
-          statusProto === 1 ? "accepted" : statusProto === 2 ? "revoked" : "pending"
-
-        return {
-          id: message.getId(),
-          username: message.getUsername(),
-          status,
-          sentBy: message.getSentBy(),
-          updatedAt: message.getUpdatedAt(),
-        }
-      })
+      const messages = response.getMessagesList().map<MsgMessage>((message) => ({
+        id: message.getId(),
+        username: message.getUsername(),
+        status: protoMsgMessageStatusToDomain(message.getStatus()),
+        sentBy: message.getSentBy(),
+        updatedAt: message.getUpdatedAt(),
+      }))
 
       return messages
     } catch (err) {
@@ -954,7 +1031,33 @@ export const NotificationsService = (): INotificationsService => {
     }
   }
 
-  // trace everything except price update because it runs every 30 seconds
+  const msgMessageHistoryList = async ({
+    id,
+  }: {
+    id: string
+  }): Promise<
+    | { id: string; status: MsgMessageStatus; createdAt: number }[]
+    | NotificationsServiceError
+  > => {
+    try {
+      const request = new MsgMessageHistoryListRequest()
+      request.setId(id)
+
+      const response = await notificationsGrpc.msgMessageHistoryList(
+        request,
+        notificationsGrpc.notificationsMetadata,
+      )
+
+      return response.getHistoryList().map((item) => ({
+        id: item.getId(),
+        status: protoMsgMessageStatusToDomain(item.getStatus()),
+        createdAt: item.getCreatedAt(),
+      }))
+    } catch (err) {
+      return handleCommonNotificationErrors(err)
+    }
+  }
+
   return {
     priceUpdate,
     triggerMarketingNotification: wrapAsyncToRunInSpan({
@@ -983,6 +1086,7 @@ export const NotificationsService = (): INotificationsService => {
         msgMessageCreate,
         msgMessageUpdateStatus,
         msgMessagesList,
+        msgMessageHistoryList,
       },
     }),
   }

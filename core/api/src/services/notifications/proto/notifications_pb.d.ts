@@ -1048,6 +1048,16 @@ export class MsgTemplate extends jspb.Message {
     getShouldAddToBulletin(): boolean;
     setShouldAddToBulletin(value: boolean): MsgTemplate;
 
+    hasNotificationAction(): boolean;
+    clearNotificationAction(): void;
+    getNotificationAction(): string | undefined;
+    setNotificationAction(value: string): MsgTemplate;
+
+    hasDeeplinkScreen(): boolean;
+    clearDeeplinkScreen(): void;
+    getDeeplinkScreen(): string | undefined;
+    setDeeplinkScreen(value: string): MsgTemplate;
+
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): MsgTemplate.AsObject;
     static toObject(includeInstance: boolean, msg: MsgTemplate): MsgTemplate.AsObject;
@@ -1069,6 +1079,8 @@ export namespace MsgTemplate {
         shouldSendPush: boolean,
         shouldAddToHistory: boolean,
         shouldAddToBulletin: boolean,
+        notificationAction?: string,
+        deeplinkScreen?: string,
     }
 }
 
@@ -1077,8 +1089,8 @@ export class MsgMessage extends jspb.Message {
     setId(value: string): MsgMessage;
     getUsername(): string;
     setUsername(value: string): MsgMessage;
-    getStatus(): MsgMessageStatus;
-    setStatus(value: MsgMessageStatus): MsgMessage;
+    getStatus(): string;
+    setStatus(value: string): MsgMessage;
     getSentBy(): string;
     setSentBy(value: string): MsgMessage;
     getUpdatedAt(): number;
@@ -1098,7 +1110,7 @@ export namespace MsgMessage {
     export type AsObject = {
         id: string,
         username: string,
-        status: MsgMessageStatus,
+        status: string,
         sentBy: string,
         updatedAt: number,
     }
@@ -1122,6 +1134,16 @@ export class MsgTemplateCreateRequest extends jspb.Message {
     getShouldAddToBulletin(): boolean;
     setShouldAddToBulletin(value: boolean): MsgTemplateCreateRequest;
 
+    hasNotificationAction(): boolean;
+    clearNotificationAction(): void;
+    getNotificationAction(): string | undefined;
+    setNotificationAction(value: string): MsgTemplateCreateRequest;
+
+    hasDeeplinkScreen(): boolean;
+    clearDeeplinkScreen(): void;
+    getDeeplinkScreen(): string | undefined;
+    setDeeplinkScreen(value: string): MsgTemplateCreateRequest;
+
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): MsgTemplateCreateRequest.AsObject;
     static toObject(includeInstance: boolean, msg: MsgTemplateCreateRequest): MsgTemplateCreateRequest.AsObject;
@@ -1142,6 +1164,8 @@ export namespace MsgTemplateCreateRequest {
         shouldSendPush: boolean,
         shouldAddToHistory: boolean,
         shouldAddToBulletin: boolean,
+        notificationAction?: string,
+        deeplinkScreen?: string,
     }
 }
 
@@ -1188,6 +1212,16 @@ export class MsgTemplateUpdateRequest extends jspb.Message {
     getShouldAddToBulletin(): boolean;
     setShouldAddToBulletin(value: boolean): MsgTemplateUpdateRequest;
 
+    hasNotificationAction(): boolean;
+    clearNotificationAction(): void;
+    getNotificationAction(): string | undefined;
+    setNotificationAction(value: string): MsgTemplateUpdateRequest;
+
+    hasDeeplinkScreen(): boolean;
+    clearDeeplinkScreen(): void;
+    getDeeplinkScreen(): string | undefined;
+    setDeeplinkScreen(value: string): MsgTemplateUpdateRequest;
+
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): MsgTemplateUpdateRequest.AsObject;
     static toObject(includeInstance: boolean, msg: MsgTemplateUpdateRequest): MsgTemplateUpdateRequest.AsObject;
@@ -1209,6 +1243,8 @@ export namespace MsgTemplateUpdateRequest {
         shouldSendPush: boolean,
         shouldAddToHistory: boolean,
         shouldAddToBulletin: boolean,
+        notificationAction?: string,
+        deeplinkScreen?: string,
     }
 }
 
@@ -1419,6 +1455,14 @@ export namespace MsgMessageUpdateStatusResponse {
 }
 
 export class MsgMessagesListRequest extends jspb.Message { 
+    getUsername(): string;
+    setUsername(value: string): MsgMessagesListRequest;
+    getStatus(): string;
+    setStatus(value: string): MsgMessagesListRequest;
+    getUpdatedAtFrom(): number;
+    setUpdatedAtFrom(value: number): MsgMessagesListRequest;
+    getUpdatedAtTo(): number;
+    setUpdatedAtTo(value: number): MsgMessagesListRequest;
     getLimit(): number;
     setLimit(value: number): MsgMessagesListRequest;
     getOffset(): number;
@@ -1436,6 +1480,10 @@ export class MsgMessagesListRequest extends jspb.Message {
 
 export namespace MsgMessagesListRequest {
     export type AsObject = {
+        username: string,
+        status: string,
+        updatedAtFrom: number,
+        updatedAtTo: number,
         limit: number,
         offset: number,
     }
@@ -1460,6 +1508,74 @@ export class MsgMessagesListResponse extends jspb.Message {
 export namespace MsgMessagesListResponse {
     export type AsObject = {
         messagesList: Array<MsgMessage.AsObject>,
+    }
+}
+
+export class MsgMessageHistoryListRequest extends jspb.Message { 
+    getId(): string;
+    setId(value: string): MsgMessageHistoryListRequest;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): MsgMessageHistoryListRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: MsgMessageHistoryListRequest): MsgMessageHistoryListRequest.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: MsgMessageHistoryListRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): MsgMessageHistoryListRequest;
+    static deserializeBinaryFromReader(message: MsgMessageHistoryListRequest, reader: jspb.BinaryReader): MsgMessageHistoryListRequest;
+}
+
+export namespace MsgMessageHistoryListRequest {
+    export type AsObject = {
+        id: string,
+    }
+}
+
+export class MsgMessageHistoryItem extends jspb.Message { 
+    getId(): string;
+    setId(value: string): MsgMessageHistoryItem;
+    getStatus(): string;
+    setStatus(value: string): MsgMessageHistoryItem;
+    getCreatedAt(): number;
+    setCreatedAt(value: number): MsgMessageHistoryItem;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): MsgMessageHistoryItem.AsObject;
+    static toObject(includeInstance: boolean, msg: MsgMessageHistoryItem): MsgMessageHistoryItem.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: MsgMessageHistoryItem, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): MsgMessageHistoryItem;
+    static deserializeBinaryFromReader(message: MsgMessageHistoryItem, reader: jspb.BinaryReader): MsgMessageHistoryItem;
+}
+
+export namespace MsgMessageHistoryItem {
+    export type AsObject = {
+        id: string,
+        status: string,
+        createdAt: number,
+    }
+}
+
+export class MsgMessageHistoryListResponse extends jspb.Message { 
+    clearHistoryList(): void;
+    getHistoryList(): Array<MsgMessageHistoryItem>;
+    setHistoryList(value: Array<MsgMessageHistoryItem>): MsgMessageHistoryListResponse;
+    addHistory(value?: MsgMessageHistoryItem, index?: number): MsgMessageHistoryItem;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): MsgMessageHistoryListResponse.AsObject;
+    static toObject(includeInstance: boolean, msg: MsgMessageHistoryListResponse): MsgMessageHistoryListResponse.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: MsgMessageHistoryListResponse, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): MsgMessageHistoryListResponse;
+    static deserializeBinaryFromReader(message: MsgMessageHistoryListResponse, reader: jspb.BinaryReader): MsgMessageHistoryListResponse;
+}
+
+export namespace MsgMessageHistoryListResponse {
+    export type AsObject = {
+        historyList: Array<MsgMessageHistoryItem.AsObject>,
     }
 }
 
@@ -1598,7 +1714,14 @@ export enum Icon {
 }
 
 export enum MsgMessageStatus {
-    PENDING = 0,
-    ACCEPTED = 1,
-    REVOKED = 2,
+    INVITED = 0,
+    BANNER_CLICKED = 1,
+    INVITATION_INFO_COMPLETED = 2,
+    KYC_INITIATED = 3,
+    KYC_PASSED = 4,
+    CARD_INFO_SUBMITTED = 5,
+    CARD_APPROVED = 6,
+    INVITE_WITHDRAWN = 7,
+    KYC_FAILED = 8,
+    CARD_DENIED = 9,
 }
