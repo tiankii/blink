@@ -14,9 +14,11 @@ import { accountSearchInvitation } from "./search-invitation"
 import { getHistory } from "./get-history"
 import { AuditedAccountMainValues } from "../../types"
 import { getInvitations, changeInvitationStatus } from "../getMessages"
+import { getTemplates } from "../../templates/getTemplates"
 import {
   NotificationMessagesQuery,
   NotificationMessageHistoryQuery,
+  NotificationIcon,
 } from "../../../generated"
 
 type EditableContent = {
@@ -95,12 +97,39 @@ export default function InvitationDetailPage() {
   const [invitation, setInvitation] = useState<InvitationRow | null>(null)
   const [userData, setUserData] = useState<AuditedAccountMainValues | null>(null)
   const [invitationData, setInvitationData] = useState<NotificationMessagesQuery>()
+  const [templates, setTemplates] = useState<TemplateRow[]>([])
 
   const [loading, setLoading] = useState<boolean>(true)
-  const [events, setEvents] = useState<NotificationMessageHistoryQuery[]>([])
+  const [events, setEvents] = useState<NotificationMessageHistoryQuery | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedStatus, setSelectedStatus] = useState<InvitationStatus | null>(null)
   const [selectedTemplate, setSelectedTemplate] = useState<string>("")
+
+  const fetchTemplates = async () => {
+    try {
+      const data = await getTemplates()
+
+      const mapped: TemplateRow[] =
+        data.notificationTemplates?.map((template) => ({
+          id: template.id,
+          name: template.name,
+          language: template.languageCode,
+          icon: template.iconName as NotificationIcon,
+          title: template.title,
+          body: template.body,
+          sendPush: template.shouldSendPush,
+          addHistory: template.shouldAddToHistory,
+          addBulletin: template.shouldAddToBulletin,
+        })) ?? []
+
+      setTemplates(mapped)
+    } catch (error) {
+      console.error("Error fetching templates", error)
+      setTemplates([])
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const handleChangeStatus = useCallback(async (invitationStatus: InvitationStatus) => {
     if (!userData) return
@@ -114,58 +143,23 @@ export default function InvitationDetailPage() {
     }
   }, [])
 
-  /*const fetchUserData = async (invitationUsername: string) => {
-    try {
-      const data = await accountSearchInvitation(invitationUsername)
-      setUserData(data)
-      console.log("data user", userData)
-    } catch (error) {
-      console.error("Error fetching user data:", error)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const fetchInvitationData = async () => {
-    try {
-      const result = await getInvitations(invitationUsername)
-      setInvitationData(result.notificationMessages[0])
-    } catch (error) {
-      console.error("Error fetching invitations:", error)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const fetchHistory = async (idReq: string) => {
-    try {
-      const result = await getHistory(idReq)
-      console.log("RESULT DE HISTORY", result)
-      setEvents(result)
-    } catch (error) {
-      console.error("Error fetching history", error)
-    }
-  }*/
-
   useEffect(() => {
+    fetchTemplates()
     const loadAllData = async () => {
       setLoading(true)
 
       try {
-        const userData = await accountSearchInvitation(invitationUsername)
-        setUserData(userData)
-        console.log("data user", userData)
+        const userDataRes = await accountSearchInvitation(invitationUsername)
+        setUserData(userDataRes)
 
         const invResult = await getInvitations(invitationUsername)
         if (invResult.notificationMessages && invResult.notificationMessages.length > 0) {
-          setInvitationData(invResult.notificationMessages[0])
+          setInvitationData(invResult)
 
           const messageId = invResult.notificationMessages[0].id
           const historyResult = await getHistory(messageId)
-          console.log("RESULT DE HISTORY", historyResult)
           setEvents(historyResult)
 
-          // 4. Setear la invitation
           setInvitation({
             id: invResult.notificationMessages[0].id,
             status: invResult.notificationMessages[0].status as InvitationStatus,
@@ -184,59 +178,8 @@ export default function InvitationDetailPage() {
     loadAllData()
   }, [invitationUsername])
 
-  /*const handleContentChange = (field: "title" | "body", value: string) => {
-    setEditableContent((prev) => {
-      if (!prev) return { title: "", body: "" }
-      return {
-        ...prev,
-        [field]: value,
-      }
-    })
-  }*/
-
   const handleStatusChange = (newStatus: InvitationStatus) => {
     if (!invitation) return
-
-    /*const newEvent: Event = {
-      id: `evt_${invitation.id}_${Date.now()}`,
-      type: "Status Change",
-      timestamp: new Date().toISOString(),
-      description: `Status changed to ${InvitationStatuses[newStatus].label}`,
-      sentBy: "Admin",
-    }
-
-    const updatedInvitation = {
-      ...invitation,
-      status: newStatus,
-      lastActivity: new Date().toISOString().split("T")[0],
-    }
-
-    setInvitation(updatedInvitation)
-    setEvents([newEvent, ...events])*/
-  }
-
-  /*const handleResendInvitation = () => {
-    if (!invitation || !editableContent) return
-
-    const newEvent: Event = {
-      id: `evt_${invitation.id}_${Date.now()}`,
-      type: "Invitation Sent",
-      timestamp: new Date().toISOString(),
-      description: `Invitation resent with template: ${editableContent.title}`,
-      sentBy: "Admin",
-    }
-
-    setEvents([newEvent, ...events])
-  }*/
-
-  /*const handleRevokeInvitation = () => {
-    if (!invitation) return
-    handleStatusChange("revoked")
-  }*/
-
-  const handleChangeStatusClick = () => {
-    setIsModalOpen(true)
-    setSelectedStatus(invitation?.status)
   }
 
   const handleSaveStatus = () => {

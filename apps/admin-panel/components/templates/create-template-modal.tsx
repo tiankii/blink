@@ -1,7 +1,13 @@
 import { useState, useMemo } from "react"
 
 import { Button } from "../shared/button"
-import { DeepLinkScreen, DeepLinkAction, NotificationIcon, DeepLinkActionTemplate, DeepLinkScreenTemplate } from "../../generated"
+import {
+  DeepLinkScreen,
+  DeepLinkAction,
+  NotificationIcon,
+  DeepLinkActionTemplate,
+  DeepLinkScreenTemplate,
+} from "../../generated"
 import { LanguageCodes } from "../notification/languages"
 import { NotificationAction } from "../notification/types"
 import { NotificationTemplateCreateInput } from "../../generated"
@@ -112,7 +118,9 @@ export function CreateTemplateModal({
                   <SelectInput
                     id="deeplinkAction"
                     value={formState.deeplinkAction || ""}
-                    onChange={({ target: { value } }: React.ChangeEvent<HTMLSelectElement>) => 
+                    onChange={({
+                      target: { value },
+                    }: React.ChangeEvent<HTMLSelectElement>) =>
                       updateFormField("deeplinkAction", value as DeepLinkActionTemplate)
                     }
                     className="mt-1 block w-full rounded-md border border-gray-200 px-3 py-2"
@@ -133,7 +141,10 @@ export function CreateTemplateModal({
                     id="deeplinkScreen"
                     value={formState.deeplinkScreen || ""}
                     onChange={(event) =>
-                      updateFormField("deeplinkScreen", event.target.value as DeepLinkScreenTemplate)
+                      updateFormField(
+                        "deeplinkScreen",
+                        event.target.value as DeepLinkScreenTemplate,
+                      )
                     }
                     className="mt-1 block w-full rounded-md border border-gray-200 px-3 py-2"
                   >

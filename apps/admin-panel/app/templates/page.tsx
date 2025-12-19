@@ -1,13 +1,12 @@
 "use client"
 
 import { useState, useCallback, useEffect, useMemo } from "react"
-import { useRouter } from "next/navigation"
 
 import { visaTemplatesMock } from "../mock-data"
 import { Button } from "../../components/shared/button"
 import { Pagination } from "../../components/shared/pagination"
 import { NotificationIconComponent } from "../../components/invitations/invitation-icon"
-import { TemplateIcon, TemplateRow } from "../invitations/types"
+import { TemplateRow } from "../invitations/types"
 import { getTemplates, getTemplateById, deleteTemplate } from "./getTemplates"
 import { saveTemplate, updateTemplate } from "./save-templates"
 import {
@@ -45,8 +44,8 @@ export default function TemplatesPage() {
 
   const fetchTemplates = async () => {
     try {
-      const data = await getTemplates()
-      setData(data)
+      const dataRes = await getTemplates()
+      setData(dataRes)
     } catch (error) {
       console.error("Error fetching templates", error)
     } finally {
@@ -56,6 +55,7 @@ export default function TemplatesPage() {
 
   useEffect(() => {
     fetchTemplates()
+
     if (isCreateOpen) {
       document.body.classList.add("hide-sidebar")
       const prev = document.body.style.overflow
@@ -83,8 +83,10 @@ export default function TemplatesPage() {
         shouldAddToBulletin: data.notificationByTemplateId.shouldAddToBulletin,
         shouldAddToHistory: data.notificationByTemplateId.shouldAddToHistory,
         shouldSendPush: data.notificationByTemplateId.shouldSendPush,
-        deeplinkScreen: data.notificationByTemplateId.deeplinkScreen as DeepLinkScreenTemplate,
-        deeplinkAction: data.notificationByTemplateId.deeplinkAction as DeepLinkActionTemplate,
+        deeplinkScreen: data.notificationByTemplateId
+          .deeplinkScreen as DeepLinkScreenTemplate,
+        deeplinkAction: data.notificationByTemplateId
+          .deeplinkAction as DeepLinkActionTemplate,
       }
 
       setEditTemplateData({ id: idReq, data: dataTemplate })
@@ -101,7 +103,7 @@ export default function TemplatesPage() {
       id: template.id,
       name: template.name,
       language: template.languageCode,
-      icon: template.iconName,
+      icon: template.iconName as NotificationIcon,
       title: template.title,
       body: template.body,
       sendPush: template.shouldSendPush,
@@ -126,7 +128,6 @@ export default function TemplatesPage() {
 
   const handleCreateTemplate = async (formData: NotificationTemplateCreateInput) => {
     setSubmitState({ loadingCreate: true, success: false, error: undefined })
-
     try {
       if (editTemplateData?.id) {
         const updateData = {
