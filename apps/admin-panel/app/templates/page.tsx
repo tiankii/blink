@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useCallback, useEffect } from "react"
+import { useState, useCallback, useEffect, useMemo } from "react"
 import { useRouter } from "next/navigation"
 
 import { visaTemplatesMock } from "../mock-data"
@@ -25,12 +25,15 @@ type SubmitState = {
 }
 
 export default function TemplatesPage() {
-  const [pageItems, setPageItems] = useState<TemplateRow[]>(visaTemplatesMock.slice(0, 0))
+  const [pageItems, setPageItems] = useState<TemplateRow[]>([])
   const [isCreateOpen, setIsCreateOpen] = useState(false)
   const [editTemplateData, setEditTemplateData] = useState<{
     id?: string
     data?: NotificationTemplateCreateInput | undefined
   }>()
+  const [data, setData] = useState<NotificationTemplatesQuery>()
+
+  const [loading, setLoading] = useState<boolean>(true)
 
   const [submitState, setSubmitState] = useState<SubmitState>({
     loadingCreate: false,
@@ -106,9 +109,9 @@ export default function TemplatesPage() {
 
   const handlePageChange = useCallback(
     ({ offset, limit }: { offset: number; limit: number }) => {
-      setPageItems(visaTemplatesMock.slice(offset, offset + limit))
+      setPageItems(templates.slice(offset, offset + limit))
     },
-    [],
+    [templates],
   )
 
   const hasTemplates = pageItems.length > 0
