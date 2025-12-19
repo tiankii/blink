@@ -5,14 +5,14 @@ interface ChangeStatusModalProps {
   isOpen: boolean
   selectedStatus: InvitationStatus | null
   selectedTemplate: string
-  sendPush: boolean
-  addHistory: boolean
+  //sendPush: boolean
+  //addHistory: boolean
   templates: TemplateRow[]
   onClose: () => void
   onStatusChange: (status: InvitationStatus) => void
-  onTemplateChange: (templateId: string) => void
-  onSendPushChange: (checked: boolean) => void
-  onAddHistoryChange: (checked: boolean) => void
+  //onTemplateChange: (templateId: string) => void
+  //onSendPushChange: (checked: boolean) => void
+  //onAddHistoryChange: (checked: boolean) => void
   onSave: () => void
 }
 
@@ -20,14 +20,14 @@ export function ChangeStatusModal({
   isOpen,
   selectedStatus,
   selectedTemplate,
-  sendPush,
-  addHistory,
+  //sendPush,
+  //addHistory,
   templates,
   onClose,
   onStatusChange,
-  onTemplateChange,
-  onSendPushChange,
-  onAddHistoryChange,
+  //onTemplateChange,
+  //onSendPushChange,
+  //onAddHistoryChange,
   onSave,
 }: ChangeStatusModalProps) {
   const [addToBulletin, setAddToBulletin] = useState(false)
@@ -66,7 +66,7 @@ export function ChangeStatusModal({
               </select>
             </div>
 
-            <div>
+            {/*<div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Select a template...
               </label>
@@ -156,7 +156,7 @@ export function ChangeStatusModal({
                   </div>
                 )}
               </div>
-            )}
+            )}*/}
           </div>
 
           <div className="flex justify-end gap-3 border-t border-gray-200 p-6">

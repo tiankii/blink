@@ -1,7 +1,8 @@
 import type { Event } from "../../app/invitations/types"
+import { NotificationMessageHistoryQuery } from "../../generated"
 
 interface StatusHistoryCardProps {
-  events: Event[]
+  events: NotificationMessageHistoryQuery[]
   getActor: (event: Event) => string
   formatDate: (date: Date | string) => string
 }
@@ -19,28 +20,17 @@ export function StatusHistoryCard({
           <thead className="border-b border-gray-200">
             <tr>
               <th className="px-4 py-2 text-left font-medium text-gray-700">Status</th>
-              <th className="px-4 py-2 text-left font-medium text-gray-700">Actor</th>
-              <th className="px-4 py-2 text-right font-medium text-gray-700">Date</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
             {events.length > 0 ? (
-              events
-                .sort(
-                  (a, b) =>
-                    new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
-                )
-                .map((event) => (
-                  <tr key={event.id}>
-                    <td className="px-4 py-3 text-gray-900 font-medium">
-                      {event.description}
-                    </td>
-                    <td className="px-4 py-3 text-gray-700">{getActor(event)}</td>
-                    <td className="px-4 py-3 text-right text-gray-500">
-                      {formatDate(event.timestamp)}
-                    </td>
-                  </tr>
-                ))
+              events.map((event) => (
+                <tr key={event.notificationMessageHistory[0].id}>
+                  <td className="px-4 py-3 text-gray-900 font-medium">
+                    {event.notificationMessageHistory[0].status}
+                  </td>
+                </tr>
+              ))
             ) : (
               <tr>
                 <td colSpan={3} className="px-4 py-3 text-center text-gray-500">

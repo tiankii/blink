@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { useParams, useRouter } from "next/navigation"
 import { visaInvitationsMock, visaTemplatesMock } from "../../mock-data"
 import type { Event, InvitationRow, TemplateRow, InvitationStatus } from "../types"
@@ -11,18 +11,60 @@ import { StatusHistoryCard } from "../../../components/invitations/status-histor
 import { ChangeStatusModal } from "../../../components/invitations/change-status-modal"
 
 import { accountSearchInvitation } from "./search-invitation"
+import { getHistory } from "./get-history"
 import { AuditedAccountMainValues } from "../../types"
+import { getInvitations, changeInvitationStatus } from "../getMessages"
+import {
+  NotificationMessagesQuery,
+  NotificationMessageHistoryQuery,
+} from "../../../generated"
 
 type EditableContent = {
   title: string
   body: string
 } | null
 
-const InvitationStatuses = {
-  pending: { label: "Pending", color: "bg-yellow-100 text-yellow-800" },
-  accepted: { label: "Accepted", color: "bg-green-100 text-green-800" },
-  revoked: { label: "Revoked", color: "bg-red-100 text-red-800" },
-  active: { label: "Active", color: "bg-red-100 text-red-800" },
+const InvitationStatuses: Record<InvitationStatus, { label: string; color: string }> = {
+  INVITED: {
+    label: "Invited",
+    color: "bg-orange-500 text-white",
+  },
+  BANNER_CLICKED: {
+    label: "Banner Clicked",
+    color: "bg-yellow-300 text-white",
+  },
+  INVITATION_INFO_COMPLETED: {
+    label: "Invitation Info Completed",
+    color: "bg-lime-300 text-white",
+  },
+  KYC_INITIATED: {
+    label: "KYC Initiated",
+    color: "bg-lime-500 text-white",
+  },
+  KYC_PASSED: {
+    label: "KYC Passed",
+    color: "bg-green-500 text-white",
+  },
+  CARD_INFO_SUBMITTED: {
+    label: "Card Info Submitted",
+    color: "bg-sky-500 text-white",
+  },
+  CARD_APPROVED: {
+    label: "Card Approved",
+    color: "bg-violet-800 text-white",
+  },
+  INVITE_WITHDRAWN: {
+    label: "Invite Withdraw",
+    color: "bg-neutral-400 text-white",
+  },
+  KYC_FAILED: {
+    label: "KYC Fail",
+    color: "bg-red-500 text-white",
+  },
+  CARD_DENIED: {
+    label: "Card Denied",
+    color: "bg-red-600 text-white",
+  },
 } as const
 
 const formatDate = (date: Date | string) => {
@@ -51,76 +93,98 @@ export default function InvitationDetailPage() {
   const invitationUsername = params.username as string
 
   const [invitation, setInvitation] = useState<InvitationRow | null>(null)
-  const [userInvitation, setUserInvitation] = useState<AuditedAccountMainValues | null>(
-    null,
-  )
+  const [userData, setUserData] = useState<AuditedAccountMainValues | null>(null)
+  const [invitationData, setInvitationData] = useState<NotificationMessagesQuery>()
+
   const [loading, setLoading] = useState<boolean>(true)
-  const [template, setTemplate] = useState<TemplateRow | null>(null)
-  const [events, setEvents] = useState<Event[]>([])
-  const [editableContent, setEditableContent] = useState<EditableContent>(null)
-  const [isEditing, setIsEditing] = useState(false)
+  const [events, setEvents] = useState<NotificationMessageHistoryQuery[]>([])
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedStatus, setSelectedStatus] = useState<InvitationStatus | null>(null)
   const [selectedTemplate, setSelectedTemplate] = useState<string>("")
-  const [sendPush, setSendPush] = useState(true)
-  const [addHistory, setAddHistory] = useState(true)
+
+  const handleChangeStatus = useCallback(async (invitationStatus: InvitationStatus) => {
+    if (!userData) return
+    try {
+      await changeInvitationStatus({
+        id: userData.id,
+        status: invitationStatus,
+      })
+    } catch (error) {
+      console.error("Error changing invitation:", error)
+    }
+  }, [])
+
+  /*const fetchUserData = async (invitationUsername: string) => {
+    try {
+      const data = await accountSearchInvitation(invitationUsername)
+      setUserData(data)
+      console.log("data user", userData)
+    } catch (error) {
+      console.error("Error fetching user data:", error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const fetchInvitationData = async () => {
+    try {
+      const result = await getInvitations(invitationUsername)
+      setInvitationData(result.notificationMessages[0])
+    } catch (error) {
+      console.error("Error fetching invitations:", error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const fetchHistory = async (idReq: string) => {
+    try {
+      const result = await getHistory(idReq)
+      console.log("RESULT DE HISTORY", result)
+      setEvents(result)
+    } catch (error) {
+      console.error("Error fetching history", error)
+    }
+  }*/
 
   useEffect(() => {
-    const foundInvitation = visaInvitationsMock.find(
-      (inv) => inv.id === invitationUsername,
-    )
+    const loadAllData = async () => {
+      setLoading(true)
 
-    const fetchUserData = async (invitationUsername: string) => {
       try {
-        const data = await accountSearchInvitation(invitationUsername)
-        setUserInvitation(data)
+        const userData = await accountSearchInvitation(invitationUsername)
+        setUserData(userData)
+        console.log("data user", userData)
+
+        const invResult = await getInvitations(invitationUsername)
+        if (invResult.notificationMessages && invResult.notificationMessages.length > 0) {
+          setInvitationData(invResult.notificationMessages[0])
+
+          const messageId = invResult.notificationMessages[0].id
+          const historyResult = await getHistory(messageId)
+          console.log("RESULT DE HISTORY", historyResult)
+          setEvents(historyResult)
+
+          // 4. Setear la invitation
+          setInvitation({
+            id: invResult.notificationMessages[0].id,
+            status: invResult.notificationMessages[0].status as InvitationStatus,
+            lastActivity: invResult.notificationMessages[0].updatedAt.toString(),
+            sentBy: invResult.notificationMessages[0].sentBy,
+            username: invResult.notificationMessages[0].username,
+          })
+        }
       } catch (error) {
-        console.error("Error fetching user data:", error)
+        console.error("Error loading data:", error)
       } finally {
         setLoading(false)
       }
     }
 
-    fetchUserData(invitationUsername)
-
-    if (foundInvitation) {
-      setInvitation(foundInvitation)
-      const defaultTemplate = visaTemplatesMock[0]
-      if (defaultTemplate) {
-        setTemplate(defaultTemplate)
-        setEditableContent({
-          title: defaultTemplate.title,
-          body: defaultTemplate.body,
-        })
-      }
-
-      const initialEvents: Event[] = [
-        {
-          id: `evt_${foundInvitation.id}_initial`,
-          type: "Invitation Sent",
-          timestamp: new Date(foundInvitation.lastActivity).toISOString(),
-          description: "Invitation sent to user",
-          sentBy: foundInvitation.sentBy,
-        },
-      ]
-
-      if (foundInvitation.status === "accepted") {
-        initialEvents.push({
-          id: `evt_${foundInvitation.id}_accepted`,
-          type: "Status Change",
-          timestamp: new Date(
-            new Date(foundInvitation.lastActivity).getTime() + 86400000,
-          ).toISOString(),
-          description: "Invitation accepted",
-          sentBy: "User",
-        })
-      }
-
-      setEvents(initialEvents)
-    }
+    loadAllData()
   }, [invitationUsername])
 
-  const handleContentChange = (field: "title" | "body", value: string) => {
+  /*const handleContentChange = (field: "title" | "body", value: string) => {
     setEditableContent((prev) => {
       if (!prev) return { title: "", body: "" }
       return {
@@ -128,12 +192,12 @@ export default function InvitationDetailPage() {
         [field]: value,
       }
     })
-  }
+  }*/
 
   const handleStatusChange = (newStatus: InvitationStatus) => {
     if (!invitation) return
 
-    const newEvent: Event = {
+    /*const newEvent: Event = {
       id: `evt_${invitation.id}_${Date.now()}`,
       type: "Status Change",
       timestamp: new Date().toISOString(),
@@ -148,10 +212,10 @@ export default function InvitationDetailPage() {
     }
 
     setInvitation(updatedInvitation)
-    setEvents([newEvent, ...events])
+    setEvents([newEvent, ...events])*/
   }
 
-  const handleResendInvitation = () => {
+  /*const handleResendInvitation = () => {
     if (!invitation || !editableContent) return
 
     const newEvent: Event = {
@@ -163,16 +227,16 @@ export default function InvitationDetailPage() {
     }
 
     setEvents([newEvent, ...events])
-  }
+  }*/
 
-  const handleRevokeInvitation = () => {
+  /*const handleRevokeInvitation = () => {
     if (!invitation) return
     handleStatusChange("revoked")
-  }
+  }*/
 
   const handleChangeStatusClick = () => {
     setIsModalOpen(true)
-    setSelectedStatus(invitation?.status || "pending")
+    setSelectedStatus(invitation?.status)
   }
 
   const handleSaveStatus = () => {
@@ -187,7 +251,7 @@ export default function InvitationDetailPage() {
     return event.sentBy || "System"
   }
 
-  if (!invitation) {
+  if (!userData && !loading) {
     return (
       <div className="flex items-center justify-center py-12">
         <p className="text-gray-500">Invitation not found</p>
@@ -204,9 +268,7 @@ export default function InvitationDetailPage() {
       ) : (
         <>
           <header className="mb-6 flex items-center justify-between">
-            <h1 className="text-2xl font-semibold text-gray-900">
-              {userInvitation?.username}
-            </h1>
+            <h1 className="text-2xl font-semibold text-gray-900">{userData?.username}</h1>
             <button
               onClick={() => router.push("/invitations")}
               className="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
@@ -216,22 +278,10 @@ export default function InvitationDetailPage() {
           </header>
 
           <div className="space-y-6">
-            {template && editableContent && (
-              <InvitationCard
-                editableContent={editableContent}
-                isEditing={isEditing}
-                sendPush={sendPush}
-                addHistory={addHistory}
-                onChangeStatus={handleChangeStatusClick}
-                onResend={handleResendInvitation}
-                onContentChange={handleContentChange}
-                onSendPushChange={setSendPush}
-                onAddHistoryChange={setAddHistory}
-              />
-            )}
+            <InvitationCard onChangeStatus={() => handleChangeStatus} />
 
             <div className="grid gap-6 lg:grid-cols-3">
-              <ClientInfoCard invitation={userInvitation} />
+              <ClientInfoCard invitation={invitationData} />
 
               <StatusHistoryCard
                 events={events}
@@ -247,14 +297,9 @@ export default function InvitationDetailPage() {
         isOpen={isModalOpen}
         selectedStatus={selectedStatus}
         selectedTemplate={selectedTemplate}
-        sendPush={sendPush}
-        addHistory={addHistory}
         templates={visaTemplatesMock}
         onClose={() => setIsModalOpen(false)}
         onStatusChange={setSelectedStatus}
-        onTemplateChange={setSelectedTemplate}
-        onSendPushChange={setSendPush}
-        onAddHistoryChange={setAddHistory}
         onSave={handleSaveStatus}
       />
     </div>

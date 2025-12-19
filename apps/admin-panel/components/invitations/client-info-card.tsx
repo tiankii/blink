@@ -1,6 +1,8 @@
 import { InvitationStatusBadge } from "./status-badge"
 import type { InvitationStatus } from "../../app/invitations/types"
 import { AuditedAccountMainValues } from "../../app/types"
+import { NotificationMessagesQuery } from "../../generated"
+import { InvitationRow } from "../../app/invitations/types"
 
 interface ClientInfoCardProps {
   invitation: AuditedAccountMainValues | null
@@ -23,10 +25,7 @@ export function ClientInfoCard({ invitation }: ClientInfoCardProps) {
           <tr>
             <td className="py-2 font-medium text-gray-700">Status</td>
             <td className="py-2">
-              <InvitationStatusBadge
-                status={invitation?.status as InvitationStatus}
-                label={invitation?.status}
-              />
+              <InvitationStatusBadge status={invitation?.status as InvitationStatus} />
             </td>
           </tr>
         </tbody>

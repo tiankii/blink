@@ -1,28 +1,11 @@
 import { EditableContent } from "../../app/invitations/types"
 
 interface InvitationCardProps {
-  editableContent: EditableContent
-  isEditing: boolean
-  sendPush: boolean
-  addHistory: boolean
   onChangeStatus: () => void
-  onResend: () => void
-  onContentChange: (field: "title" | "body", value: string) => void
-  onSendPushChange: (checked: boolean) => void
-  onAddHistoryChange: (checked: boolean) => void
+  //onResend: () => void
 }
 
-export function InvitationCard({
-  editableContent,
-  isEditing,
-  sendPush,
-  addHistory,
-  onChangeStatus,
-  onResend,
-  onContentChange,
-  onSendPushChange,
-  onAddHistoryChange,
-}: InvitationCardProps) {
+export function InvitationCard({ onChangeStatus }: InvitationCardProps) {
   return (
     <div className="rounded-lg border border-gray-200 bg-white p-6">
       <div className="mb-4 flex items-center justify-between">
@@ -34,10 +17,7 @@ export function InvitationCard({
           >
             Change Status
           </button>
-          <button
-            onClick={onResend}
-            className="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-          >
+          <button className="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
             Resend Invitation
           </button>
           <button className="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
@@ -48,13 +28,13 @@ export function InvitationCard({
 
       <div className="flex items-start gap-4 rounded-lg bg-gray-50 p-4">
         <div className="text-2xl">⭐</div>
-        <div>
+        {/*<div>
           <p className="font-semibold text-gray-900">{editableContent?.title}</p>
           <p className="text-sm text-gray-600">{editableContent?.body}</p>
-        </div>
+        </div>*/}
       </div>
 
-      {isEditing && (
+      {/*{isEditing && (
         <div className="mt-4 space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700">Title</label>
@@ -95,7 +75,7 @@ export function InvitationCard({
             </label>
           </div>
         </div>
-      )}
+      )}*/}
     </div>
   )
 }

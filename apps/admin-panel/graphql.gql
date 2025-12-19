@@ -410,8 +410,20 @@ mutation marketingNotificationTrigger($input: MarketingNotificationTriggerInput!
   }
 }
 
-query notificationMessages {
-  notificationMessages {
+query notificationMessages(
+  $username: String
+  $limit: Int
+  $offset: Int
+  $updatedAtFrom: Int
+  $updatedAtTo: Int
+) {
+  notificationMessages(
+    username: $username
+    limit: $limit
+    offset: $offset
+    updatedAtFrom: $updatedAtFrom
+    updatedAtTo: $updatedAtTo
+  ) {
     id
     sentBy
     status
@@ -431,6 +443,24 @@ query notificationTemplates {
     shouldAddToHistory
     shouldSendPush
     title
+    notificationAction
+    deeplinkScreen
+  }
+}
+
+query notificationByTemplateId($id: ID!) {
+  notificationByTemplateId(id: $id) {
+    id
+    name
+    languageCode
+    title
+    body
+    iconName
+    shouldSendPush
+    shouldAddToHistory
+    shouldAddToBulletin
+    notificationAction
+    deeplinkScreen
   }
 }
 
@@ -447,5 +477,43 @@ mutation notificationMessageUpdateStatus($input: NotificationMessageUpdateStatus
     errors {
       message
     }
+  }
+}
+
+mutation notificationTemplateCreate($input: NotificationTemplateCreateInput!) {
+  notificationTemplateCreate(input: $input) {
+    errors {
+      message
+    }
+  }
+}
+
+mutation notificationTemplateUpdate($input: NotificationTemplateUpdateInput!) {
+  notificationTemplateUpdate(input: $input) {
+    success
+    errors {
+      message
+      code
+      path
+    }
+  }
+}
+
+mutation notificationTemplateDelete($input: NotificationTemplateDeleteInput!) {
+  notificationTemplateDelete(input: $input) {
+    success
+    errors {
+      message
+      code
+      path
+    }
+  }
+}
+
+query notificationMessageHistory($id: ID!) {
+  notificationMessageHistory(id: $id) {
+    id
+    status
+    createdAt
   }
 }

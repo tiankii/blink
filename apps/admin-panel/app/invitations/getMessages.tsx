@@ -12,7 +12,9 @@ import {
   NotificationMessageUpdateStatusInput,
 } from "../../generated"
 
-export const getInvitations = async (): Promise<NotificationMessagesQuery> => {
+export const getInvitations = async (
+  usernameReq?: string,
+): Promise<NotificationMessagesQuery> => {
   console.warn("Get invitations")
 
   const { data } = await getClient().query<
@@ -20,12 +22,17 @@ export const getInvitations = async (): Promise<NotificationMessagesQuery> => {
     NotificationMessagesQueryVariables
   >({
     query: NotificationMessagesDocument,
+    variables: {
+      username: usernameReq,
+    },
   })
 
   return data
 }
 
-export const RevokeInvitation = async (data: NotificationMessageUpdateStatusInput) => {
+export const changeInvitationStatus = async (
+  data: NotificationMessageUpdateStatusInput,
+) => {
   console.warn("Revoke invitation")
 
   await getClient().mutate<

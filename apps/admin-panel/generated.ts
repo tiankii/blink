@@ -226,8 +226,10 @@ export const DeepLinkScreen = {
   Chat: 'CHAT',
   Circles: 'CIRCLES',
   Convert: 'CONVERT',
+  CreditCardLimit: 'CREDIT_CARD_LIMIT',
   Earn: 'EARN',
   Home: 'HOME',
+  LoadingCard: 'LOADING_CARD',
   Map: 'MAP',
   People: 'PEOPLE',
   Price: 'PRICE',
@@ -243,7 +245,9 @@ export const DeepLinkScreen = {
   SettingsNotifications: 'SETTINGS_NOTIFICATIONS',
   SettingsSecurity: 'SETTINGS_SECURITY',
   SettingsTheme: 'SETTINGS_THEME',
-  SettingsTxLimits: 'SETTINGS_TX_LIMITS'
+  SettingsTxLimits: 'SETTINGS_TX_LIMITS',
+  VisaCard: 'VISA_CARD',
+  WelcomeCard: 'WELCOME_CARD'
 } as const;
 
 export type DeepLinkScreen = typeof DeepLinkScreen[keyof typeof DeepLinkScreen];
@@ -543,29 +547,52 @@ export type NotificationMessage = {
   readonly __typename: 'NotificationMessage';
   readonly id: Scalars['ID']['output'];
   readonly sentBy: Scalars['String']['output'];
-  readonly status: Scalars['String']['output'];
+  readonly status: NotificationMessageStatus;
   readonly updatedAt: Scalars['Timestamp']['output'];
   readonly username: Scalars['String']['output'];
 };
 
 export type NotificationMessageCreateInput = {
   readonly sentBy: Scalars['String']['input'];
-  readonly status?: InputMaybe<Scalars['String']['input']>;
+  readonly status?: InputMaybe<NotificationMessageStatus>;
   readonly username: Scalars['String']['input'];
 };
 
+export type NotificationMessageHistoryItem = {
+  readonly __typename: 'NotificationMessageHistoryItem';
+  readonly createdAt: Scalars['Int']['output'];
+  readonly id: Scalars['ID']['output'];
+  readonly status: Scalars['String']['output'];
+};
+
+export const NotificationMessageStatus = {
+  BannerClicked: 'BANNER_CLICKED',
+  CardApproved: 'CARD_APPROVED',
+  CardDenied: 'CARD_DENIED',
+  CardInfoSubmitted: 'CARD_INFO_SUBMITTED',
+  InvitationInfoCompleted: 'INVITATION_INFO_COMPLETED',
+  Invited: 'INVITED',
+  InviteWithdrawn: 'INVITE_WITHDRAWN',
+  KycFailed: 'KYC_FAILED',
+  KycInitiated: 'KYC_INITIATED',
+  KycPassed: 'KYC_PASSED'
+} as const;
+
+export type NotificationMessageStatus = typeof NotificationMessageStatus[keyof typeof NotificationMessageStatus];
 export type NotificationMessageUpdateStatusInput = {
   readonly id: Scalars['ID']['input'];
-  readonly status: Scalars['String']['input'];
+  readonly status: NotificationMessageStatus;
 };
 
 export type NotificationTemplate = {
   readonly __typename: 'NotificationTemplate';
   readonly body: Scalars['String']['output'];
+  readonly deeplinkScreen?: Maybe<Scalars['String']['output']>;
   readonly iconName: Scalars['String']['output'];
   readonly id: Scalars['ID']['output'];
   readonly languageCode: Scalars['Language']['output'];
   readonly name: Scalars['String']['output'];
+  readonly notificationAction?: Maybe<Scalars['String']['output']>;
   readonly shouldAddToBulletin: Scalars['Boolean']['output'];
   readonly shouldAddToHistory: Scalars['Boolean']['output'];
   readonly shouldSendPush: Scalars['Boolean']['output'];
@@ -574,9 +601,11 @@ export type NotificationTemplate = {
 
 export type NotificationTemplateCreateInput = {
   readonly body: Scalars['String']['input'];
+  readonly deeplinkScreen?: InputMaybe<Scalars['String']['input']>;
   readonly iconName: Scalars['String']['input'];
   readonly languageCode: Scalars['Language']['input'];
   readonly name: Scalars['String']['input'];
+  readonly notificationAction?: InputMaybe<Scalars['String']['input']>;
   readonly shouldAddToBulletin: Scalars['Boolean']['input'];
   readonly shouldAddToHistory: Scalars['Boolean']['input'];
   readonly shouldSendPush: Scalars['Boolean']['input'];
@@ -589,10 +618,12 @@ export type NotificationTemplateDeleteInput = {
 
 export type NotificationTemplateUpdateInput = {
   readonly body: Scalars['String']['input'];
+  readonly deeplinkScreen?: InputMaybe<Scalars['String']['input']>;
   readonly iconName: Scalars['String']['input'];
   readonly id: Scalars['ID']['input'];
   readonly languageCode: Scalars['Language']['input'];
   readonly name: Scalars['String']['input'];
+  readonly notificationAction?: InputMaybe<Scalars['String']['input']>;
   readonly shouldAddToBulletin: Scalars['Boolean']['input'];
   readonly shouldAddToHistory: Scalars['Boolean']['input'];
   readonly shouldSendPush: Scalars['Boolean']['input'];
@@ -652,6 +683,8 @@ export type Query = {
   readonly lightningInvoice: LightningInvoice;
   readonly lightningPayment: LightningPayment;
   readonly merchantsPendingApproval: ReadonlyArray<Merchant>;
+  readonly notificationByTemplateId?: Maybe<NotificationTemplate>;
+  readonly notificationMessageHistory: ReadonlyArray<NotificationMessageHistoryItem>;
   readonly notificationMessages: ReadonlyArray<NotificationMessage>;
   readonly notificationTemplates: ReadonlyArray<NotificationTemplate>;
   readonly transactionById?: Maybe<Transaction>;
@@ -702,9 +735,23 @@ export type QueryLightningPaymentArgs = {
 };
 
 
+export type QueryNotificationByTemplateIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryNotificationMessageHistoryArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
 export type QueryNotificationMessagesArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+  status?: InputMaybe<Scalars['String']['input']>;
+  updatedAtFrom?: InputMaybe<Scalars['Int']['input']>;
+  updatedAtTo?: InputMaybe<Scalars['Int']['input']>;
+  username?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -1128,15 +1175,28 @@ export type MarketingNotificationTriggerMutationVariables = Exact<{
 
 export type MarketingNotificationTriggerMutation = { readonly __typename: 'Mutation', readonly marketingNotificationTrigger: { readonly __typename: 'SuccessPayload', readonly success?: boolean | null, readonly errors: ReadonlyArray<{ readonly __typename: 'GraphQLApplicationError', readonly message: string }> } };
 
-export type NotificationMessagesQueryVariables = Exact<{ [key: string]: never; }>;
+export type NotificationMessagesQueryVariables = Exact<{
+  username?: InputMaybe<Scalars['String']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  updatedAtFrom?: InputMaybe<Scalars['Int']['input']>;
+  updatedAtTo?: InputMaybe<Scalars['Int']['input']>;
+}>;
 
 
-export type NotificationMessagesQuery = { readonly __typename: 'Query', readonly notificationMessages: ReadonlyArray<{ readonly __typename: 'NotificationMessage', readonly id: string, readonly sentBy: string, readonly status: string, readonly updatedAt: number, readonly username: string }> };
+export type NotificationMessagesQuery = { readonly __typename: 'Query', readonly notificationMessages: ReadonlyArray<{ readonly __typename: 'NotificationMessage', readonly id: string, readonly sentBy: string, readonly status: NotificationMessageStatus, readonly updatedAt: number, readonly username: string }> };
 
 export type NotificationTemplatesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type NotificationTemplatesQuery = { readonly __typename: 'Query', readonly notificationTemplates: ReadonlyArray<{ readonly __typename: 'NotificationTemplate', readonly body: string, readonly iconName: string, readonly id: string, readonly languageCode: string, readonly name: string, readonly shouldAddToBulletin: boolean, readonly shouldAddToHistory: boolean, readonly shouldSendPush: boolean, readonly title: string }> };
+export type NotificationTemplatesQuery = { readonly __typename: 'Query', readonly notificationTemplates: ReadonlyArray<{ readonly __typename: 'NotificationTemplate', readonly body: string, readonly iconName: string, readonly id: string, readonly languageCode: string, readonly name: string, readonly shouldAddToBulletin: boolean, readonly shouldAddToHistory: boolean, readonly shouldSendPush: boolean, readonly title: string, readonly notificationAction?: string | null, readonly deeplinkScreen?: string | null }> };
+
+export type NotificationByTemplateIdQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type NotificationByTemplateIdQuery = { readonly __typename: 'Query', readonly notificationByTemplateId?: { readonly __typename: 'NotificationTemplate', readonly id: string, readonly name: string, readonly languageCode: string, readonly title: string, readonly body: string, readonly iconName: string, readonly shouldSendPush: boolean, readonly shouldAddToHistory: boolean, readonly shouldAddToBulletin: boolean, readonly notificationAction?: string | null, readonly deeplinkScreen?: string | null } | null };
 
 export type NotificationMessageCreateMutationVariables = Exact<{
   input: NotificationMessageCreateInput;
@@ -1151,6 +1211,34 @@ export type NotificationMessageUpdateStatusMutationVariables = Exact<{
 
 
 export type NotificationMessageUpdateStatusMutation = { readonly __typename: 'Mutation', readonly notificationMessageUpdateStatus: { readonly __typename: 'SuccessPayload', readonly errors: ReadonlyArray<{ readonly __typename: 'GraphQLApplicationError', readonly message: string }> } };
+
+export type NotificationTemplateCreateMutationVariables = Exact<{
+  input: NotificationTemplateCreateInput;
+}>;
+
+
+export type NotificationTemplateCreateMutation = { readonly __typename: 'Mutation', readonly notificationTemplateCreate: { readonly __typename: 'SuccessPayload', readonly errors: ReadonlyArray<{ readonly __typename: 'GraphQLApplicationError', readonly message: string }> } };
+
+export type NotificationTemplateUpdateMutationVariables = Exact<{
+  input: NotificationTemplateUpdateInput;
+}>;
+
+
+export type NotificationTemplateUpdateMutation = { readonly __typename: 'Mutation', readonly notificationTemplateUpdate: { readonly __typename: 'SuccessPayload', readonly success?: boolean | null, readonly errors: ReadonlyArray<{ readonly __typename: 'GraphQLApplicationError', readonly message: string, readonly code?: string | null, readonly path?: ReadonlyArray<string | null> | null }> } };
+
+export type NotificationTemplateDeleteMutationVariables = Exact<{
+  input: NotificationTemplateDeleteInput;
+}>;
+
+
+export type NotificationTemplateDeleteMutation = { readonly __typename: 'Mutation', readonly notificationTemplateDelete: { readonly __typename: 'SuccessPayload', readonly success?: boolean | null, readonly errors: ReadonlyArray<{ readonly __typename: 'GraphQLApplicationError', readonly message: string, readonly code?: string | null, readonly path?: ReadonlyArray<string | null> | null }> } };
+
+export type NotificationMessageHistoryQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type NotificationMessageHistoryQuery = { readonly __typename: 'Query', readonly notificationMessageHistory: ReadonlyArray<{ readonly __typename: 'NotificationMessageHistoryItem', readonly id: string, readonly status: string, readonly createdAt: number }> };
 
 
 export const AccountDetailsByUserPhoneDocument = gql`
@@ -2074,8 +2162,14 @@ export type MarketingNotificationTriggerMutationHookResult = ReturnType<typeof u
 export type MarketingNotificationTriggerMutationResult = Apollo.MutationResult<MarketingNotificationTriggerMutation>;
 export type MarketingNotificationTriggerMutationOptions = Apollo.BaseMutationOptions<MarketingNotificationTriggerMutation, MarketingNotificationTriggerMutationVariables>;
 export const NotificationMessagesDocument = gql`
-    query notificationMessages {
-  notificationMessages {
+    query notificationMessages($username: String, $limit: Int, $offset: Int, $updatedAtFrom: Int, $updatedAtTo: Int) {
+  notificationMessages(
+    username: $username
+    limit: $limit
+    offset: $offset
+    updatedAtFrom: $updatedAtFrom
+    updatedAtTo: $updatedAtTo
+  ) {
     id
     sentBy
     status
@@ -2097,6 +2191,11 @@ export const NotificationMessagesDocument = gql`
  * @example
  * const { data, loading, error } = useNotificationMessagesQuery({
  *   variables: {
+ *      username: // value for 'username'
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *      updatedAtFrom: // value for 'updatedAtFrom'
+ *      updatedAtTo: // value for 'updatedAtTo'
  *   },
  * });
  */
@@ -2128,6 +2227,8 @@ export const NotificationTemplatesDocument = gql`
     shouldAddToHistory
     shouldSendPush
     title
+    notificationAction
+    deeplinkScreen
   }
 }
     `;
@@ -2163,6 +2264,56 @@ export type NotificationTemplatesQueryHookResult = ReturnType<typeof useNotifica
 export type NotificationTemplatesLazyQueryHookResult = ReturnType<typeof useNotificationTemplatesLazyQuery>;
 export type NotificationTemplatesSuspenseQueryHookResult = ReturnType<typeof useNotificationTemplatesSuspenseQuery>;
 export type NotificationTemplatesQueryResult = Apollo.QueryResult<NotificationTemplatesQuery, NotificationTemplatesQueryVariables>;
+export const NotificationByTemplateIdDocument = gql`
+    query notificationByTemplateId($id: ID!) {
+  notificationByTemplateId(id: $id) {
+    id
+    name
+    languageCode
+    title
+    body
+    iconName
+    shouldSendPush
+    shouldAddToHistory
+    shouldAddToBulletin
+    notificationAction
+    deeplinkScreen
+  }
+}
+    `;
+
+/**
+ * __useNotificationByTemplateIdQuery__
+ *
+ * To run a query within a React component, call `useNotificationByTemplateIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useNotificationByTemplateIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useNotificationByTemplateIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useNotificationByTemplateIdQuery(baseOptions: Apollo.QueryHookOptions<NotificationByTemplateIdQuery, NotificationByTemplateIdQueryVariables> & ({ variables: NotificationByTemplateIdQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<NotificationByTemplateIdQuery, NotificationByTemplateIdQueryVariables>(NotificationByTemplateIdDocument, options);
+      }
+export function useNotificationByTemplateIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<NotificationByTemplateIdQuery, NotificationByTemplateIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<NotificationByTemplateIdQuery, NotificationByTemplateIdQueryVariables>(NotificationByTemplateIdDocument, options);
+        }
+export function useNotificationByTemplateIdSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<NotificationByTemplateIdQuery, NotificationByTemplateIdQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<NotificationByTemplateIdQuery, NotificationByTemplateIdQueryVariables>(NotificationByTemplateIdDocument, options);
+        }
+export type NotificationByTemplateIdQueryHookResult = ReturnType<typeof useNotificationByTemplateIdQuery>;
+export type NotificationByTemplateIdLazyQueryHookResult = ReturnType<typeof useNotificationByTemplateIdLazyQuery>;
+export type NotificationByTemplateIdSuspenseQueryHookResult = ReturnType<typeof useNotificationByTemplateIdSuspenseQuery>;
+export type NotificationByTemplateIdQueryResult = Apollo.QueryResult<NotificationByTemplateIdQuery, NotificationByTemplateIdQueryVariables>;
 export const NotificationMessageCreateDocument = gql`
     mutation notificationMessageCreate($input: NotificationMessageCreateInput!) {
   notificationMessageCreate(input: $input) {
@@ -2233,3 +2384,156 @@ export function useNotificationMessageUpdateStatusMutation(baseOptions?: Apollo.
 export type NotificationMessageUpdateStatusMutationHookResult = ReturnType<typeof useNotificationMessageUpdateStatusMutation>;
 export type NotificationMessageUpdateStatusMutationResult = Apollo.MutationResult<NotificationMessageUpdateStatusMutation>;
 export type NotificationMessageUpdateStatusMutationOptions = Apollo.BaseMutationOptions<NotificationMessageUpdateStatusMutation, NotificationMessageUpdateStatusMutationVariables>;
+export const NotificationTemplateCreateDocument = gql`
+    mutation notificationTemplateCreate($input: NotificationTemplateCreateInput!) {
+  notificationTemplateCreate(input: $input) {
+    errors {
+      message
+    }
+  }
+}
+    `;
+export type NotificationTemplateCreateMutationFn = Apollo.MutationFunction<NotificationTemplateCreateMutation, NotificationTemplateCreateMutationVariables>;
+
+/**
+ * __useNotificationTemplateCreateMutation__
+ *
+ * To run a mutation, you first call `useNotificationTemplateCreateMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useNotificationTemplateCreateMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [notificationTemplateCreateMutation, { data, loading, error }] = useNotificationTemplateCreateMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useNotificationTemplateCreateMutation(baseOptions?: Apollo.MutationHookOptions<NotificationTemplateCreateMutation, NotificationTemplateCreateMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<NotificationTemplateCreateMutation, NotificationTemplateCreateMutationVariables>(NotificationTemplateCreateDocument, options);
+      }
+export type NotificationTemplateCreateMutationHookResult = ReturnType<typeof useNotificationTemplateCreateMutation>;
+export type NotificationTemplateCreateMutationResult = Apollo.MutationResult<NotificationTemplateCreateMutation>;
+export type NotificationTemplateCreateMutationOptions = Apollo.BaseMutationOptions<NotificationTemplateCreateMutation, NotificationTemplateCreateMutationVariables>;
+export const NotificationTemplateUpdateDocument = gql`
+    mutation notificationTemplateUpdate($input: NotificationTemplateUpdateInput!) {
+  notificationTemplateUpdate(input: $input) {
+    success
+    errors {
+      message
+      code
+      path
+    }
+  }
+}
+    `;
+export type NotificationTemplateUpdateMutationFn = Apollo.MutationFunction<NotificationTemplateUpdateMutation, NotificationTemplateUpdateMutationVariables>;
+
+/**
+ * __useNotificationTemplateUpdateMutation__
+ *
+ * To run a mutation, you first call `useNotificationTemplateUpdateMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useNotificationTemplateUpdateMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [notificationTemplateUpdateMutation, { data, loading, error }] = useNotificationTemplateUpdateMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useNotificationTemplateUpdateMutation(baseOptions?: Apollo.MutationHookOptions<NotificationTemplateUpdateMutation, NotificationTemplateUpdateMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<NotificationTemplateUpdateMutation, NotificationTemplateUpdateMutationVariables>(NotificationTemplateUpdateDocument, options);
+      }
+export type NotificationTemplateUpdateMutationHookResult = ReturnType<typeof useNotificationTemplateUpdateMutation>;
+export type NotificationTemplateUpdateMutationResult = Apollo.MutationResult<NotificationTemplateUpdateMutation>;
+export type NotificationTemplateUpdateMutationOptions = Apollo.BaseMutationOptions<NotificationTemplateUpdateMutation, NotificationTemplateUpdateMutationVariables>;
+export const NotificationTemplateDeleteDocument = gql`
+    mutation notificationTemplateDelete($input: NotificationTemplateDeleteInput!) {
+  notificationTemplateDelete(input: $input) {
+    success
+    errors {
+      message
+      code
+      path
+    }
+  }
+}
+    `;
+export type NotificationTemplateDeleteMutationFn = Apollo.MutationFunction<NotificationTemplateDeleteMutation, NotificationTemplateDeleteMutationVariables>;
+
+/**
+ * __useNotificationTemplateDeleteMutation__
+ *
+ * To run a mutation, you first call `useNotificationTemplateDeleteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useNotificationTemplateDeleteMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [notificationTemplateDeleteMutation, { data, loading, error }] = useNotificationTemplateDeleteMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useNotificationTemplateDeleteMutation(baseOptions?: Apollo.MutationHookOptions<NotificationTemplateDeleteMutation, NotificationTemplateDeleteMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<NotificationTemplateDeleteMutation, NotificationTemplateDeleteMutationVariables>(NotificationTemplateDeleteDocument, options);
+      }
+export type NotificationTemplateDeleteMutationHookResult = ReturnType<typeof useNotificationTemplateDeleteMutation>;
+export type NotificationTemplateDeleteMutationResult = Apollo.MutationResult<NotificationTemplateDeleteMutation>;
+export type NotificationTemplateDeleteMutationOptions = Apollo.BaseMutationOptions<NotificationTemplateDeleteMutation, NotificationTemplateDeleteMutationVariables>;
+export const NotificationMessageHistoryDocument = gql`
+    query notificationMessageHistory($id: ID!) {
+  notificationMessageHistory(id: $id) {
+    id
+    status
+    createdAt
+  }
+}
+    `;
+
+/**
+ * __useNotificationMessageHistoryQuery__
+ *
+ * To run a query within a React component, call `useNotificationMessageHistoryQuery` and pass it any options that fit your needs.
+ * When your component renders, `useNotificationMessageHistoryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useNotificationMessageHistoryQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useNotificationMessageHistoryQuery(baseOptions: Apollo.QueryHookOptions<NotificationMessageHistoryQuery, NotificationMessageHistoryQueryVariables> & ({ variables: NotificationMessageHistoryQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<NotificationMessageHistoryQuery, NotificationMessageHistoryQueryVariables>(NotificationMessageHistoryDocument, options);
+      }
+export function useNotificationMessageHistoryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<NotificationMessageHistoryQuery, NotificationMessageHistoryQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<NotificationMessageHistoryQuery, NotificationMessageHistoryQueryVariables>(NotificationMessageHistoryDocument, options);
+        }
+export function useNotificationMessageHistorySuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<NotificationMessageHistoryQuery, NotificationMessageHistoryQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<NotificationMessageHistoryQuery, NotificationMessageHistoryQueryVariables>(NotificationMessageHistoryDocument, options);
+        }
+export type NotificationMessageHistoryQueryHookResult = ReturnType<typeof useNotificationMessageHistoryQuery>;
+export type NotificationMessageHistoryLazyQueryHookResult = ReturnType<typeof useNotificationMessageHistoryLazyQuery>;
+export type NotificationMessageHistorySuspenseQueryHookResult = ReturnType<typeof useNotificationMessageHistorySuspenseQuery>;
+export type NotificationMessageHistoryQueryResult = Apollo.QueryResult<NotificationMessageHistoryQuery, NotificationMessageHistoryQueryVariables>;

@@ -8,21 +8,44 @@ import { Button } from "../../components/shared/button"
 import { Pagination } from "../../components/shared/pagination"
 import { TextInput, SelectInput } from "../../components/shared/form-controls"
 import { InvitationStatusBadge } from "../../components/invitations/status-badge"
+import { CreateMessageModal } from "../../components/invitations/create-message-modal"
+import {
+  userIdByUsername,
+  triggerMarketingNotification,
+} from "../../components/notification/notification-actions"
 
 import {
   InvitationStatusOptions,
   InvitationRow,
   StatusFilter,
   InvitationStatus,
+  SubmitState,
+  FormStateMessage,
 } from "./types"
-import { getInvitations, RevokeInvitation } from "./getMessages"
-import { NotificationMessagesQuery } from "../../generated"
+import { getInvitations, changeInvitationStatus } from "./getMessages"
+import {
+  NotificationMessagesQuery,
+  MarketingNotificationTriggerInput,
+  NotificationIcon,
+  NotificationMessageStatus,
+} from "../../generated"
+import { SaveInvitation } from "./new/save-invitation"
 
 const statusFilterOptions: Array<{ value: StatusFilter; label: string }> = [
   { value: InvitationStatusOptions.All, label: "All Statuses" },
-  { value: InvitationStatusOptions.Pending, label: "Pending" },
-  { value: InvitationStatusOptions.Accepted, label: "Accepted" },
-  { value: InvitationStatusOptions.Revoked, label: "Revoked" },
+  { value: InvitationStatusOptions.Invited, label: "Invited" },
+  { value: InvitationStatusOptions.BannerClicked, label: "Banner Clicked" },
+  {
+    value: InvitationStatusOptions.InvitationInfoCompleted,
+    label: "Invitation Info Completed",
+  },
+  { value: InvitationStatusOptions.KycInitiated, label: "KYC Initiated" },
+  { value: InvitationStatusOptions.KycPassed, label: "KYC Passed" },
+  { value: InvitationStatusOptions.CardInfoSubmitted, label: "Card Info Submitted" },
+  { value: InvitationStatusOptions.CardApproved, label: "Card Approved" },
+  { value: InvitationStatusOptions.InviteWithdrawn, label: "Invite Withdraw" },
+  { value: InvitationStatusOptions.KycFailed, label: "KYC Fail" },
+  { value: InvitationStatusOptions.CardDenied, label: "Card Denied" },
 ]
 
 export default function InvitationsPage() {
@@ -39,17 +62,18 @@ export default function InvitationsPage() {
   const [dateFilter, setDateFilter] = useState("")
   const [pageItems, setPageItems] = useState<InvitationRow[]>([])
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const result = await getInvitations()
-        setData(result)
-      } catch (error) {
-        console.error("Error fetching invitations:", error)
-      } finally {
-        setLoading(false)
-      }
+  const fetchData = async () => {
+    try {
+      const result = await getInvitations()
+      setData(result)
+    } catch (error) {
+      console.error("Error fetching invitations:", error)
+    } finally {
+      setLoading(false)
     }
+  }
+
+  useEffect(() => {
     fetchData()
   }, [])
 
@@ -112,9 +136,9 @@ export default function InvitationsPage() {
   const handleRevokeInvitation = useCallback(async (invitationId: string) => {
     setRevokingId(invitationId)
     try {
-      await RevokeInvitation({
+      await changeInvitationStatus({
         id: invitationId,
-        status: "cancelled",
+        status: NotificationMessageStatus.CardDenied,
       })
 
       const result = await getInvitations()
@@ -125,6 +149,78 @@ export default function InvitationsPage() {
       setRevokingId(null)
     }
   }, [])
+
+  const [submitState, setSubmitState] = useState<SubmitState>({
+    loading: false,
+    success: false,
+    error: undefined,
+  })
+
+  /*const handleCreateMessage = async (
+    formData: FormStateMessage,
+    invitationTemplate: MarketingNotificationTriggerInput,
+  ) => {
+    setSubmitState({ loading: true, success: false, error: undefined })
+
+    try {
+      const userIdRes = await userIdByUsername(formData.userQuery)
+
+      if (userIdRes.userId === undefined) {
+        setSubmitState({
+          loading: false,
+          success: false,
+          error: userIdRes.message || "User not found",
+        })
+        return
+      }
+
+      if (!invitationTemplate) {
+        setSubmitState({
+          loading: false,
+          success: false,
+          error: "Invitation template is not selected.",
+        })
+        return
+      }
+
+      const res = await triggerMarketingNotification({
+        userIdsFilter: [userIdRes.userId],
+        openDeepLink: { screen: "CHAT" },
+        icon: invitationTemplate.icon as NotificationIcon,
+        shouldSendPush: invitationTemplate.shouldSendPush,
+        shouldAddToBulletin: invitationTemplate.shouldAddToBulletin,
+        shouldAddToHistory: invitationTemplate.shouldAddToHistory,
+        localizedNotificationContents: invitationTemplate.localizedNotificationContents,
+      })
+
+      if (res.success) {
+        setSubmitState({
+          loading: false,
+          success: true,
+          error: undefined,
+        })
+        await SaveInvitation({
+          sentBy: "admin", // Should be username from session user
+          username: formData.userQuery,
+          status: NotificationMessageStatus.Invited,
+        })
+
+        return
+      } else {
+        setSubmitState({
+          loading: false,
+          success: false,
+          error: res.message || "Failed to send invitation.",
+        })
+      }
+    } catch (error) {
+      setSubmitState({
+        loading: false,
+        success: false,
+        error: "Error sending invitation.",
+      })
+    }
+  }*/
 
   const hasInvitations = pageItems.length > 0
 
@@ -145,118 +241,120 @@ export default function InvitationsPage() {
           <span>Send New Invitation</span>
         </Button>
       </header>
-
-      <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center">
-        <div className="relative flex-1">
+      <div className="border rounded-xl p-6">
+        <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center pa-5">
+          <div className="relative flex-1">
+            <TextInput
+              type="text"
+              placeholder="Search by username..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              aria-label="Search invitations"
+            />
+          </div>
+          <SelectInput
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
+            className="h-10 md:w-48"
+            aria-label="Filter by status"
+          >
+            {statusFilterOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </SelectInput>
           <TextInput
-            type="text"
-            placeholder="Search by username..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            aria-label="Search invitations"
+            type="date"
+            value={dateFilter}
+            onChange={(e) => setDateFilter(e.target.value)}
+            className="h-10 md:w-60"
+            aria-label="Filter by date"
+            placeholder="Filter by date"
           />
         </div>
-        <SelectInput
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
-          className="h-10 md:w-48"
-          aria-label="Filter by status"
-        >
-          {statusFilterOptions.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </SelectInput>
-        <TextInput
-          type="date"
-          value={dateFilter}
-          onChange={(e) => setDateFilter(e.target.value)}
-          className="h-10 md:w-60"
-          aria-label="Filter by date"
-        />
-      </div>
 
-      <div className="overflow-hidden rounded-lg border border-gray-200 bg-white">
-        <table className="min-w-full divide-y divide-gray-200 text-sm">
-          <thead className="bg-gray-50">
-            <tr>
-              <th scope="col" className="px-6 py-3 text-left font-medium text-gray-500">
-                User
-              </th>
-              <th scope="col" className="px-6 py-3 text-left font-medium text-gray-500">
-                Status
-              </th>
-              <th scope="col" className="px-6 py-3 text-left font-medium text-gray-500">
-                Last Activity
-              </th>
-              <th scope="col" className="px-6 py-3 text-left font-medium text-gray-500">
-                Sent By
-              </th>
-              <th scope="col" className="px-6 py-3 text-left font-medium text-gray-500">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-100 bg-white">
-            {hasInvitations ? (
-              pageItems.map((invitation) => {
-                const formattedDate = formatDateDisplay(invitation.lastActivity)
-                const isRevoking = revokingId === invitation.id
+        <div className="overflow-hidden rounded-lg border border-gray-200 bg-white">
+          <table className="min-w-full divide-y divide-gray-200 text-sm">
+            <thead className="bg-gray-50">
+              <tr>
+                <th scope="col" className="px-6 py-3 text-left font-medium text-gray-500">
+                  User
+                </th>
+                <th scope="col" className="px-6 py-3 text-left font-medium text-gray-500">
+                  Status
+                </th>
+                <th scope="col" className="px-6 py-3 text-left font-medium text-gray-500">
+                  Last Activity
+                </th>
+                <th scope="col" className="px-6 py-3 text-left font-medium text-gray-500">
+                  Sent By
+                </th>
+                <th scope="col" className="px-6 py-3 text-left font-medium text-gray-500">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100 bg-white">
+              {hasInvitations ? (
+                pageItems.map((invitation) => {
+                  const formattedDate = formatDateDisplay(invitation.lastActivity)
+                  const isRevoking = revokingId === invitation.id
 
-                return (
-                  <tr
-                    key={invitation.id}
-                    className="cursor-pointer hover:bg-gray-50"
-                    onClick={() => handleRowClick(invitation.id)}
-                  >
-                    <td className="whitespace-nowrap px-6 py-4 text-gray-900">
-                      {invitation.username}
-                    </td>
-                    <td className="px-6 py-4">
-                      <InvitationStatusBadge status={invitation.status} />
-                    </td>
-                    <td className="px-6 py-4 text-gray-700">{formattedDate}</td>
-                    <td className="px-6 py-4 text-gray-700">{invitation.sentBy}</td>
-                    <td className="px-6 py-4" onClick={(e) => e.stopPropagation()}>
-                      <div className="flex items-center gap-2">
-                        <Button
-                          variant="outline-blue"
-                          onClick={() => handleRowClick(invitation.username)}
-                          disabled={isRevoking}
-                        >
-                          View
-                        </Button>
-                        {invitation.status === InvitationStatusOptions.Pending && (
+                  return (
+                    <tr
+                      key={invitation.id}
+                      className="cursor-pointer hover:bg-gray-50"
+                      onClick={() => handleRowClick(invitation.username)}
+                    >
+                      <td className="whitespace-nowrap px-6 py-4 text-gray-900">
+                        {invitation.username}
+                      </td>
+                      <td className="px-6 py-4">
+                        <InvitationStatusBadge status={invitation.status} />
+                      </td>
+                      <td className="px-6 py-4 text-gray-700">{formattedDate}</td>
+                      <td className="px-6 py-4 text-gray-700">{invitation.sentBy}</td>
+                      <td className="px-6 py-4" onClick={(e) => e.stopPropagation()}>
+                        <div className="flex items-center gap-2">
                           <Button
-                            variant="outline-red"
-                            onClick={() => handleRevokeInvitation(invitation.id)}
+                            variant="outline-blue"
+                            onClick={() => handleRowClick(invitation.username)}
                             disabled={isRevoking}
                           >
-                            {isRevoking ? "Revoking..." : "Revoke"}
+                            View
                           </Button>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                )
-              })
-            ) : (
-              <tr>
-                <td className="px-6 py-8 text-center text-sm text-gray-500" colSpan={5}>
-                  No users found.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+                          {invitation.status === InvitationStatusOptions.Invited && (
+                            <Button
+                              variant="outline-red"
+                              onClick={() => handleRevokeInvitation(invitation.id)}
+                              disabled={isRevoking}
+                            >
+                              {isRevoking ? "Revoking..." : "Revoke"}
+                            </Button>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  )
+                })
+              ) : (
+                <tr>
+                  <td className="px-6 py-8 text-center text-sm text-gray-500" colSpan={5}>
+                    No users found.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
 
-      <Pagination
-        totalItems={filteredInvitations.length}
-        resetKey={resetKey}
-        onPageChange={handlePageChange}
-      />
+        <Pagination
+          totalItems={filteredInvitations.length}
+          resetKey={resetKey}
+          onPageChange={handlePageChange}
+        />
+      </div>
     </div>
   )
 }

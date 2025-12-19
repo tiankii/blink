@@ -17,13 +17,14 @@ import {
   Checkbox,
 } from "../../../components/shared/form-controls"
 
-import { FormState, SubmitState } from "../types"
+import { DeepLinkAction, DeepLinkScreen, NotificationIcon } from "../../../generated"
+import { FormStateMessage, SubmitState } from "../types"
 import { SaveInvitation } from "./save-invitation"
 
 export default function NewInvitationPage() {
   const router = useRouter()
 
-  const [formState, setFormState] = useState<FormState>({
+  const [formState, setFormState] = useState<FormStateMessage>({
     userQuery: "",
     templateId: "",
     title: "",
@@ -38,6 +39,38 @@ export default function NewInvitationPage() {
     success: false,
     error: undefined,
   })
+
+  const [templates, setTemplates] = useState<TemplateRow[]>([])
+
+  const [loading, setLoading] = useState<boolean>(true)
+
+  const fetchTemplates = async () => {
+    try {
+      const data = await getTemplates()
+
+      const mapped: TemplateRow[] =
+        data.notificationTemplates?.map((template) => ({
+          id: template.id,
+          name: template.name,
+          language: template.languageCode,
+          icon: template.iconName,
+          title: template.title,
+          body: template.body,
+          sendPush: template.shouldSendPush,
+          addHistory: template.shouldAddToHistory,
+          addBulletin: template.shouldAddToBulletin,
+          deeplinkScreen: template.deeplinkScreen,
+          notificationAction: template.notificationAction,
+        })) ?? []
+
+      setTemplates(mapped)
+    } catch (error) {
+      console.error("Error fetching templates", error)
+      setTemplates([])
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const selectedTemplate = useMemo(
     () =>
@@ -54,11 +87,15 @@ export default function NewInvitationPage() {
           ...selectedTemplate.localizedNotificationContents[0],
           title: formState.title,
           body: formState.body,
+          language: selectedTemplate.language,
         },
       ],
       shouldSendPush: formState.sendPush,
       shouldAddToHistory: formState.addHistory,
       shouldAddToBulletin: formState.addBulletin,
+      deeplinkScreen: {
+        screen: selectedTemplate.deeplinkScreen as DeepLinkScreen,
+      },
     }
   }, [
     selectedTemplate,
@@ -67,6 +104,7 @@ export default function NewInvitationPage() {
     formState.sendPush,
     formState.addHistory,
     formState.addBulletin,
+    selectedTemplate?.deeplinkScreen,
   ])
 
   useEffect(() => {
@@ -121,9 +159,8 @@ export default function NewInvitationPage() {
 
       const res = await triggerMarketingNotification({
         userIdsFilter: [userIdRes.userId],
-        openDeepLink: invitationTemplate.openDeepLink,
-        openExternalUrl: invitationTemplate.openExternalUrl,
-        icon: invitationTemplate.icon,
+        //openDeepLink: invitationTemplate?.deeplinkScreen,
+        icon: invitationTemplate.icon as NotificationIcon,
         shouldSendPush: invitationTemplate.shouldSendPush,
         shouldAddToBulletin: invitationTemplate.shouldAddToBulletin,
         shouldAddToHistory: invitationTemplate.shouldAddToHistory,
@@ -139,7 +176,7 @@ export default function NewInvitationPage() {
         await SaveInvitation({
           sentBy: "admin", // Should be username from session user
           username: formState.userQuery,
-          status: "pending",
+          status: "INVITED",
         })
 
         return
@@ -159,7 +196,10 @@ export default function NewInvitationPage() {
     }
   }
 
-  const updateFormField = <K extends keyof FormState>(key: K, value: FormState[K]) => {
+  const updateFormField = <K extends keyof FormStateMessage>(
+    key: K,
+    value: FormStateMessage[K],
+  ) => {
     setFormState((prev) => ({ ...prev, [key]: value }))
   }
 
@@ -207,14 +247,15 @@ export default function NewInvitationPage() {
               onChange={(event) => updateFormField("templateId", event.target.value)}
             >
               <option value="">Select a template</option>
-              {notificationContentMock.map((template) => {
-                const firstContent = template.localizedNotificationContents[0]
-                return (
+              {templates && templates.length > 0 ? (
+                templates.map((template) => (
                   <option key={template.id} value={template.id}>
                     {firstContent?.title} ({firstContent?.language})
                   </option>
-                )
-              })}
+                ))
+              ) : (
+                <option value="">There are no templates</option>
+              )}
             </SelectInput>
           </div>
           {formState.templateId && (

@@ -1,4 +1,14 @@
-export type InvitationStatus = "pending" | "accepted" | "revoked" | "active"
+import { NotificationMessageStatus } from "../../generated"
+
+export const InvitationStatusOptions = {
+  All: "ALL",
+  ...NotificationMessageStatus,
+} as const
+
+export type StatusFilter =
+  (typeof InvitationStatusOptions)[keyof typeof InvitationStatusOptions]
+
+export type InvitationStatus = Exclude<StatusFilter, "ALL">
 
 export type InvitationRow = {
   id: string
@@ -7,17 +17,6 @@ export type InvitationRow = {
   sentBy: string
   username: string
 }
-
-export const InvitationStatusOptions = {
-  All: "all",
-  Pending: "pending",
-  Accepted: "accepted",
-  Revoked: "revoked",
-  Active: "active",
-} as const
-
-export type StatusFilter =
-  (typeof InvitationStatusOptions)[keyof typeof InvitationStatusOptions]
 
 export const TemplateIcon = {
   Star: "star",
@@ -37,6 +36,8 @@ export type TemplateRow = {
   sendPush: boolean
   addHistory: boolean
   addBulletin: boolean
+  deeplinkScreen?: string | null | undefined
+  notificationAction?: string | null | undefined
 }
 
 export type Event = {
@@ -52,7 +53,7 @@ export type EditableContent = {
   body: string
 } | null
 
-export type FormState = {
+export type FormStateMessage = {
   userQuery: string
   templateId: string
   title: string
