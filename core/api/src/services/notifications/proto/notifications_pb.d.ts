@@ -1579,6 +1579,49 @@ export namespace MsgMessageHistoryListResponse {
     }
 }
 
+export class MsgTemplateByIdRequest extends jspb.Message { 
+    getId(): string;
+    setId(value: string): MsgTemplateByIdRequest;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): MsgTemplateByIdRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: MsgTemplateByIdRequest): MsgTemplateByIdRequest.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: MsgTemplateByIdRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): MsgTemplateByIdRequest;
+    static deserializeBinaryFromReader(message: MsgTemplateByIdRequest, reader: jspb.BinaryReader): MsgTemplateByIdRequest;
+}
+
+export namespace MsgTemplateByIdRequest {
+    export type AsObject = {
+        id: string,
+    }
+}
+
+export class MsgTemplateByIdResponse extends jspb.Message { 
+
+    hasTemplate(): boolean;
+    clearTemplate(): void;
+    getTemplate(): MsgTemplate | undefined;
+    setTemplate(value?: MsgTemplate): MsgTemplateByIdResponse;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): MsgTemplateByIdResponse.AsObject;
+    static toObject(includeInstance: boolean, msg: MsgTemplateByIdResponse): MsgTemplateByIdResponse.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: MsgTemplateByIdResponse, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): MsgTemplateByIdResponse;
+    static deserializeBinaryFromReader(message: MsgTemplateByIdResponse, reader: jspb.BinaryReader): MsgTemplateByIdResponse;
+}
+
+export namespace MsgTemplateByIdResponse {
+    export type AsObject = {
+        template?: MsgTemplate.AsObject,
+    }
+}
+
 export enum NotificationChannel {
     PUSH = 0,
 }

@@ -161,6 +161,33 @@ impl MsgTemplateRepository {
         Ok(row.0)
     }
 
+    pub async fn find_by_id(&self, id: Uuid) -> Result<Option<MsgTemplate>, sqlx::Error> {
+        let row = sqlx::query_as::<_, MsgTemplate>(
+            r#"
+            SELECT
+                id,
+                name,
+                language_code,
+                icon_name,
+                title,
+                body,
+                should_send_push,
+                should_add_to_history,
+                should_add_to_bulletin,
+                deeplink_action,
+                deeplink_screen,
+                external_url
+            FROM msg_templates
+            WHERE id = $1
+            "#,
+        )
+        .bind(id)
+        .fetch_optional(&self.pool)
+        .await?;
+
+        Ok(row)
+    }
+
     pub async fn list_templates(
         &self,
         limit: Option<i64>,

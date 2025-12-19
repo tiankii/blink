@@ -246,6 +246,28 @@ function deserialize_services_notifications_v1_MsgMessagesListResponse(buffer_ar
   return notifications_pb.MsgMessagesListResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_services_notifications_v1_MsgTemplateByIdRequest(arg) {
+  if (!(arg instanceof notifications_pb.MsgTemplateByIdRequest)) {
+    throw new Error('Expected argument of type services.notifications.v1.MsgTemplateByIdRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_services_notifications_v1_MsgTemplateByIdRequest(buffer_arg) {
+  return notifications_pb.MsgTemplateByIdRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_services_notifications_v1_MsgTemplateByIdResponse(arg) {
+  if (!(arg instanceof notifications_pb.MsgTemplateByIdResponse)) {
+    throw new Error('Expected argument of type services.notifications.v1.MsgTemplateByIdResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_services_notifications_v1_MsgTemplateByIdResponse(buffer_arg) {
+  return notifications_pb.MsgTemplateByIdResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_services_notifications_v1_MsgTemplateCreateRequest(arg) {
   if (!(arg instanceof notifications_pb.MsgTemplateCreateRequest)) {
     throw new Error('Expected argument of type services.notifications.v1.MsgTemplateCreateRequest');
@@ -577,6 +599,17 @@ var NotificationsServiceService = exports.NotificationsServiceService = {
     requestDeserialize: deserialize_services_notifications_v1_MsgTemplateDeleteRequest,
     responseSerialize: serialize_services_notifications_v1_MsgTemplateDeleteResponse,
     responseDeserialize: deserialize_services_notifications_v1_MsgTemplateDeleteResponse,
+  },
+  msgTemplateById: {
+    path: '/services.notifications.v1.NotificationsService/MsgTemplateById',
+    requestStream: false,
+    responseStream: false,
+    requestType: notifications_pb.MsgTemplateByIdRequest,
+    responseType: notifications_pb.MsgTemplateByIdResponse,
+    requestSerialize: serialize_services_notifications_v1_MsgTemplateByIdRequest,
+    requestDeserialize: deserialize_services_notifications_v1_MsgTemplateByIdRequest,
+    responseSerialize: serialize_services_notifications_v1_MsgTemplateByIdResponse,
+    responseDeserialize: deserialize_services_notifications_v1_MsgTemplateByIdResponse,
   },
   msgTemplatesList: {
     path: '/services.notifications.v1.NotificationsService/MsgTemplatesList',

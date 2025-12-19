@@ -17,6 +17,7 @@ service NotificationsService {
   rpc MsgTemplateCreate (MsgTemplateCreateRequest) returns (MsgTemplateCreateResponse) {}
   rpc MsgTemplateUpdate (MsgTemplateUpdateRequest) returns (MsgTemplateUpdateResponse) {}
   rpc MsgTemplateDelete (MsgTemplateDeleteRequest) returns (MsgTemplateDeleteResponse) {}
+  rpc MsgTemplateById (MsgTemplateByIdRequest) returns (MsgTemplateByIdResponse) {}
   rpc MsgTemplatesList (MsgTemplatesListRequest) returns (MsgTemplatesListResponse) {}
   rpc MsgMessageCreate (MsgMessageCreateRequest) returns (MsgMessageCreateResponse) {}
   rpc MsgMessageUpdateStatus (MsgMessageUpdateStatusRequest) returns (MsgMessageUpdateStatusResponse) {}
@@ -490,4 +491,12 @@ message MsgMessageHistoryItem {
 
 message MsgMessageHistoryListResponse {
   repeated MsgMessageHistoryItem history = 1;
+}
+
+message MsgTemplateByIdRequest {
+  string id = 1;
+}
+
+message MsgTemplateByIdResponse {
+  optional MsgTemplate template = 1;
 }

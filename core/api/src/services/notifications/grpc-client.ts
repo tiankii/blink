@@ -43,6 +43,8 @@ import {
   MsgMessagesListResponse,
   MsgMessageHistoryListRequest,
   MsgMessageHistoryListResponse,
+  MsgTemplateByIdRequest,
+  MsgTemplateByIdResponse,
 } from "./proto/notifications_pb"
 
 import { NOTIFICATIONS_HOST, NOTIFICATIONS_PORT } from "@/config"
@@ -170,3 +172,9 @@ export const msgMessageHistoryList = promisify<
   Metadata,
   MsgMessageHistoryListResponse
 >(notificationsClient.msgMessageHistoryList.bind(notificationsClient))
+
+export const msgTemplateById = promisify<
+  MsgTemplateByIdRequest,
+  Metadata,
+  MsgTemplateByIdResponse
+>(notificationsClient.msgTemplateById.bind(notificationsClient))

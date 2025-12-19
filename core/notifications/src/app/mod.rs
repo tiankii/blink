@@ -464,6 +464,15 @@ impl NotificationsApp {
         Ok(deleted_id)
     }
 
+    #[instrument(name = "app.msg_template_by_id", skip(self), err)]
+    pub async fn msg_template_by_id(
+        &self,
+        id: uuid::Uuid,
+    ) -> Result<Option<crate::msg_templates::MsgTemplate>, ApplicationError> {
+        let template = self.msg_template_repository.find_by_id(id).await?;
+        Ok(template)
+    }
+
     #[instrument(name = "app.msg_templates_list", skip(self), err)]
     pub async fn list_msg_templates(
         &self,

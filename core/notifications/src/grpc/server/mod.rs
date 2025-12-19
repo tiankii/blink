@@ -195,6 +195,34 @@ impl NotificationsService for Notifications {
         Ok(Response::new(response))
     }
 
+    #[instrument(name = "notifications.msg_template_by_id", skip_all, err)]
+    async fn msg_template_by_id(
+        &self,
+        request: Request<MsgTemplateByIdRequest>,
+    ) -> Result<Response<MsgTemplateByIdResponse>, Status> {
+        grpc::extract_tracing(&request);
+        let request = request.into_inner();
+
+        if request.id.is_empty() {
+            return Err(Status::invalid_argument("id is required"));
+        }
+
+        let id = Uuid::parse_str(&request.id)
+            .map_err(|_| Status::invalid_argument("invalid template id"))?;
+
+        let template = self
+            .app
+            .msg_template_by_id(id)
+            .await
+            .map_err(Status::from)?;
+
+        let response = MsgTemplateByIdResponse {
+            template: template.map(MsgTemplate::from),
+        };
+
+        Ok(Response::new(response))
+    }
+
     #[instrument(name = "notifications.msg_templates_list", skip_all, err)]
     async fn msg_templates_list(
         &self,

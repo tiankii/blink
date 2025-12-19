@@ -36,7 +36,7 @@ import {
   MsgMessageUpdateStatusRequest,
   MsgMessagesListRequest,
   MsgMessageHistoryListRequest,
-  MsgMessageStatus as ProtoMsgMessageStatus,
+  MsgTemplateByIdRequest,
 } from "./proto/notifications_pb"
 
 import * as notificationsGrpc from "./grpc-client"
@@ -899,6 +899,42 @@ export const NotificationsService = (): INotificationsService => {
     }
   }
 
+  const msgTemplateById = async ({
+    id,
+  }: {
+    id: string
+  }): Promise<MsgTemplate | null | NotificationsServiceError> => {
+    try {
+      const request = new MsgTemplateByIdRequest()
+      request.setId(id)
+
+      const response = await notificationsGrpc.msgTemplateById(
+        request,
+        notificationsGrpc.notificationsMetadata,
+      )
+
+      const template = response.getTemplate()
+      if (!template) return null
+
+      return {
+        id: template.getId(),
+        name: template.getName(),
+        languageCode: template.getLanguageCode(),
+        iconName: template.getIconName(),
+        title: template.getTitle(),
+        body: template.getBody(),
+        shouldSendPush: template.getShouldSendPush(),
+        shouldAddToHistory: template.getShouldAddToHistory(),
+        shouldAddToBulletin: template.getShouldAddToBulletin(),
+        deeplinkAction: template.getDeeplinkAction(),
+        deeplinkScreen: template.getDeeplinkScreen(),
+        externalUrl: template.getExternalUrl(),
+      }
+    } catch (err) {
+      return handleCommonNotificationErrors(err)
+    }
+  }
+
   const msgTemplatesList = async ({
     languageCode,
     limit,
@@ -1082,6 +1118,7 @@ export const NotificationsService = (): INotificationsService => {
         msgTemplateCreate,
         msgTemplateUpdate,
         msgTemplateDelete,
+        msgTemplateById,
         msgTemplatesList,
         msgMessageCreate,
         msgMessageUpdateStatus,
