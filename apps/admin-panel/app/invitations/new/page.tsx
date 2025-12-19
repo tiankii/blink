@@ -54,14 +54,12 @@ export default function NewInvitationPage() {
           id: template.id,
           name: template.name,
           language: template.languageCode,
-          icon: template.iconName,
+          icon: template.iconName as NotificationIcon,
           title: template.title,
           body: template.body,
           sendPush: template.shouldSendPush,
           addHistory: template.shouldAddToHistory,
           addBulletin: template.shouldAddToBulletin,
-          deeplinkScreen: template.deeplinkScreen,
-          deeplinkAction: template.deeplinkAction,
         })) ?? []
 
       setTemplates(mapped)
@@ -74,8 +72,7 @@ export default function NewInvitationPage() {
   }
 
   const selectedTemplate = useMemo(
-    () =>
-      notificationContentMock.find((template) => template.id === formState.templateId),
+    () => templates.find((template) => template.id === formState.templateId),
     [formState.templateId],
   )
 
@@ -85,7 +82,6 @@ export default function NewInvitationPage() {
       ...selectedTemplate,
       localizedNotificationContents: [
         {
-          ...selectedTemplate.localizedNotificationContents[0],
           title: formState.title,
           body: formState.body,
           language: selectedTemplate.language,
@@ -95,6 +91,7 @@ export default function NewInvitationPage() {
       shouldAddToHistory: formState.addHistory,
       shouldAddToBulletin: formState.addBulletin,
       deeplinkScreen: {
+        action: selectedTemplate.deeplinkAction as DeepLinkAction,
         screen: selectedTemplate.deeplinkScreen as DeepLinkScreen,
       },
     }
@@ -109,19 +106,19 @@ export default function NewInvitationPage() {
   ])
 
   useEffect(() => {
+    fetchTemplates()
     if (!selectedTemplate) {
       setFormState((prev) => ({ ...prev, title: "", body: "" }))
       return
     }
 
-    const firstContent = selectedTemplate.localizedNotificationContents[0]
     setFormState((prev) => ({
       ...prev,
-      title: firstContent?.title || "",
-      body: firstContent?.body || "",
-      sendPush: selectedTemplate.shouldSendPush,
-      addHistory: selectedTemplate.shouldAddToHistory,
-      addBulletin: selectedTemplate.shouldAddToBulletin,
+      title: selectedTemplate.title,
+      body: selectedTemplate.body,
+      sendPush: selectedTemplate.sendPush,
+      addHistory: selectedTemplate.addHistory,
+      addBulletin: selectedTemplate.addBulletin,
     }))
   }, [selectedTemplate])
 
@@ -160,8 +157,8 @@ export default function NewInvitationPage() {
 
       const res = await triggerMarketingNotification({
         userIdsFilter: [userIdRes.userId],
-        //openDeepLink: invitationTemplate?.deeplinkScreen,
-        icon: invitationTemplate.icon as NotificationIcon,
+        openDeepLink: invitationTemplate?.deeplinkScreen,
+        icon: invitationTemplate.icon,
         shouldSendPush: invitationTemplate.shouldSendPush,
         shouldAddToBulletin: invitationTemplate.shouldAddToBulletin,
         shouldAddToHistory: invitationTemplate.shouldAddToHistory,
@@ -251,7 +248,7 @@ export default function NewInvitationPage() {
               {templates && templates.length > 0 ? (
                 templates.map((template) => (
                   <option key={template.id} value={template.id}>
-                    {firstContent?.title} ({firstContent?.language})
+                    {template.title} ({template.language})
                   </option>
                 ))
               ) : (

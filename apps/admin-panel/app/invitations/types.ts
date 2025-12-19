@@ -1,4 +1,4 @@
-import { NotificationMessageStatus } from "../../generated"
+import { NotificationMessageStatus, NotificationIcon } from "../../generated"
 
 export const InvitationStatusOptions = {
   All: "ALL",
@@ -30,7 +30,7 @@ export type TemplateRow = {
   id: string
   name: string
   language: string
-  icon: TemplateIcon
+  icon: NotificationIcon
   title: string
   body: string
   sendPush: boolean
