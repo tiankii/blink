@@ -18,8 +18,9 @@ import {
 } from "../../../components/shared/form-controls"
 
 import { DeepLinkAction, DeepLinkScreen, NotificationIcon } from "../../../generated"
-import { FormStateMessage, SubmitState } from "../types"
+import { FormStateMessage, SubmitState, TemplateRow } from "../types"
 import { SaveInvitation } from "./save-invitation"
+import { getTemplates } from "../../templates/getTemplates"
 
 export default function NewInvitationPage() {
   const router = useRouter()
@@ -60,7 +61,7 @@ export default function NewInvitationPage() {
           addHistory: template.shouldAddToHistory,
           addBulletin: template.shouldAddToBulletin,
           deeplinkScreen: template.deeplinkScreen,
-          notificationAction: template.notificationAction,
+          deeplinkAction: template.deeplinkAction,
         })) ?? []
 
       setTemplates(mapped)

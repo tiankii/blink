@@ -14,6 +14,8 @@ import {
   NotificationTemplatesQuery,
   NotificationTemplateCreateInput,
   NotificationIcon,
+  DeepLinkScreenTemplate,
+  DeepLinkActionTemplate,
 } from "../../generated"
 
 import { CreateTemplateModal } from "../../components/templates/create-template-modal"
@@ -53,6 +55,7 @@ export default function TemplatesPage() {
   }
 
   useEffect(() => {
+    fetchTemplates()
     if (isCreateOpen) {
       document.body.classList.add("hide-sidebar")
       const prev = document.body.style.overflow
@@ -80,8 +83,8 @@ export default function TemplatesPage() {
         shouldAddToBulletin: data.notificationByTemplateId.shouldAddToBulletin,
         shouldAddToHistory: data.notificationByTemplateId.shouldAddToHistory,
         shouldSendPush: data.notificationByTemplateId.shouldSendPush,
-        deeplinkScreen: data.notificationByTemplateId.deeplinkScreen,
-        notificationAction: data.notificationByTemplateId.notificationAction,
+        deeplinkScreen: data.notificationByTemplateId.deeplinkScreen as DeepLinkScreenTemplate,
+        deeplinkAction: data.notificationByTemplateId.deeplinkAction as DeepLinkActionTemplate,
       }
 
       setEditTemplateData({ id: idReq, data: dataTemplate })

@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react"
 
 import { Button } from "../shared/button"
-import { DeepLinkScreen, DeepLinkAction, NotificationIcon } from "../../generated"
+import { DeepLinkScreen, DeepLinkAction, NotificationIcon, DeepLinkActionTemplate, DeepLinkScreenTemplate } from "../../generated"
 import { LanguageCodes } from "../notification/languages"
 import { NotificationAction } from "../notification/types"
 import { NotificationTemplateCreateInput } from "../../generated"
@@ -33,8 +33,6 @@ export function CreateTemplateModal({
       shouldAddToHistory: true,
       shouldSendPush: true,
       title: "",
-      deeplinkScreen: "",
-      notificationAction: "",
     },
   )
 
@@ -112,21 +110,19 @@ export function CreateTemplateModal({
                     Action
                   </label>
                   <SelectInput
-                    id="notificationAction"
-                    value={formState.notificationAction || ""}
-                    onChange={(event) =>
-                      updateFormField("notificationAction", event.target.value)
+                    id="deeplinkAction"
+                    value={formState.deeplinkAction || ""}
+                    onChange={({ target: { value } }: React.ChangeEvent<HTMLSelectElement>) => 
+                      updateFormField("deeplinkAction", value as DeepLinkActionTemplate)
                     }
                     className="mt-1 block w-full rounded-md border border-gray-200 px-3 py-2"
                   >
                     <option value="">None</option>
-                    {Object.values(NotificationAction).map((actionIcon) => {
-                      return (
-                        <option key={actionIcon} value={actionIcon}>
-                          {actionIcon}
-                        </option>
-                      )
-                    })}
+                    {Object.values(NotificationAction).map((actionIcon) => (
+                      <option key={actionIcon} value={actionIcon}>
+                        {actionIcon}
+                      </option>
+                    ))}
                   </SelectInput>
                 </div>
                 <div>
@@ -137,7 +133,7 @@ export function CreateTemplateModal({
                     id="deeplinkScreen"
                     value={formState.deeplinkScreen || ""}
                     onChange={(event) =>
-                      updateFormField("deeplinkScreen", event.target.value)
+                      updateFormField("deeplinkScreen", event.target.value as DeepLinkScreenTemplate)
                     }
                     className="mt-1 block w-full rounded-md border border-gray-200 px-3 py-2"
                   >

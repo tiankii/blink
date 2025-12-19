@@ -36,8 +36,9 @@ export type TemplateRow = {
   sendPush: boolean
   addHistory: boolean
   addBulletin: boolean
-  deeplinkScreen?: string | null | undefined
-  notificationAction?: string | null | undefined
+  deeplinkScreen?: string | null
+  deeplinkAction?: string | null
+  externalUrl?: string | null
 }
 
 export type Event = {
