@@ -414,6 +414,7 @@ query notificationMessages(
   $username: String
   $limit: Int
   $offset: Int
+  $status: NotificationMessageStatus
   $updatedAtFrom: Int
   $updatedAtTo: Int
 ) {
@@ -421,6 +422,7 @@ query notificationMessages(
     username: $username
     limit: $limit
     offset: $offset
+    status: $status
     updatedAtFrom: $updatedAtFrom
     updatedAtTo: $updatedAtTo
   ) {
@@ -443,8 +445,9 @@ query notificationTemplates {
     shouldAddToHistory
     shouldSendPush
     title
-    notificationAction
+    deeplinkAction
     deeplinkScreen
+    externalUrl
   }
 }
 
@@ -459,8 +462,9 @@ query notificationByTemplateId($id: ID!) {
     shouldSendPush
     shouldAddToHistory
     shouldAddToBulletin
-    notificationAction
+    deeplinkAction
     deeplinkScreen
+    externalUrl
   }
 }
 

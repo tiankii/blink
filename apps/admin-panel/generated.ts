@@ -222,6 +222,13 @@ export const DeepLinkAction = {
 } as const;
 
 export type DeepLinkAction = typeof DeepLinkAction[keyof typeof DeepLinkAction];
+export const DeepLinkActionTemplate = {
+  SetDefaultAccountModal: 'SET_DEFAULT_ACCOUNT_MODAL',
+  SetLnAddressModal: 'SET_LN_ADDRESS_MODAL',
+  UpgradeAccountModal: 'UPGRADE_ACCOUNT_MODAL'
+} as const;
+
+export type DeepLinkActionTemplate = typeof DeepLinkActionTemplate[keyof typeof DeepLinkActionTemplate];
 export const DeepLinkScreen = {
   Chat: 'CHAT',
   Circles: 'CIRCLES',
@@ -251,6 +258,35 @@ export const DeepLinkScreen = {
 } as const;
 
 export type DeepLinkScreen = typeof DeepLinkScreen[keyof typeof DeepLinkScreen];
+export const DeepLinkScreenTemplate = {
+  Chat: 'CHAT',
+  Circles: 'CIRCLES',
+  Convert: 'CONVERT',
+  CreditCardLimit: 'CREDIT_CARD_LIMIT',
+  Earn: 'EARN',
+  Home: 'HOME',
+  LoadingCard: 'LOADING_CARD',
+  Map: 'MAP',
+  People: 'PEOPLE',
+  Price: 'PRICE',
+  Receive: 'RECEIVE',
+  ScanQr: 'SCAN_QR',
+  Settings: 'SETTINGS',
+  Settings_2Fa: 'SETTINGS_2FA',
+  SettingsAccount: 'SETTINGS_ACCOUNT',
+  SettingsDefaultAccount: 'SETTINGS_DEFAULT_ACCOUNT',
+  SettingsDisplayCurrency: 'SETTINGS_DISPLAY_CURRENCY',
+  SettingsEmail: 'SETTINGS_EMAIL',
+  SettingsLanguage: 'SETTINGS_LANGUAGE',
+  SettingsNotifications: 'SETTINGS_NOTIFICATIONS',
+  SettingsSecurity: 'SETTINGS_SECURITY',
+  SettingsTheme: 'SETTINGS_THEME',
+  SettingsTxLimits: 'SETTINGS_TX_LIMITS',
+  VisaCard: 'VISA_CARD',
+  WelcomeCard: 'WELCOME_CARD'
+} as const;
+
+export type DeepLinkScreenTemplate = typeof DeepLinkScreenTemplate[keyof typeof DeepLinkScreenTemplate];
 export type Email = {
   readonly __typename: 'Email';
   readonly address?: Maybe<Scalars['EmailAddress']['output']>;
@@ -562,7 +598,7 @@ export type NotificationMessageHistoryItem = {
   readonly __typename: 'NotificationMessageHistoryItem';
   readonly createdAt: Scalars['Int']['output'];
   readonly id: Scalars['ID']['output'];
-  readonly status: Scalars['String']['output'];
+  readonly status: NotificationMessageStatus;
 };
 
 export const NotificationMessageStatus = {
@@ -587,12 +623,13 @@ export type NotificationMessageUpdateStatusInput = {
 export type NotificationTemplate = {
   readonly __typename: 'NotificationTemplate';
   readonly body: Scalars['String']['output'];
+  readonly deeplinkAction?: Maybe<Scalars['String']['output']>;
   readonly deeplinkScreen?: Maybe<Scalars['String']['output']>;
+  readonly externalUrl?: Maybe<Scalars['String']['output']>;
   readonly iconName: Scalars['String']['output'];
   readonly id: Scalars['ID']['output'];
   readonly languageCode: Scalars['Language']['output'];
   readonly name: Scalars['String']['output'];
-  readonly notificationAction?: Maybe<Scalars['String']['output']>;
   readonly shouldAddToBulletin: Scalars['Boolean']['output'];
   readonly shouldAddToHistory: Scalars['Boolean']['output'];
   readonly shouldSendPush: Scalars['Boolean']['output'];
@@ -601,11 +638,12 @@ export type NotificationTemplate = {
 
 export type NotificationTemplateCreateInput = {
   readonly body: Scalars['String']['input'];
-  readonly deeplinkScreen?: InputMaybe<Scalars['String']['input']>;
+  readonly deeplinkAction?: InputMaybe<DeepLinkActionTemplate>;
+  readonly deeplinkScreen?: InputMaybe<DeepLinkScreenTemplate>;
+  readonly externalUrl?: InputMaybe<Scalars['ExternalUrl']['input']>;
   readonly iconName: Scalars['String']['input'];
   readonly languageCode: Scalars['Language']['input'];
   readonly name: Scalars['String']['input'];
-  readonly notificationAction?: InputMaybe<Scalars['String']['input']>;
   readonly shouldAddToBulletin: Scalars['Boolean']['input'];
   readonly shouldAddToHistory: Scalars['Boolean']['input'];
   readonly shouldSendPush: Scalars['Boolean']['input'];
@@ -618,12 +656,13 @@ export type NotificationTemplateDeleteInput = {
 
 export type NotificationTemplateUpdateInput = {
   readonly body: Scalars['String']['input'];
-  readonly deeplinkScreen?: InputMaybe<Scalars['String']['input']>;
+  readonly deeplinkAction?: InputMaybe<DeepLinkActionTemplate>;
+  readonly deeplinkScreen?: InputMaybe<DeepLinkScreenTemplate>;
+  readonly externalUrl?: InputMaybe<Scalars['ExternalUrl']['input']>;
   readonly iconName: Scalars['String']['input'];
   readonly id: Scalars['ID']['input'];
   readonly languageCode: Scalars['Language']['input'];
   readonly name: Scalars['String']['input'];
-  readonly notificationAction?: InputMaybe<Scalars['String']['input']>;
   readonly shouldAddToBulletin: Scalars['Boolean']['input'];
   readonly shouldAddToHistory: Scalars['Boolean']['input'];
   readonly shouldSendPush: Scalars['Boolean']['input'];
@@ -748,7 +787,7 @@ export type QueryNotificationMessageHistoryArgs = {
 export type QueryNotificationMessagesArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  status?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<NotificationMessageStatus>;
   updatedAtFrom?: InputMaybe<Scalars['Int']['input']>;
   updatedAtTo?: InputMaybe<Scalars['Int']['input']>;
   username?: InputMaybe<Scalars['String']['input']>;
@@ -1179,6 +1218,7 @@ export type NotificationMessagesQueryVariables = Exact<{
   username?: InputMaybe<Scalars['String']['input']>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+  status?: InputMaybe<NotificationMessageStatus>;
   updatedAtFrom?: InputMaybe<Scalars['Int']['input']>;
   updatedAtTo?: InputMaybe<Scalars['Int']['input']>;
 }>;
@@ -1189,14 +1229,14 @@ export type NotificationMessagesQuery = { readonly __typename: 'Query', readonly
 export type NotificationTemplatesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type NotificationTemplatesQuery = { readonly __typename: 'Query', readonly notificationTemplates: ReadonlyArray<{ readonly __typename: 'NotificationTemplate', readonly body: string, readonly iconName: string, readonly id: string, readonly languageCode: string, readonly name: string, readonly shouldAddToBulletin: boolean, readonly shouldAddToHistory: boolean, readonly shouldSendPush: boolean, readonly title: string, readonly notificationAction?: string | null, readonly deeplinkScreen?: string | null }> };
+export type NotificationTemplatesQuery = { readonly __typename: 'Query', readonly notificationTemplates: ReadonlyArray<{ readonly __typename: 'NotificationTemplate', readonly body: string, readonly iconName: string, readonly id: string, readonly languageCode: string, readonly name: string, readonly shouldAddToBulletin: boolean, readonly shouldAddToHistory: boolean, readonly shouldSendPush: boolean, readonly title: string, readonly deeplinkAction?: string | null, readonly deeplinkScreen?: string | null, readonly externalUrl?: string | null }> };
 
 export type NotificationByTemplateIdQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
 
 
-export type NotificationByTemplateIdQuery = { readonly __typename: 'Query', readonly notificationByTemplateId?: { readonly __typename: 'NotificationTemplate', readonly id: string, readonly name: string, readonly languageCode: string, readonly title: string, readonly body: string, readonly iconName: string, readonly shouldSendPush: boolean, readonly shouldAddToHistory: boolean, readonly shouldAddToBulletin: boolean, readonly notificationAction?: string | null, readonly deeplinkScreen?: string | null } | null };
+export type NotificationByTemplateIdQuery = { readonly __typename: 'Query', readonly notificationByTemplateId?: { readonly __typename: 'NotificationTemplate', readonly id: string, readonly name: string, readonly languageCode: string, readonly title: string, readonly body: string, readonly iconName: string, readonly shouldSendPush: boolean, readonly shouldAddToHistory: boolean, readonly shouldAddToBulletin: boolean, readonly deeplinkAction?: string | null, readonly deeplinkScreen?: string | null, readonly externalUrl?: string | null } | null };
 
 export type NotificationMessageCreateMutationVariables = Exact<{
   input: NotificationMessageCreateInput;
@@ -1238,7 +1278,7 @@ export type NotificationMessageHistoryQueryVariables = Exact<{
 }>;
 
 
-export type NotificationMessageHistoryQuery = { readonly __typename: 'Query', readonly notificationMessageHistory: ReadonlyArray<{ readonly __typename: 'NotificationMessageHistoryItem', readonly id: string, readonly status: string, readonly createdAt: number }> };
+export type NotificationMessageHistoryQuery = { readonly __typename: 'Query', readonly notificationMessageHistory: ReadonlyArray<{ readonly __typename: 'NotificationMessageHistoryItem', readonly id: string, readonly status: NotificationMessageStatus, readonly createdAt: number }> };
 
 
 export const AccountDetailsByUserPhoneDocument = gql`
@@ -2162,11 +2202,12 @@ export type MarketingNotificationTriggerMutationHookResult = ReturnType<typeof u
 export type MarketingNotificationTriggerMutationResult = Apollo.MutationResult<MarketingNotificationTriggerMutation>;
 export type MarketingNotificationTriggerMutationOptions = Apollo.BaseMutationOptions<MarketingNotificationTriggerMutation, MarketingNotificationTriggerMutationVariables>;
 export const NotificationMessagesDocument = gql`
-    query notificationMessages($username: String, $limit: Int, $offset: Int, $updatedAtFrom: Int, $updatedAtTo: Int) {
+    query notificationMessages($username: String, $limit: Int, $offset: Int, $status: NotificationMessageStatus, $updatedAtFrom: Int, $updatedAtTo: Int) {
   notificationMessages(
     username: $username
     limit: $limit
     offset: $offset
+    status: $status
     updatedAtFrom: $updatedAtFrom
     updatedAtTo: $updatedAtTo
   ) {
@@ -2194,6 +2235,7 @@ export const NotificationMessagesDocument = gql`
  *      username: // value for 'username'
  *      limit: // value for 'limit'
  *      offset: // value for 'offset'
+ *      status: // value for 'status'
  *      updatedAtFrom: // value for 'updatedAtFrom'
  *      updatedAtTo: // value for 'updatedAtTo'
  *   },
@@ -2227,8 +2269,9 @@ export const NotificationTemplatesDocument = gql`
     shouldAddToHistory
     shouldSendPush
     title
-    notificationAction
+    deeplinkAction
     deeplinkScreen
+    externalUrl
   }
 }
     `;
@@ -2276,8 +2319,9 @@ export const NotificationByTemplateIdDocument = gql`
     shouldSendPush
     shouldAddToHistory
     shouldAddToBulletin
-    notificationAction
+    deeplinkAction
     deeplinkScreen
+    externalUrl
   }
 }
     `;
