@@ -126,6 +126,9 @@ impl NotificationsService for Notifications {
                 request.should_send_push,
                 request.should_add_to_history,
                 request.should_add_to_bulletin,
+                request.deeplink_action,
+                request.deeplink_screen,
+                request.external_url,
             )
             .await
             .map_err(Status::from)?;
@@ -160,6 +163,9 @@ impl NotificationsService for Notifications {
                 request.should_send_push,
                 request.should_add_to_history,
                 request.should_add_to_bulletin,
+                request.deeplink_action,
+                request.deeplink_screen,
+                request.external_url,
             )
             .await
             .map_err(Status::from)?;

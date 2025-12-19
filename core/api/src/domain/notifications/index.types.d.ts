@@ -103,8 +103,9 @@ type MsgTemplate = {
   shouldSendPush: boolean
   shouldAddToHistory: boolean
   shouldAddToBulletin: boolean
-  notificationAction?: string
+  deeplinkAction?: string
   deeplinkScreen?: string
+  externalUrl?: string
 }
 
 type MsgMessage = {
@@ -188,8 +189,9 @@ interface INotificationsService {
     shouldSendPush?: boolean
     shouldAddToHistory?: boolean
     shouldAddToBulletin?: boolean
-    notificationAction?: string
+    deeplinkAction?: string
     deeplinkScreen?: string
+    externalUrl?: string
   }): Promise<true | NotificationsServiceError>
 
   msgTemplateUpdate(args: {
@@ -202,8 +204,9 @@ interface INotificationsService {
     shouldSendPush?: boolean
     shouldAddToHistory?: boolean
     shouldAddToBulletin?: boolean
-    notificationAction?: string
+    deeplinkAction?: string
     deeplinkScreen?: string
+    externalUrl?: string
   }): Promise<true | NotificationsServiceError>
 
   msgTemplateDelete(args: { id: string }): Promise<true | NotificationsServiceError>
@@ -213,6 +216,10 @@ interface INotificationsService {
     limit?: number
     offset?: number
   }): Promise<MsgTemplate[] | NotificationsServiceError>
+
+  msgTemplateById(args: {
+    id: string
+  }): Promise<MsgTemplate | null | NotificationsServiceError>
 
   msgMessageCreate(args: {
     username: string
@@ -226,6 +233,10 @@ interface INotificationsService {
   }): Promise<true | NotificationsServiceError>
 
   msgMessagesList(args: {
+    username?: string
+    status?: MsgMessageStatus
+    updatedAtFrom?: number
+    updatedAtTo?: number
     limit?: number
     offset?: number
   }): Promise<MsgMessage[] | NotificationsServiceError>
@@ -253,4 +264,50 @@ type TriggerMarketingNotificationArgs = {
   shouldAddToBulletin: boolean
   icon?: Icon
   localizedContents: Map<UserLanguage, LocalizedNotificationContent>
+}
+
+type BaseMsgTemplateArgs = {
+  name: string
+  languageCode: string
+  iconName: string
+  title: string
+  body: string
+  shouldSendPush?: boolean
+  shouldAddToHistory?: boolean
+  shouldAddToBulletin?: boolean
+  deeplinkAction?: string
+  deeplinkScreen?: string
+  externalUrl?: string
+}
+
+type MsgTemplateCreateArgs = BaseMsgTemplateArgs
+
+type MsgTemplateUpdateArgs = BaseMsgTemplateArgs & {
+  id: string
+}
+
+type MsgTemplatesListArgs = {
+  languageCode?: string
+  limit?: number
+  offset?: number
+}
+
+type MsgMessageCreateArgs = {
+  username: string
+  status?: MsgMessageStatus
+  sentBy: string
+}
+
+type MsgMessageUpdateStatusArgs = {
+  id: string
+  status: MsgMessageStatus
+}
+
+type MsgMessagesListArgs = {
+  username?: string
+  status?: MsgMessageStatus
+  updatedAtFrom?: number
+  updatedAtTo?: number
+  limit?: number
+  offset?: number
 }

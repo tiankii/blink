@@ -14,8 +14,9 @@ pub struct MsgTemplate {
     pub should_send_push: bool,
     pub should_add_to_history: bool,
     pub should_add_to_bulletin: bool,
-    pub notification_action: Option<String>,
+    pub deeplink_action: Option<String>,
     pub deeplink_screen: Option<String>,
+    pub external_url: Option<String>,
 }
 
 #[derive(Debug, Clone)]
@@ -42,8 +43,9 @@ impl MsgTemplateRepository {
         should_send_push: bool,
         should_add_to_history: bool,
         should_add_to_bulletin: bool,
-        notification_action: Option<String>,
+        deeplink_action: Option<String>,
         deeplink_screen: Option<String>,
+        external_url: Option<String>,
     ) -> Result<MsgTemplate, sqlx::Error> {
         let template = sqlx::query_as::<_, MsgTemplate>(
             r#"
@@ -56,10 +58,11 @@ impl MsgTemplateRepository {
                 should_send_push,
                 should_add_to_history,
                 should_add_to_bulletin,
-                notification_action,
-                deeplink_screen
+                deeplink_action,
+                deeplink_screen,
+                external_url
             )
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
             RETURNING
                 id,
                 name,
@@ -70,8 +73,9 @@ impl MsgTemplateRepository {
                 should_send_push,
                 should_add_to_history,
                 should_add_to_bulletin,
-                notification_action,
-                deeplink_screen
+                deeplink_action,
+                deeplink_screen,
+                external_url
             "#,
         )
         .bind(name)
@@ -82,8 +86,9 @@ impl MsgTemplateRepository {
         .bind(should_send_push)
         .bind(should_add_to_history)
         .bind(should_add_to_bulletin)
-        .bind(notification_action)
+        .bind(deeplink_action)
         .bind(deeplink_screen)
+        .bind(external_url)
         .fetch_one(&self.pool)
         .await?;
         Ok(template)
@@ -100,8 +105,9 @@ impl MsgTemplateRepository {
         should_send_push: bool,
         should_add_to_history: bool,
         should_add_to_bulletin: bool,
-        notification_action: Option<String>,
+        deeplink_action: Option<String>,
         deeplink_screen: Option<String>,
+        external_url: Option<String>,
     ) -> Result<MsgTemplate, sqlx::Error> {
         let template = sqlx::query_as::<_, MsgTemplate>(
             r#"
@@ -114,8 +120,9 @@ impl MsgTemplateRepository {
                 should_send_push = $7,
                 should_add_to_history = $8,
                 should_add_to_bulletin = $9,
-                notification_action = $10,
-                deeplink_screen = $11
+                deeplink_action = $10,
+                deeplink_screen = $11,
+                external_url = $12
             WHERE id = $1
             RETURNING
                 id,
@@ -127,8 +134,9 @@ impl MsgTemplateRepository {
                 should_send_push,
                 should_add_to_history,
                 should_add_to_bulletin,
-                notification_action,
-                deeplink_screen
+                deeplink_action,
+                deeplink_screen,
+                external_url
             "#,
         )
         .bind(id)
@@ -140,8 +148,9 @@ impl MsgTemplateRepository {
         .bind(should_send_push)
         .bind(should_add_to_history)
         .bind(should_add_to_bulletin)
-        .bind(notification_action)
+        .bind(deeplink_action)
         .bind(deeplink_screen)
+        .bind(external_url)
         .fetch_one(&self.pool)
         .await?;
         Ok(template)
@@ -205,8 +214,9 @@ impl MsgTemplateRepository {
                 should_send_push,
                 should_add_to_history,
                 should_add_to_bulletin,
-                notification_action,
-                deeplink_screen
+                deeplink_action,
+                deeplink_screen,
+                external_url
             FROM msg_templates
             ORDER BY name, language_code
             LIMIT COALESCE($1, 9223372036854775807)

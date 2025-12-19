@@ -10,8 +10,9 @@ CREATE TABLE msg_templates (
   should_send_push BOOLEAN NOT NULL DEFAULT FALSE,
   should_add_to_history BOOLEAN NOT NULL DEFAULT FALSE,
   should_add_to_bulletin BOOLEAN NOT NULL DEFAULT FALSE,
-  notification_action TEXT,
+  deeplink_action TEXT,
   deeplink_screen TEXT,
+  external_url TEXT,
   UNIQUE (name, language_code)
 );
 

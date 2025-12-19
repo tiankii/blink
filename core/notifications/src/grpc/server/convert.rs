@@ -371,8 +371,9 @@ impl From<crate::msg_templates::MsgTemplate> for proto::MsgTemplate {
             should_send_push: template.should_send_push,
             should_add_to_history: template.should_add_to_history,
             should_add_to_bulletin: template.should_add_to_bulletin,
-            notification_action: template.notification_action,
+            deeplink_action: template.deeplink_action,
             deeplink_screen: template.deeplink_screen,
+            external_url: template.external_url,
         }
     }
 }

@@ -1048,15 +1048,20 @@ export class MsgTemplate extends jspb.Message {
     getShouldAddToBulletin(): boolean;
     setShouldAddToBulletin(value: boolean): MsgTemplate;
 
-    hasNotificationAction(): boolean;
-    clearNotificationAction(): void;
-    getNotificationAction(): string | undefined;
-    setNotificationAction(value: string): MsgTemplate;
+    hasDeeplinkAction(): boolean;
+    clearDeeplinkAction(): void;
+    getDeeplinkAction(): string | undefined;
+    setDeeplinkAction(value: string): MsgTemplate;
 
     hasDeeplinkScreen(): boolean;
     clearDeeplinkScreen(): void;
     getDeeplinkScreen(): string | undefined;
     setDeeplinkScreen(value: string): MsgTemplate;
+
+    hasExternalUrl(): boolean;
+    clearExternalUrl(): void;
+    getExternalUrl(): string | undefined;
+    setExternalUrl(value: string): MsgTemplate;
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): MsgTemplate.AsObject;
@@ -1079,8 +1084,9 @@ export namespace MsgTemplate {
         shouldSendPush: boolean,
         shouldAddToHistory: boolean,
         shouldAddToBulletin: boolean,
-        notificationAction?: string,
+        deeplinkAction?: string,
         deeplinkScreen?: string,
+        externalUrl?: string,
     }
 }
 
@@ -1134,15 +1140,20 @@ export class MsgTemplateCreateRequest extends jspb.Message {
     getShouldAddToBulletin(): boolean;
     setShouldAddToBulletin(value: boolean): MsgTemplateCreateRequest;
 
-    hasNotificationAction(): boolean;
-    clearNotificationAction(): void;
-    getNotificationAction(): string | undefined;
-    setNotificationAction(value: string): MsgTemplateCreateRequest;
+    hasDeeplinkAction(): boolean;
+    clearDeeplinkAction(): void;
+    getDeeplinkAction(): string | undefined;
+    setDeeplinkAction(value: string): MsgTemplateCreateRequest;
 
     hasDeeplinkScreen(): boolean;
     clearDeeplinkScreen(): void;
     getDeeplinkScreen(): string | undefined;
     setDeeplinkScreen(value: string): MsgTemplateCreateRequest;
+
+    hasExternalUrl(): boolean;
+    clearExternalUrl(): void;
+    getExternalUrl(): string | undefined;
+    setExternalUrl(value: string): MsgTemplateCreateRequest;
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): MsgTemplateCreateRequest.AsObject;
@@ -1164,8 +1175,9 @@ export namespace MsgTemplateCreateRequest {
         shouldSendPush: boolean,
         shouldAddToHistory: boolean,
         shouldAddToBulletin: boolean,
-        notificationAction?: string,
+        deeplinkAction?: string,
         deeplinkScreen?: string,
+        externalUrl?: string,
     }
 }
 
@@ -1212,15 +1224,20 @@ export class MsgTemplateUpdateRequest extends jspb.Message {
     getShouldAddToBulletin(): boolean;
     setShouldAddToBulletin(value: boolean): MsgTemplateUpdateRequest;
 
-    hasNotificationAction(): boolean;
-    clearNotificationAction(): void;
-    getNotificationAction(): string | undefined;
-    setNotificationAction(value: string): MsgTemplateUpdateRequest;
+    hasDeeplinkAction(): boolean;
+    clearDeeplinkAction(): void;
+    getDeeplinkAction(): string | undefined;
+    setDeeplinkAction(value: string): MsgTemplateUpdateRequest;
 
     hasDeeplinkScreen(): boolean;
     clearDeeplinkScreen(): void;
     getDeeplinkScreen(): string | undefined;
     setDeeplinkScreen(value: string): MsgTemplateUpdateRequest;
+
+    hasExternalUrl(): boolean;
+    clearExternalUrl(): void;
+    getExternalUrl(): string | undefined;
+    setExternalUrl(value: string): MsgTemplateUpdateRequest;
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): MsgTemplateUpdateRequest.AsObject;
@@ -1243,8 +1260,9 @@ export namespace MsgTemplateUpdateRequest {
         shouldSendPush: boolean,
         shouldAddToHistory: boolean,
         shouldAddToBulletin: boolean,
-        notificationAction?: string,
+        deeplinkAction?: string,
         deeplinkScreen?: string,
+        externalUrl?: string,
     }
 }
 

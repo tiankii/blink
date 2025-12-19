@@ -8443,8 +8443,9 @@ body: jspb.Message.getFieldWithDefault(msg, 6, ""),
 shouldSendPush: jspb.Message.getBooleanFieldWithDefault(msg, 7, false),
 shouldAddToHistory: jspb.Message.getBooleanFieldWithDefault(msg, 8, false),
 shouldAddToBulletin: jspb.Message.getBooleanFieldWithDefault(msg, 9, false),
-notificationAction: (f = jspb.Message.getField(msg, 10)) == null ? undefined : f,
-deeplinkScreen: (f = jspb.Message.getField(msg, 11)) == null ? undefined : f
+deeplinkAction: (f = jspb.Message.getField(msg, 10)) == null ? undefined : f,
+deeplinkScreen: (f = jspb.Message.getField(msg, 11)) == null ? undefined : f,
+externalUrl: (f = jspb.Message.getField(msg, 12)) == null ? undefined : f
   };
 
   if (includeInstance) {
@@ -8519,11 +8520,15 @@ proto.services.notifications.v1.MsgTemplate.deserializeBinaryFromReader = functi
       break;
     case 10:
       var value = /** @type {string} */ (reader.readString());
-      msg.setNotificationAction(value);
+      msg.setDeeplinkAction(value);
       break;
     case 11:
       var value = /** @type {string} */ (reader.readString());
       msg.setDeeplinkScreen(value);
+      break;
+    case 12:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setExternalUrl(value);
       break;
     default:
       reader.skipField();
@@ -8628,6 +8633,13 @@ proto.services.notifications.v1.MsgTemplate.serializeBinaryToWriter = function(m
   if (f != null) {
     writer.writeString(
       11,
+      f
+    );
+  }
+  f = /** @type {string} */ (jspb.Message.getField(message, 12));
+  if (f != null) {
+    writer.writeString(
+      12,
       f
     );
   }
@@ -8797,10 +8809,10 @@ proto.services.notifications.v1.MsgTemplate.prototype.setShouldAddToBulletin = f
 
 
 /**
- * optional string notification_action = 10;
+ * optional string deeplink_action = 10;
  * @return {string}
  */
-proto.services.notifications.v1.MsgTemplate.prototype.getNotificationAction = function() {
+proto.services.notifications.v1.MsgTemplate.prototype.getDeeplinkAction = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 10, ""));
 };
 
@@ -8809,7 +8821,7 @@ proto.services.notifications.v1.MsgTemplate.prototype.getNotificationAction = fu
  * @param {string} value
  * @return {!proto.services.notifications.v1.MsgTemplate} returns this
  */
-proto.services.notifications.v1.MsgTemplate.prototype.setNotificationAction = function(value) {
+proto.services.notifications.v1.MsgTemplate.prototype.setDeeplinkAction = function(value) {
   return jspb.Message.setField(this, 10, value);
 };
 
@@ -8818,7 +8830,7 @@ proto.services.notifications.v1.MsgTemplate.prototype.setNotificationAction = fu
  * Clears the field making it undefined.
  * @return {!proto.services.notifications.v1.MsgTemplate} returns this
  */
-proto.services.notifications.v1.MsgTemplate.prototype.clearNotificationAction = function() {
+proto.services.notifications.v1.MsgTemplate.prototype.clearDeeplinkAction = function() {
   return jspb.Message.setField(this, 10, undefined);
 };
 
@@ -8827,7 +8839,7 @@ proto.services.notifications.v1.MsgTemplate.prototype.clearNotificationAction = 
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.services.notifications.v1.MsgTemplate.prototype.hasNotificationAction = function() {
+proto.services.notifications.v1.MsgTemplate.prototype.hasDeeplinkAction = function() {
   return jspb.Message.getField(this, 10) != null;
 };
 
@@ -8865,6 +8877,42 @@ proto.services.notifications.v1.MsgTemplate.prototype.clearDeeplinkScreen = func
  */
 proto.services.notifications.v1.MsgTemplate.prototype.hasDeeplinkScreen = function() {
   return jspb.Message.getField(this, 11) != null;
+};
+
+
+/**
+ * optional string external_url = 12;
+ * @return {string}
+ */
+proto.services.notifications.v1.MsgTemplate.prototype.getExternalUrl = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 12, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.services.notifications.v1.MsgTemplate} returns this
+ */
+proto.services.notifications.v1.MsgTemplate.prototype.setExternalUrl = function(value) {
+  return jspb.Message.setField(this, 12, value);
+};
+
+
+/**
+ * Clears the field making it undefined.
+ * @return {!proto.services.notifications.v1.MsgTemplate} returns this
+ */
+proto.services.notifications.v1.MsgTemplate.prototype.clearExternalUrl = function() {
+  return jspb.Message.setField(this, 12, undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.services.notifications.v1.MsgTemplate.prototype.hasExternalUrl = function() {
+  return jspb.Message.getField(this, 12) != null;
 };
 
 
@@ -9158,8 +9206,9 @@ body: jspb.Message.getFieldWithDefault(msg, 5, ""),
 shouldSendPush: jspb.Message.getBooleanFieldWithDefault(msg, 6, false),
 shouldAddToHistory: jspb.Message.getBooleanFieldWithDefault(msg, 7, false),
 shouldAddToBulletin: jspb.Message.getBooleanFieldWithDefault(msg, 8, false),
-notificationAction: (f = jspb.Message.getField(msg, 9)) == null ? undefined : f,
-deeplinkScreen: (f = jspb.Message.getField(msg, 10)) == null ? undefined : f
+deeplinkAction: (f = jspb.Message.getField(msg, 9)) == null ? undefined : f,
+deeplinkScreen: (f = jspb.Message.getField(msg, 10)) == null ? undefined : f,
+externalUrl: (f = jspb.Message.getField(msg, 11)) == null ? undefined : f
   };
 
   if (includeInstance) {
@@ -9230,11 +9279,15 @@ proto.services.notifications.v1.MsgTemplateCreateRequest.deserializeBinaryFromRe
       break;
     case 9:
       var value = /** @type {string} */ (reader.readString());
-      msg.setNotificationAction(value);
+      msg.setDeeplinkAction(value);
       break;
     case 10:
       var value = /** @type {string} */ (reader.readString());
       msg.setDeeplinkScreen(value);
+      break;
+    case 11:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setExternalUrl(value);
       break;
     default:
       reader.skipField();
@@ -9332,6 +9385,13 @@ proto.services.notifications.v1.MsgTemplateCreateRequest.serializeBinaryToWriter
   if (f != null) {
     writer.writeString(
       10,
+      f
+    );
+  }
+  f = /** @type {string} */ (jspb.Message.getField(message, 11));
+  if (f != null) {
+    writer.writeString(
+      11,
       f
     );
   }
@@ -9483,10 +9543,10 @@ proto.services.notifications.v1.MsgTemplateCreateRequest.prototype.setShouldAddT
 
 
 /**
- * optional string notification_action = 9;
+ * optional string deeplink_action = 9;
  * @return {string}
  */
-proto.services.notifications.v1.MsgTemplateCreateRequest.prototype.getNotificationAction = function() {
+proto.services.notifications.v1.MsgTemplateCreateRequest.prototype.getDeeplinkAction = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 9, ""));
 };
 
@@ -9495,7 +9555,7 @@ proto.services.notifications.v1.MsgTemplateCreateRequest.prototype.getNotificati
  * @param {string} value
  * @return {!proto.services.notifications.v1.MsgTemplateCreateRequest} returns this
  */
-proto.services.notifications.v1.MsgTemplateCreateRequest.prototype.setNotificationAction = function(value) {
+proto.services.notifications.v1.MsgTemplateCreateRequest.prototype.setDeeplinkAction = function(value) {
   return jspb.Message.setField(this, 9, value);
 };
 
@@ -9504,7 +9564,7 @@ proto.services.notifications.v1.MsgTemplateCreateRequest.prototype.setNotificati
  * Clears the field making it undefined.
  * @return {!proto.services.notifications.v1.MsgTemplateCreateRequest} returns this
  */
-proto.services.notifications.v1.MsgTemplateCreateRequest.prototype.clearNotificationAction = function() {
+proto.services.notifications.v1.MsgTemplateCreateRequest.prototype.clearDeeplinkAction = function() {
   return jspb.Message.setField(this, 9, undefined);
 };
 
@@ -9513,7 +9573,7 @@ proto.services.notifications.v1.MsgTemplateCreateRequest.prototype.clearNotifica
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.services.notifications.v1.MsgTemplateCreateRequest.prototype.hasNotificationAction = function() {
+proto.services.notifications.v1.MsgTemplateCreateRequest.prototype.hasDeeplinkAction = function() {
   return jspb.Message.getField(this, 9) != null;
 };
 
@@ -9551,6 +9611,42 @@ proto.services.notifications.v1.MsgTemplateCreateRequest.prototype.clearDeeplink
  */
 proto.services.notifications.v1.MsgTemplateCreateRequest.prototype.hasDeeplinkScreen = function() {
   return jspb.Message.getField(this, 10) != null;
+};
+
+
+/**
+ * optional string external_url = 11;
+ * @return {string}
+ */
+proto.services.notifications.v1.MsgTemplateCreateRequest.prototype.getExternalUrl = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 11, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.services.notifications.v1.MsgTemplateCreateRequest} returns this
+ */
+proto.services.notifications.v1.MsgTemplateCreateRequest.prototype.setExternalUrl = function(value) {
+  return jspb.Message.setField(this, 11, value);
+};
+
+
+/**
+ * Clears the field making it undefined.
+ * @return {!proto.services.notifications.v1.MsgTemplateCreateRequest} returns this
+ */
+proto.services.notifications.v1.MsgTemplateCreateRequest.prototype.clearExternalUrl = function() {
+  return jspb.Message.setField(this, 11, undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.services.notifications.v1.MsgTemplateCreateRequest.prototype.hasExternalUrl = function() {
+  return jspb.Message.getField(this, 11) != null;
 };
 
 
@@ -9746,8 +9842,9 @@ body: jspb.Message.getFieldWithDefault(msg, 6, ""),
 shouldSendPush: jspb.Message.getBooleanFieldWithDefault(msg, 7, false),
 shouldAddToHistory: jspb.Message.getBooleanFieldWithDefault(msg, 8, false),
 shouldAddToBulletin: jspb.Message.getBooleanFieldWithDefault(msg, 9, false),
-notificationAction: (f = jspb.Message.getField(msg, 10)) == null ? undefined : f,
-deeplinkScreen: (f = jspb.Message.getField(msg, 11)) == null ? undefined : f
+deeplinkAction: (f = jspb.Message.getField(msg, 10)) == null ? undefined : f,
+deeplinkScreen: (f = jspb.Message.getField(msg, 11)) == null ? undefined : f,
+externalUrl: (f = jspb.Message.getField(msg, 12)) == null ? undefined : f
   };
 
   if (includeInstance) {
@@ -9822,11 +9919,15 @@ proto.services.notifications.v1.MsgTemplateUpdateRequest.deserializeBinaryFromRe
       break;
     case 10:
       var value = /** @type {string} */ (reader.readString());
-      msg.setNotificationAction(value);
+      msg.setDeeplinkAction(value);
       break;
     case 11:
       var value = /** @type {string} */ (reader.readString());
       msg.setDeeplinkScreen(value);
+      break;
+    case 12:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setExternalUrl(value);
       break;
     default:
       reader.skipField();
@@ -9931,6 +10032,13 @@ proto.services.notifications.v1.MsgTemplateUpdateRequest.serializeBinaryToWriter
   if (f != null) {
     writer.writeString(
       11,
+      f
+    );
+  }
+  f = /** @type {string} */ (jspb.Message.getField(message, 12));
+  if (f != null) {
+    writer.writeString(
+      12,
       f
     );
   }
@@ -10100,10 +10208,10 @@ proto.services.notifications.v1.MsgTemplateUpdateRequest.prototype.setShouldAddT
 
 
 /**
- * optional string notification_action = 10;
+ * optional string deeplink_action = 10;
  * @return {string}
  */
-proto.services.notifications.v1.MsgTemplateUpdateRequest.prototype.getNotificationAction = function() {
+proto.services.notifications.v1.MsgTemplateUpdateRequest.prototype.getDeeplinkAction = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 10, ""));
 };
 
@@ -10112,7 +10220,7 @@ proto.services.notifications.v1.MsgTemplateUpdateRequest.prototype.getNotificati
  * @param {string} value
  * @return {!proto.services.notifications.v1.MsgTemplateUpdateRequest} returns this
  */
-proto.services.notifications.v1.MsgTemplateUpdateRequest.prototype.setNotificationAction = function(value) {
+proto.services.notifications.v1.MsgTemplateUpdateRequest.prototype.setDeeplinkAction = function(value) {
   return jspb.Message.setField(this, 10, value);
 };
 
@@ -10121,7 +10229,7 @@ proto.services.notifications.v1.MsgTemplateUpdateRequest.prototype.setNotificati
  * Clears the field making it undefined.
  * @return {!proto.services.notifications.v1.MsgTemplateUpdateRequest} returns this
  */
-proto.services.notifications.v1.MsgTemplateUpdateRequest.prototype.clearNotificationAction = function() {
+proto.services.notifications.v1.MsgTemplateUpdateRequest.prototype.clearDeeplinkAction = function() {
   return jspb.Message.setField(this, 10, undefined);
 };
 
@@ -10130,7 +10238,7 @@ proto.services.notifications.v1.MsgTemplateUpdateRequest.prototype.clearNotifica
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.services.notifications.v1.MsgTemplateUpdateRequest.prototype.hasNotificationAction = function() {
+proto.services.notifications.v1.MsgTemplateUpdateRequest.prototype.hasDeeplinkAction = function() {
   return jspb.Message.getField(this, 10) != null;
 };
 
@@ -10168,6 +10276,42 @@ proto.services.notifications.v1.MsgTemplateUpdateRequest.prototype.clearDeeplink
  */
 proto.services.notifications.v1.MsgTemplateUpdateRequest.prototype.hasDeeplinkScreen = function() {
   return jspb.Message.getField(this, 11) != null;
+};
+
+
+/**
+ * optional string external_url = 12;
+ * @return {string}
+ */
+proto.services.notifications.v1.MsgTemplateUpdateRequest.prototype.getExternalUrl = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 12, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.services.notifications.v1.MsgTemplateUpdateRequest} returns this
+ */
+proto.services.notifications.v1.MsgTemplateUpdateRequest.prototype.setExternalUrl = function(value) {
+  return jspb.Message.setField(this, 12, value);
+};
+
+
+/**
+ * Clears the field making it undefined.
+ * @return {!proto.services.notifications.v1.MsgTemplateUpdateRequest} returns this
+ */
+proto.services.notifications.v1.MsgTemplateUpdateRequest.prototype.clearExternalUrl = function() {
+  return jspb.Message.setField(this, 12, undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.services.notifications.v1.MsgTemplateUpdateRequest.prototype.hasExternalUrl = function() {
+  return jspb.Message.getField(this, 12) != null;
 };
 
 

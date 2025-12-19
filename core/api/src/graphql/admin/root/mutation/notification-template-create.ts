@@ -1,8 +1,11 @@
 import { GT } from "@/graphql/index"
 import Language from "@/graphql/shared/types/scalar/language"
-import SuccessPayload from "@/graphql/shared/types/payload/success-payload"
-import { NotificationsService } from "@/services/notifications"
+import ExternalUrl from "@/graphql/admin/types/scalar/external-url"
 import { mapAndParseErrorForGqlResponse } from "@/graphql/error-map"
+import SuccessPayload from "@/graphql/shared/types/payload/success-payload"
+import DeepLinkActionTemplate from "@/graphql/admin/types/scalar/deep-link-action-template"
+import DeepLinkScreenTemplate from "@/graphql/admin/types/scalar/deep-link-screen-template"
+import { NotificationsService } from "@/services/notifications"
 
 const NotificationTemplateCreateInput = GT.Input({
   name: "NotificationTemplateCreateInput",
@@ -15,8 +18,9 @@ const NotificationTemplateCreateInput = GT.Input({
     shouldSendPush: { type: GT.NonNull(GT.Boolean) },
     shouldAddToHistory: { type: GT.NonNull(GT.Boolean) },
     shouldAddToBulletin: { type: GT.NonNull(GT.Boolean) },
-    notificationAction: { type: GT.String },
-    deeplinkScreen: { type: GT.String },
+    deeplinkAction: { type: DeepLinkActionTemplate },
+    deeplinkScreen: { type: DeepLinkScreenTemplate },
+    externalUrl: { type: ExternalUrl },
   }),
 })
 
@@ -33,8 +37,9 @@ const NotificationTemplateCreateMutation = GT.Field<
       shouldSendPush: boolean
       shouldAddToHistory: boolean
       shouldAddToBulletin: boolean
-      notificationAction?: string
+      deeplinkAction?: string
       deeplinkScreen?: string
+      externalUrl?: string
     }
   }
 >({
@@ -55,8 +60,9 @@ const NotificationTemplateCreateMutation = GT.Field<
       shouldSendPush,
       shouldAddToHistory,
       shouldAddToBulletin,
-      notificationAction,
+      deeplinkAction,
       deeplinkScreen,
+      externalUrl,
     } = args.input
 
     if (languageCode instanceof Error) {
@@ -74,10 +80,10 @@ const NotificationTemplateCreateMutation = GT.Field<
       shouldSendPush,
       shouldAddToHistory,
       shouldAddToBulletin,
-      notificationAction,
+      deeplinkAction,
       deeplinkScreen,
+      externalUrl,
     })
-
     if (res instanceof Error) {
       return { errors: [mapAndParseErrorForGqlResponse(res)], success: false }
     }

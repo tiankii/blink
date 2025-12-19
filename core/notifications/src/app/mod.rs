@@ -404,6 +404,9 @@ impl NotificationsApp {
         should_send_push: bool,
         should_add_to_history: bool,
         should_add_to_bulletin: bool,
+        deeplink_action: Option<String>,
+        deeplink_screen: Option<String>,
+        external_url: Option<String>,
     ) -> Result<crate::msg_templates::MsgTemplate, ApplicationError> {
         let template = self
             .msg_template_repository
@@ -416,8 +419,9 @@ impl NotificationsApp {
                 should_send_push,
                 should_add_to_history,
                 should_add_to_bulletin,
-                None,
-                None,
+                deeplink_action,
+                deeplink_screen,
+                external_url,
             )
             .await?;
         Ok(template)
@@ -435,6 +439,9 @@ impl NotificationsApp {
         should_send_push: bool,
         should_add_to_history: bool,
         should_add_to_bulletin: bool,
+        deeplink_action: Option<String>,
+        deeplink_screen: Option<String>,
+        external_url: Option<String>,
     ) -> Result<crate::msg_templates::MsgTemplate, ApplicationError> {
         let template = self
             .msg_template_repository
@@ -448,8 +455,9 @@ impl NotificationsApp {
                 should_send_push,
                 should_add_to_history,
                 should_add_to_bulletin,
-                None,
-                None,
+                deeplink_action,
+                deeplink_screen,
+                external_url,
             )
             .await?;
         Ok(template)

@@ -1,8 +1,8 @@
 import { GT } from "@/graphql/index"
-import SuccessPayload from "@/graphql/shared/types/payload/success-payload"
-import { NotificationsService } from "@/services/notifications"
 import { mapAndParseErrorForGqlResponse } from "@/graphql/error-map"
+import SuccessPayload from "@/graphql/shared/types/payload/success-payload"
 import NotificationMessageStatus from "@/graphql/admin/types/scalar/notification-message-status"
+import { NotificationsService } from "@/services/notifications"
 
 const NotificationMessageUpdateStatusInput = GT.Input({
   name: "NotificationMessageUpdateStatusInput",
@@ -44,7 +44,6 @@ const NotificationMessageUpdateStatusMutation = GT.Field<
       id,
       status,
     })
-
     if (res instanceof Error) {
       return { errors: [mapAndParseErrorForGqlResponse(res)], success: false }
     }
