@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useCallback, useEffect, useMemo } from "react"
-
 import { visaTemplatesMock } from "../mock-data"
 import { Button } from "../../components/shared/button"
 import { Pagination } from "../../components/shared/pagination"
@@ -16,8 +15,9 @@ import {
   DeepLinkScreenTemplate,
   DeepLinkActionTemplate,
 } from "../../generated"
-
 import { CreateTemplateModal } from "../../components/templates/create-template-modal"
+import { NotificationAction } from "../../components/notification/types"
+import { sanitizeStringOrNull } from "../utils"
 
 type SubmitState = {
   loadingCreate: boolean
@@ -25,21 +25,34 @@ type SubmitState = {
   error?: string
 }
 
+type TemplateWithFields = {
+  id: string
+  name: string
+  title: string
+  body: string
+  iconName: string
+  languageCode: string
+  shouldSendPush: boolean
+  shouldAddToHistory: boolean
+  shouldAddToBulletin: boolean
+  deeplinkScreen?: string | null
+  deeplinkAction?: string | null
+  externalUrl?: string | null
+  external_url?: string | null
+}
+
 export default function TemplatesPage() {
   const [pageItems, setPageItems] = useState<TemplateRow[]>([])
   const [isCreateOpen, setIsCreateOpen] = useState(false)
   const [editTemplateData, setEditTemplateData] = useState<{
-    id?: string
-    data?: NotificationTemplateCreateInput | undefined
-  }>()
+    id: string
+    data: NotificationTemplateCreateInput
+  } | null>(null)
   const [data, setData] = useState<NotificationTemplatesQuery>()
-
   const [loading, setLoading] = useState<boolean>(true)
-
   const [submitState, setSubmitState] = useState<SubmitState>({
     loadingCreate: false,
     success: false,
-    error: undefined,
   })
 
   const fetchTemplates = async () => {
@@ -65,34 +78,45 @@ export default function TemplatesPage() {
         document.body.style.overflow = prev || ""
       }
     }
-    return
   }, [isCreateOpen])
 
   const handleGetTemplate = async (idReq: string) => {
     try {
-      const data = await getTemplateById(idReq)
+      const res = await getTemplateById(idReq)
+      const tpl = res.notificationByTemplateId as TemplateWithFields | null
+      if (!tpl) return
 
-      if (!data.notificationByTemplateId) return
+      const deeplinkScreen = tpl.deeplinkScreen as DeepLinkScreenTemplate | null
+      const deeplinkAction = tpl.deeplinkAction as DeepLinkActionTemplate | null
+      const externalUrl = sanitizeStringOrNull(
+        tpl.externalUrl ?? tpl.external_url ?? null
+      )
+
+      const inferredAction = externalUrl
+        ? NotificationAction.OpenExternalUrl
+        : deeplinkScreen
+          ? NotificationAction.OpenDeepLink
+          : null
 
       const dataTemplate: NotificationTemplateCreateInput = {
-        name: data.notificationByTemplateId.name,
-        title: data.notificationByTemplateId.title,
-        body: data.notificationByTemplateId.body,
-        iconName: data.notificationByTemplateId.iconName,
-        languageCode: data.notificationByTemplateId.languageCode,
-        shouldAddToBulletin: data.notificationByTemplateId.shouldAddToBulletin,
-        shouldAddToHistory: data.notificationByTemplateId.shouldAddToHistory,
-        shouldSendPush: data.notificationByTemplateId.shouldSendPush,
-        deeplinkScreen: data.notificationByTemplateId
-          .deeplinkScreen as DeepLinkScreenTemplate,
-        deeplinkAction: data.notificationByTemplateId
-          .deeplinkAction as DeepLinkActionTemplate,
-      }
+        name: tpl.name,
+        title: tpl.title,
+        body: tpl.body,
+        iconName: tpl.iconName,
+        languageCode: tpl.languageCode,
+        shouldAddToBulletin: tpl.shouldAddToBulletin,
+        shouldAddToHistory: tpl.shouldAddToHistory,
+        shouldSendPush: tpl.shouldSendPush,
+        deeplinkScreen: deeplinkScreen ?? null,
+        deeplinkAction: deeplinkAction ?? null,
+        externalUrl: externalUrl ?? null,
+        action: inferredAction,
+      } as NotificationTemplateCreateInput & { action: NotificationAction | null }
 
       setEditTemplateData({ id: idReq, data: dataTemplate })
       setIsCreateOpen(true)
     } catch (error) {
-      console.error(error)
+      console.error("Error fetching template", error)
     }
   }
 
@@ -123,20 +147,20 @@ export default function TemplatesPage() {
 
   const handleCloseModal = () => {
     setIsCreateOpen(false)
-    setEditTemplateData(undefined)
+    setEditTemplateData(null)
   }
 
   const handleCreateTemplate = async (formData: NotificationTemplateCreateInput) => {
-    setSubmitState({ loadingCreate: true, success: false, error: undefined })
+    setSubmitState({ loadingCreate: true, success: false })
     try {
       if (editTemplateData?.id) {
         const updateData = {
           ...formData,
           id: editTemplateData.id,
         }
-        await updateTemplate(updateData)
+        await updateTemplate(updateData as NotificationTemplateCreateInput & { id: string })
       } else {
-        await saveTemplate(formData)
+        await saveTemplate(formData as NotificationTemplateCreateInput)
       }
       setSubmitState((prev) => ({ ...prev, success: true }))
       await fetchTemplates()
@@ -146,7 +170,7 @@ export default function TemplatesPage() {
         ? "Error updating template."
         : "Error creating template."
       setSubmitState((prev) => ({ ...prev, error: errorMessage }))
-      console.error(submitState.error)
+      console.error(errorMessage, error)
     } finally {
       setSubmitState((prev) => ({ ...prev, loadingCreate: false }))
     }
@@ -161,7 +185,7 @@ export default function TemplatesPage() {
       await deleteTemplate(templateId)
       fetchTemplates()
     } catch (error) {
-      console.error("Error deleting template")
+      console.error("Error deleting template", error)
     }
   }, [])
 

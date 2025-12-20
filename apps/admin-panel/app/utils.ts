@@ -36,3 +36,10 @@ const countDecimals = (val: string) => {
   if (Math.floor(value.valueOf()) === value.valueOf()) return 0
   return value.toString().split(".")[1].length || 0
 }
+
+export const sanitizeStringOrNull = (value: string | null): string | null => {
+  if (!value) return null
+  
+  const trimmedValue = value.trim()
+  return trimmedValue.length > 0 ? trimmedValue : null
+}
