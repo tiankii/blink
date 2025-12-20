@@ -30,14 +30,15 @@ export const saveTemplate = async (data: NotificationTemplateCreateInput) => {
         shouldAddToHistory: data.shouldAddToHistory,
         shouldSendPush: data.shouldSendPush,
         title: data.title,
+        deeplinkScreen: data.deeplinkScreen,
+        deeplinkAction: data.deeplinkAction,
+        externalUrl: data.externalUrl,
       },
     },
   })
 }
 
 export const updateTemplate = async (data: NotificationTemplateUpdateInput) => {
-  console.warn("Update Template")
-
   await getClient().mutate<
     NotificationTemplateUpdateMutation,
     NotificationTemplateUpdateMutationVariables
@@ -55,7 +56,8 @@ export const updateTemplate = async (data: NotificationTemplateUpdateInput) => {
         shouldAddToHistory: data.shouldAddToHistory,
         shouldAddToBulletin: data.shouldAddToBulletin,
         deeplinkScreen: data.deeplinkScreen,
-        notificationAction: data.notificationAction,
+        deeplinkAction: data.deeplinkAction,
+        externalUrl: data.externalUrl,
       },
     },
   })
