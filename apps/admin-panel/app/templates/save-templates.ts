@@ -11,7 +11,6 @@ import {
   NotificationTemplateUpdateMutationVariables,
   NotificationTemplateUpdateDocument,
   NotificationTemplateUpdateInput,
-  NotificationMessageCreateMutation,
 } from "../../generated"
 
 export const saveTemplate = async (data: NotificationTemplateCreateInput) => {

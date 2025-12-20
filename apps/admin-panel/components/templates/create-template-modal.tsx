@@ -1,10 +1,11 @@
-import { useState, useMemo, useEffect } from "react"
+import { useEffect, useMemo, useState } from "react"
 
 import { Button } from "../shared/button"
-import { NotificationTemplateCreateInput } from "../../generated"
 import { LanguageCodes } from "../notification/languages"
 import { NotificationAction } from "../notification/types"
+import { NotificationTemplateCreateInput } from "../../generated"
 import { sanitizeStringOrNull } from "../../app/utils"
+
 import { TemplateBuilder } from "./template-builder"
 import { CreateTemplateModalProps, TemplateFormState } from "./types"
 
@@ -32,8 +33,10 @@ export function CreateTemplateModal({
     return {
       ...INITIAL_FORM_STATE,
       ...editTemplateData,
-      deeplinkScreen: editTemplateData.deeplinkScreen ?? INITIAL_FORM_STATE.deeplinkScreen,
-      deeplinkAction: editTemplateData.deeplinkAction ?? INITIAL_FORM_STATE.deeplinkAction,
+      deeplinkScreen:
+        editTemplateData.deeplinkScreen ?? INITIAL_FORM_STATE.deeplinkScreen,
+      deeplinkAction:
+        editTemplateData.deeplinkAction ?? INITIAL_FORM_STATE.deeplinkAction,
       externalUrl: editTemplateData.externalUrl ?? INITIAL_FORM_STATE.externalUrl,
     }
   })
@@ -48,8 +51,10 @@ export function CreateTemplateModal({
     setFormState({
       ...INITIAL_FORM_STATE,
       ...editTemplateData,
-      deeplinkScreen: editTemplateData.deeplinkScreen ?? INITIAL_FORM_STATE.deeplinkScreen,
-      deeplinkAction: editTemplateData.deeplinkAction ?? INITIAL_FORM_STATE.deeplinkAction,
+      deeplinkScreen:
+        editTemplateData.deeplinkScreen ?? INITIAL_FORM_STATE.deeplinkScreen,
+      deeplinkAction:
+        editTemplateData.deeplinkAction ?? INITIAL_FORM_STATE.deeplinkAction,
       externalUrl: editTemplateData.externalUrl ?? INITIAL_FORM_STATE.externalUrl,
     })
   }, [isOpen, editTemplateData])

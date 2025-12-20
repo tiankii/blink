@@ -28,8 +28,6 @@ export const getTemplates = async (): Promise<NotificationTemplatesQuery> => {
 }
 
 export const getTemplateById = async (idReq: string) => {
-  console.warn("Get Template")
-
   const { data } = await getClient().query<
     NotificationByTemplateIdQuery,
     NotificationByTemplateIdQueryVariables
@@ -42,8 +40,6 @@ export const getTemplateById = async (idReq: string) => {
 }
 
 export const deleteTemplate = async (idReq: string) => {
-  console.warn("Delete Template")
-
   await getClient().mutate<
     NotificationTemplateDeleteMutation,
     NotificationTemplateDeleteMutationVariables

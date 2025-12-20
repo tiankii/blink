@@ -1,23 +1,26 @@
 "use client"
 
-import { useState, useCallback, useEffect, useMemo } from "react"
-import { visaTemplatesMock } from "../mock-data"
+import { useCallback, useEffect, useMemo, useState } from "react"
+
+import { NotificationIconComponent } from "../../components/invitations/invitation-icon"
+import { NotificationAction } from "../../components/notification/types"
 import { Button } from "../../components/shared/button"
 import { Pagination } from "../../components/shared/pagination"
-import { NotificationIconComponent } from "../../components/invitations/invitation-icon"
-import { TemplateRow } from "../invitations/types"
-import { getTemplates, getTemplateById, deleteTemplate } from "./getTemplates"
-import { saveTemplate, updateTemplate } from "./save-templates"
-import {
-  NotificationTemplatesQuery,
-  NotificationTemplateCreateInput,
-  NotificationIcon,
-  DeepLinkScreenTemplate,
-  DeepLinkActionTemplate,
-} from "../../generated"
 import { CreateTemplateModal } from "../../components/templates/create-template-modal"
-import { NotificationAction } from "../../components/notification/types"
+import {
+  DeepLinkActionTemplate,
+  DeepLinkScreenTemplate,
+  NotificationIcon,
+  NotificationTemplateCreateInput,
+  NotificationTemplatesQuery,
+} from "../../generated"
+
+import { visaTemplatesMock } from "../mock-data"
+import { TemplateRow } from "../invitations/types"
 import { sanitizeStringOrNull } from "../utils"
+
+import { saveTemplate, updateTemplate } from "./save-templates"
+import { getTemplateById, getTemplates, deleteTemplate } from "./getTemplates"
 
 type SubmitState = {
   loadingCreate: boolean
@@ -89,7 +92,7 @@ export default function TemplatesPage() {
       const deeplinkScreen = tpl.deeplinkScreen as DeepLinkScreenTemplate | null
       const deeplinkAction = tpl.deeplinkAction as DeepLinkActionTemplate | null
       const externalUrl = sanitizeStringOrNull(
-        tpl.externalUrl ?? tpl.external_url ?? null
+        tpl.externalUrl ?? tpl.external_url ?? null,
       )
 
       const inferredAction = externalUrl
@@ -158,7 +161,9 @@ export default function TemplatesPage() {
           ...formData,
           id: editTemplateData.id,
         }
-        await updateTemplate(updateData as NotificationTemplateCreateInput & { id: string })
+        await updateTemplate(
+          updateData as NotificationTemplateCreateInput & { id: string },
+        )
       } else {
         await saveTemplate(formData as NotificationTemplateCreateInput)
       }

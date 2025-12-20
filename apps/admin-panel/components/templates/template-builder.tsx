@@ -1,13 +1,15 @@
 import {
   DeepLinkAction,
-  DeepLinkScreen,
-  NotificationIcon,
   DeepLinkActionTemplate,
+  DeepLinkScreen,
   DeepLinkScreenTemplate,
+  NotificationIcon,
 } from "../../generated"
+
 import { LanguageCodes } from "../notification/languages"
 import { NotificationAction } from "../notification/types"
-import { TextInput, SelectInput, TextArea, Checkbox } from "../shared/form-controls"
+import { Checkbox, SelectInput, TextArea, TextInput } from "../shared/form-controls"
+
 import { TemplateBuilderProps } from "./types"
 
 const isValidNotificationAction = (value: string): value is NotificationAction => {
@@ -67,7 +69,9 @@ export function TemplateBuilder({ formState, updateFormField }: TemplateBuilderP
             required
             className={CONSTANTS.SELECT_CLASSES}
           >
-            <option value={CONSTANTS.DEFAULT_SELECT_VALUE}>{CONSTANTS.DEFAULT_SELECT_LABEL}</option>
+            <option value={CONSTANTS.DEFAULT_SELECT_VALUE}>
+              {CONSTANTS.DEFAULT_SELECT_LABEL}
+            </option>
             {Object.values(NotificationAction).map((action) => (
               <option key={action} value={action}>
                 {action}
@@ -88,13 +92,17 @@ export function TemplateBuilder({ formState, updateFormField }: TemplateBuilderP
                 onChange={(e) =>
                   updateFormField(
                     "deeplinkScreen",
-                    e.target.value ? (e.target.value as DeepLinkScreenTemplate) : formState.deeplinkScreen,
+                    e.target.value
+                      ? (e.target.value as DeepLinkScreenTemplate)
+                      : formState.deeplinkScreen,
                   )
                 }
                 required
                 className={CONSTANTS.SELECT_CLASSES}
               >
-                <option value={CONSTANTS.DEFAULT_SELECT_VALUE}>{CONSTANTS.DEFAULT_SELECT_LABEL}</option>
+                <option value={CONSTANTS.DEFAULT_SELECT_VALUE}>
+                  {CONSTANTS.DEFAULT_SELECT_LABEL}
+                </option>
                 {Object.values(DeepLinkScreen).map((screen) => (
                   <option key={screen} value={screen}>
                     {screen}
@@ -113,13 +121,17 @@ export function TemplateBuilder({ formState, updateFormField }: TemplateBuilderP
                 onChange={(e) =>
                   updateFormField(
                     "deeplinkAction",
-                    e.target.value ? (e.target.value as DeepLinkActionTemplate) : formState.deeplinkAction,
+                    e.target.value
+                      ? (e.target.value as DeepLinkActionTemplate)
+                      : formState.deeplinkAction,
                   )
                 }
                 required
                 className={CONSTANTS.SELECT_CLASSES}
               >
-                <option value={CONSTANTS.DEFAULT_SELECT_VALUE}>{CONSTANTS.DEFAULT_SELECT_LABEL}</option>
+                <option value={CONSTANTS.DEFAULT_SELECT_VALUE}>
+                  {CONSTANTS.DEFAULT_SELECT_LABEL}
+                </option>
                 {Object.values(DeepLinkAction).map((action) => (
                   <option key={action} value={action}>
                     {action}
@@ -195,12 +207,16 @@ export function TemplateBuilder({ formState, updateFormField }: TemplateBuilderP
             onChange={(e) =>
               updateFormField(
                 "iconName",
-                e.target.value ? (e.target.value as NotificationIcon) : formState.iconName,
+                e.target.value
+                  ? (e.target.value as NotificationIcon)
+                  : formState.iconName,
               )
             }
             className={CONSTANTS.SELECT_CLASSES}
           >
-            <option value={CONSTANTS.DEFAULT_SELECT_VALUE}>{CONSTANTS.DEFAULT_SELECT_LABEL}</option>
+            <option value={CONSTANTS.DEFAULT_SELECT_VALUE}>
+              {CONSTANTS.DEFAULT_SELECT_LABEL}
+            </option>
             {Object.values(NotificationIcon).map((icon) => (
               <option key={icon} value={icon}>
                 {icon}
