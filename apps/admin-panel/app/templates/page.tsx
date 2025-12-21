@@ -6,7 +6,6 @@ import { saveTemplate, updateTemplate } from "./save-templates"
 import { deleteTemplate, getTemplateById, getTemplates } from "./getTemplates"
 
 import { sanitizeStringOrNull } from "@/app/utils"
-import { visaTemplatesMock } from "@/app/mock-data"
 import { TemplateRow } from "@/app/invitations/types"
 
 import { Button } from "@/components/shared/button"
@@ -21,6 +20,8 @@ import {
   NotificationTemplateCreateInput,
   NotificationTemplatesQuery,
 } from "@/generated"
+
+const TEMPLATES_PAGE_SIZE = 20
 
 type SubmitState = {
   loadingCreate: boolean
@@ -46,7 +47,7 @@ type TemplateWithFields = {
 
 export default function TemplatesPage() {
   const [pageItems, setPageItems] = useState<TemplateRow[]>([])
-  const [isCreateOpen, setIsCreateOpen] = useState(false)
+  const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false)
   const [editTemplateData, setEditTemplateData] = useState<{
     id: string
     data: NotificationTemplateCreateInput
@@ -58,8 +59,11 @@ export default function TemplatesPage() {
     success: false,
   })
 
-  const fetchTemplates = async () => {
+  const isEditMode = Boolean(editTemplateData?.id)
+
+  const fetchTemplates = useCallback(async () => {
     try {
+      setLoading(true)
       const dataRes = await getTemplates()
       setData(dataRes)
     } catch (error) {
@@ -67,23 +71,26 @@ export default function TemplatesPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
 
   useEffect(() => {
     fetchTemplates()
+  }, [fetchTemplates])
 
-    if (isCreateOpen) {
-      document.body.classList.add("hide-sidebar")
-      const prev = document.body.style.overflow
-      document.body.style.overflow = "hidden"
-      return () => {
-        document.body.classList.remove("hide-sidebar")
-        document.body.style.overflow = prev || ""
-      }
+  useEffect(() => {
+    if (!isTemplateModalOpen) return
+
+    document.body.classList.add("hide-sidebar")
+    const prev = document.body.style.overflow
+    document.body.style.overflow = "hidden"
+
+    return () => {
+      document.body.classList.remove("hide-sidebar")
+      document.body.style.overflow = prev || ""
     }
-  }, [isCreateOpen])
+  }, [isTemplateModalOpen])
 
-  const handleGetTemplate = async (idReq: string) => {
+  const handleGetTemplate = useCallback(async (idReq: string) => {
     try {
       const res = await getTemplateById(idReq)
       const tpl = res.notificationByTemplateId as TemplateWithFields | null
@@ -95,11 +102,11 @@ export default function TemplatesPage() {
         tpl.externalUrl ?? tpl.external_url ?? null,
       )
 
-      const inferredAction = externalUrl
-        ? NotificationAction.OpenExternalUrl
-        : deeplinkScreen
-          ? NotificationAction.OpenDeepLink
-          : null
+      const inferredAction = (() => {
+        if (externalUrl) return NotificationAction.OpenExternalUrl
+        if (deeplinkScreen) return NotificationAction.OpenDeepLink
+        return null
+      })()
 
       const dataTemplate: NotificationTemplateCreateInput = {
         name: tpl.name,
@@ -117,16 +124,17 @@ export default function TemplatesPage() {
       } as NotificationTemplateCreateInput & { action: NotificationAction | null }
 
       setEditTemplateData({ id: idReq, data: dataTemplate })
-      setIsCreateOpen(true)
+      setIsTemplateModalOpen(true)
     } catch (error) {
       console.error("Error fetching template", error)
     }
-  }
+  }, [])
 
   const templates: TemplateRow[] = useMemo(() => {
-    if (!data?.notificationTemplates) return []
+    const list = data?.notificationTemplates
+    if (!list) return []
 
-    return data.notificationTemplates.map((template) => ({
+    return list.map((template) => ({
       id: template.id,
       name: template.name,
       language: template.languageCode,
@@ -148,51 +156,60 @@ export default function TemplatesPage() {
 
   const hasTemplates = pageItems.length > 0
 
-  const handleCloseModal = () => {
-    setIsCreateOpen(false)
+  const handleCloseModal = useCallback(() => {
+    setIsTemplateModalOpen(false)
     setEditTemplateData(null)
-  }
-
-  const handleCreateTemplate = async (formData: NotificationTemplateCreateInput) => {
-    setSubmitState({ loadingCreate: true, success: false })
-    try {
-      if (editTemplateData?.id) {
-        const updateData = {
-          ...formData,
-          id: editTemplateData.id,
-        }
-        await updateTemplate(
-          updateData as NotificationTemplateCreateInput & { id: string },
-        )
-      } else {
-        await saveTemplate(formData as NotificationTemplateCreateInput)
-      }
-      setSubmitState((prev) => ({ ...prev, success: true }))
-      await fetchTemplates()
-      handleCloseModal()
-    } catch (error) {
-      const errorMessage = editTemplateData?.id
-        ? "Error updating template."
-        : "Error creating template."
-      setSubmitState((prev) => ({ ...prev, error: errorMessage }))
-      console.error(errorMessage, error)
-    } finally {
-      setSubmitState((prev) => ({ ...prev, loadingCreate: false }))
-    }
-  }
-
-  const handleDeleteTemplate = useCallback(async (templateId: string) => {
-    if (!confirm("Are you sure you want to delete this template?")) {
-      return
-    }
-
-    try {
-      await deleteTemplate(templateId)
-      fetchTemplates()
-    } catch (error) {
-      console.error("Error deleting template", error)
-    }
   }, [])
+
+  const handleSubmitTemplate = useCallback(
+    async (formData: NotificationTemplateCreateInput) => {
+      setSubmitState({ loadingCreate: true, success: false })
+
+      try {
+        if (editTemplateData?.id) {
+          const updateData = {
+            ...formData,
+            id: editTemplateData.id,
+          }
+          await updateTemplate(
+            updateData as NotificationTemplateCreateInput & { id: string },
+          )
+        }
+
+        if (!editTemplateData?.id) {
+          await saveTemplate(formData as NotificationTemplateCreateInput)
+        }
+
+        setSubmitState((prev) => ({ ...prev, success: true }))
+        await fetchTemplates()
+        handleCloseModal()
+      } catch (error) {
+        const errorMessage = (() => {
+          if (editTemplateData?.id) return "Error updating template."
+          return "Error creating template."
+        })()
+        setSubmitState((prev) => ({ ...prev, error: errorMessage }))
+        console.error(errorMessage, error)
+      } finally {
+        setSubmitState((prev) => ({ ...prev, loadingCreate: false }))
+      }
+    },
+    [editTemplateData, fetchTemplates, handleCloseModal],
+  )
+
+  const handleDeleteTemplate = useCallback(
+    async (templateId: string) => {
+      if (!confirm("Are you sure you want to delete this template?")) return
+
+      try {
+        await deleteTemplate(templateId)
+        await fetchTemplates()
+      } catch (error) {
+        console.error("Error deleting template", error)
+      }
+    },
+    [fetchTemplates],
+  )
 
   if (loading) {
     return (
@@ -206,7 +223,12 @@ export default function TemplatesPage() {
     <div className="px-6 py-6 lg:px-10">
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-semibold text-gray-900">Templates</h1>
-        <Button onClick={() => setIsCreateOpen(true)}>
+        <Button
+          onClick={() => {
+            setEditTemplateData(null)
+            setIsTemplateModalOpen(true)
+          }}
+        >
           <span className="mr-2">＋</span>
           <span>Create New Template</span>
         </Button>
@@ -232,7 +254,7 @@ export default function TemplatesPage() {
                   <tr
                     key={template.id}
                     onClick={() => handleGetTemplate(template.id)}
-                    className="hover:bg-gray-50"
+                    className="hover:bg-gray-50 cursor-pointer"
                   >
                     <td className="whitespace-nowrap px-6 py-4 text-gray-900">
                       {template.name}
@@ -286,18 +308,19 @@ export default function TemplatesPage() {
           </table>
         </div>
         <Pagination
-          totalItems={visaTemplatesMock.length}
+          totalItems={templates.length}
           onPageChange={handlePageChange}
+          pageSize={TEMPLATES_PAGE_SIZE}
         />
       </div>
 
-      {isCreateOpen && (
+      {isTemplateModalOpen && (
         <TemplateCreateEditModal
-          isOpen={isCreateOpen}
+          isOpen={isTemplateModalOpen}
           onClose={handleCloseModal}
-          onSubmit={handleCreateTemplate}
+          onSubmit={handleSubmitTemplate}
           isLoading={submitState.loadingCreate}
-          editTemplateData={editTemplateData?.data}
+          editTemplateData={isEditMode ? editTemplateData?.data : undefined}
         />
       )}
     </div>
