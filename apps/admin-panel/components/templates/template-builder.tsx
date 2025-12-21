@@ -131,7 +131,6 @@ export function TemplateBuilder({ formState, updateFormField }: TemplateBuilderP
                       : formState.deeplinkAction,
                   )
                 }
-                required
                 className={CONSTANTS.SELECT_CLASSES}
               >
                 <option value={CONSTANTS.DEFAULT_SELECT_VALUE}>
