@@ -1,16 +1,21 @@
+import { TemplateBuilderProps } from "./types"
+
 import {
   DeepLinkAction,
   DeepLinkActionTemplate,
   DeepLinkScreen,
   DeepLinkScreenTemplate,
   NotificationIcon,
-} from "../../generated"
+} from "@/generated"
 
-import { LanguageCodes } from "../notification/languages"
-import { NotificationAction } from "../notification/types"
-import { Checkbox, SelectInput, TextArea, TextInput } from "../shared/form-controls"
-
-import { TemplateBuilderProps } from "./types"
+import { NotificationAction } from "@/components/notification/types"
+import { LanguageCodes } from "@/components/notification/languages"
+import {
+  Checkbox,
+  SelectInput,
+  TextArea,
+  TextInput,
+} from "@/components/shared/form-controls"
 
 const isValidNotificationAction = (value: string): value is NotificationAction => {
   return Object.values(NotificationAction).includes(value as NotificationAction)

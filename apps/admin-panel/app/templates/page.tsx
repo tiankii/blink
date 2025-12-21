@@ -2,25 +2,25 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react"
 
-import { NotificationIconComponent } from "../../components/invitations/invitation-icon"
-import { NotificationAction } from "../../components/notification/types"
-import { Button } from "../../components/shared/button"
-import { Pagination } from "../../components/shared/pagination"
-import { CreateTemplateModal } from "../../components/templates/create-template-modal"
+import { saveTemplate, updateTemplate } from "./save-templates"
+import { deleteTemplate, getTemplateById, getTemplates } from "./getTemplates"
+
+import { sanitizeStringOrNull } from "@/app/utils"
+import { visaTemplatesMock } from "@/app/mock-data"
+import { TemplateRow } from "@/app/invitations/types"
+
+import { Button } from "@/components/shared/button"
+import { Pagination } from "@/components/shared/pagination"
+import { NotificationAction } from "@/components/notification/types"
+import { CreateTemplateModal } from "@/components/templates/create-template-modal"
+import { NotificationIconComponent } from "@/components/invitations/invitation-icon"
 import {
   DeepLinkActionTemplate,
   DeepLinkScreenTemplate,
   NotificationIcon,
   NotificationTemplateCreateInput,
   NotificationTemplatesQuery,
-} from "../../generated"
-
-import { visaTemplatesMock } from "../mock-data"
-import { TemplateRow } from "../invitations/types"
-import { sanitizeStringOrNull } from "../utils"
-
-import { saveTemplate, updateTemplate } from "./save-templates"
-import { getTemplateById, getTemplates, deleteTemplate } from "./getTemplates"
+} from "@/generated"
 
 type SubmitState = {
   loadingCreate: boolean

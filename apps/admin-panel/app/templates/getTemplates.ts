@@ -1,22 +1,19 @@
 "use server"
 
-import { getClient } from "../../app/graphql-rsc"
-
+import { getClient } from "@/app/graphql-rsc"
 import {
-  NotificationTemplatesDocument,
-  NotificationTemplatesQuery,
-  NotificationTemplatesQueryVariables,
   NotificationByTemplateIdDocument,
   NotificationByTemplateIdQuery,
   NotificationByTemplateIdQueryVariables,
   NotificationTemplateDeleteDocument,
   NotificationTemplateDeleteMutation,
   NotificationTemplateDeleteMutationVariables,
-} from "../../generated"
+  NotificationTemplatesDocument,
+  NotificationTemplatesQuery,
+  NotificationTemplatesQueryVariables,
+} from "@/generated"
 
 export const getTemplates = async (): Promise<NotificationTemplatesQuery> => {
-  console.warn("Get Templates")
-
   const { data } = await getClient().query<
     NotificationTemplatesQuery,
     NotificationTemplatesQueryVariables

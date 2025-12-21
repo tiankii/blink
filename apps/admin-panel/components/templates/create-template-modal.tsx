@@ -1,13 +1,14 @@
 import { useEffect, useMemo, useState } from "react"
 
-import { Button } from "../shared/button"
-import { LanguageCodes } from "../notification/languages"
-import { NotificationAction } from "../notification/types"
-import { NotificationTemplateCreateInput } from "../../generated"
-import { sanitizeStringOrNull } from "../../app/utils"
-
 import { TemplateBuilder } from "./template-builder"
 import { CreateTemplateModalProps, TemplateFormState } from "./types"
+
+import { sanitizeStringOrNull } from "@/app/utils"
+import { NotificationTemplateCreateInput } from "@/generated"
+
+import { Button } from "@/components/shared/button"
+import { NotificationAction } from "@/components/notification/types"
+import { LanguageCodes } from "@/components/notification/languages"
 
 const INITIAL_FORM_STATE: TemplateFormState = {
   name: "",

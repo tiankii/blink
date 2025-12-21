@@ -1,6 +1,6 @@
 "use server"
 
-import { getClient } from "../../app/graphql-rsc"
+import { getClient } from "@/app/graphql-rsc"
 
 import {
   NotificationTemplateCreateMutation,
@@ -11,7 +11,7 @@ import {
   NotificationTemplateUpdateMutationVariables,
   NotificationTemplateUpdateDocument,
   NotificationTemplateUpdateInput,
-} from "../../generated"
+} from "@/generated"
 
 export const saveTemplate = async (data: NotificationTemplateCreateInput) => {
   await getClient().mutate<

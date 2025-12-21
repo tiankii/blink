@@ -1,9 +1,9 @@
-import { NotificationAction } from "../notification/types"
+import { NotificationAction } from "@/components/notification/types"
 import {
   DeepLinkActionTemplate,
   DeepLinkScreenTemplate,
   NotificationTemplateCreateInput,
-} from "../../generated"
+} from "@/generated"
 
 export type TemplateFormState = NotificationTemplateCreateInput & {
   action?: NotificationAction
