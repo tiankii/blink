@@ -20,7 +20,7 @@ export type TemplateBuilderProps = {
   ) => void
 }
 
-export type CreateTemplateModalProps = {
+export type TemplateCreateEditModalProps = {
   isOpen: boolean
   onClose: () => void
   onSubmit: (formData: NotificationTemplateCreateInput) => Promise<void>

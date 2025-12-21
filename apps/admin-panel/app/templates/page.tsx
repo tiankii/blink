@@ -12,7 +12,7 @@ import { TemplateRow } from "@/app/invitations/types"
 import { Button } from "@/components/shared/button"
 import { Pagination } from "@/components/shared/pagination"
 import { NotificationAction } from "@/components/notification/types"
-import { CreateTemplateModal } from "@/components/templates/create-template-modal"
+import { TemplateCreateEditModal } from "@/components/templates/template-create-edit-modal"
 import { NotificationIconComponent } from "@/components/invitations/invitation-icon"
 import {
   DeepLinkActionTemplate,
@@ -292,7 +292,7 @@ export default function TemplatesPage() {
       </div>
 
       {isCreateOpen && (
-        <CreateTemplateModal
+        <TemplateCreateEditModal
           isOpen={isCreateOpen}
           onClose={handleCloseModal}
           onSubmit={handleCreateTemplate}

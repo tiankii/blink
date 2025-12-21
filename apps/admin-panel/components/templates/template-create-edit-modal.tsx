@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react"
 
 import { TemplateBuilder } from "./template-builder"
-import { CreateTemplateModalProps, TemplateFormState } from "./types"
+import { TemplateCreateEditModalProps, TemplateFormState } from "./types"
 
 import { sanitizeStringOrNull } from "@/app/utils"
 import { NotificationTemplateCreateInput } from "@/generated"
@@ -21,13 +21,13 @@ const INITIAL_FORM_STATE: TemplateFormState = {
   body: "",
 }
 
-export function CreateTemplateModal({
+export function TemplateCreateEditModal({
   isOpen,
   onClose,
   onSubmit,
   isLoading = false,
   editTemplateData,
-}: CreateTemplateModalProps) {
+}: TemplateCreateEditModalProps) {
   const [formState, setFormState] = useState<TemplateFormState>(() => {
     if (!editTemplateData) return INITIAL_FORM_STATE
 
