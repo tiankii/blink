@@ -13,6 +13,8 @@ import {
   NotificationTemplateUpdateInput,
 } from "@/generated"
 
+import { normalizeTemplateInput } from "./helpers"
+
 export const saveTemplate = async (data: NotificationTemplateCreateInput) => {
   await getClient().mutate<
     NotificationTemplateCreateMutation,
@@ -20,19 +22,7 @@ export const saveTemplate = async (data: NotificationTemplateCreateInput) => {
   >({
     mutation: NotificationTemplateCreateDocument,
     variables: {
-      input: {
-        body: data.body,
-        iconName: data.iconName,
-        languageCode: data.languageCode,
-        name: data.name,
-        shouldAddToBulletin: data.shouldAddToBulletin,
-        shouldAddToHistory: data.shouldAddToHistory,
-        shouldSendPush: data.shouldSendPush,
-        title: data.title,
-        deeplinkScreen: data.deeplinkScreen,
-        deeplinkAction: data.deeplinkAction,
-        externalUrl: data.externalUrl,
-      },
+      input: normalizeTemplateInput(data),
     },
   })
 }
@@ -44,20 +34,7 @@ export const updateTemplate = async (data: NotificationTemplateUpdateInput) => {
   >({
     mutation: NotificationTemplateUpdateDocument,
     variables: {
-      input: {
-        id: data.id,
-        name: data.name,
-        languageCode: data.languageCode,
-        title: data.title,
-        body: data.body,
-        iconName: data.iconName,
-        shouldSendPush: data.shouldSendPush,
-        shouldAddToHistory: data.shouldAddToHistory,
-        shouldAddToBulletin: data.shouldAddToBulletin,
-        deeplinkScreen: data.deeplinkScreen,
-        deeplinkAction: data.deeplinkAction,
-        externalUrl: data.externalUrl,
-      },
+      input: normalizeTemplateInput(data),
     },
   })
 }
