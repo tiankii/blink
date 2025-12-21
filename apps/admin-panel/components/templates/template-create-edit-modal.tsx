@@ -129,10 +129,7 @@ export function TemplateCreateEditModal({
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center overflow-auto bg-black/60 p-0">
       <div className="w-full h-full overflow-auto border-b border-gray-100 bg-white px-8 py-5">
-        <div className="mb-2 flex items-center justify-between">
-          <h1 className="text-2xl font-semibold text-gray-900">
-            {editTemplateData ? "Edit Template" : "Create New Template"}
-          </h1>
+        <div className="flex justify-end">
           <button
             type="button"
             aria-label="Close"
@@ -142,6 +139,12 @@ export function TemplateCreateEditModal({
           >
             ✕
           </button>
+        </div>
+
+        <div className="mx-auto max-w-6xl px-5 pt-2 pb-1">
+          <h1 className="text-2xl font-semibold text-gray-900">
+            {editTemplateData ? "Edit Template" : "Create New Template"}
+          </h1>
         </div>
 
         <div className="mx-auto max-w-6xl p-5">
