@@ -33,7 +33,7 @@ export const getInvitations = async (
 export const changeInvitationStatus = async (
   data: NotificationMessageUpdateStatusInput,
 ) => {
-  console.warn("Revoke invitation")
+  console.warn("Change Status")
 
   await getClient().mutate<
     NotificationMessageUpdateStatusMutation,

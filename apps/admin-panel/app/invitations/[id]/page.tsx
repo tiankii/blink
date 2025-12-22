@@ -2,85 +2,24 @@
 
 import { useState, useEffect, useCallback } from "react"
 import { useParams, useRouter } from "next/navigation"
-import { visaInvitationsMock, visaTemplatesMock } from "../../mock-data"
-import type { Event, InvitationRow, TemplateRow, InvitationStatus } from "../types"
+import type { InvitationRow, InvitationStatus } from "../types"
 
-import { InvitationCard } from "../../../components/invitations/invitation-card"
-import { ClientInfoCard } from "../../../components/invitations/client-info-card"
-import { StatusHistoryCard } from "../../../components/invitations/status-history-card"
-import { ChangeStatusModal } from "../../../components/invitations/change-status-modal"
+import { InvitationCard } from "@/components/invitations/invitation-card"
+import { ClientInfoCard } from "@/components/invitations/client-info-card"
+import { StatusHistoryCard } from "@/components/invitations/status-history-card"
+import { ChangeStatusModal } from "@/components/invitations/change-status-modal"
 
 import { accountSearchInvitation } from "./search-invitation"
 import { getHistory } from "./get-history"
 import { AuditedAccountMainValues } from "../../types"
 import { getInvitations, changeInvitationStatus } from "../getMessages"
-import { getTemplates } from "../../templates/getTemplates"
-import {
-  NotificationMessagesQuery,
-  NotificationMessageHistoryQuery,
-  NotificationIcon,
-} from "../../../generated"
+import { NotificationMessagesQuery, NotificationMessageHistoryQuery } from "@/generated"
 
-type EditableContent = {
-  title: string
-  body: string
-} | null
+const formatDateTime = (date: Date | string | number) => {
+  const d =
+    typeof date === "number" && date < 1e12 ? new Date(date * 1000) : new Date(date)
 
-const InvitationStatuses: Record<InvitationStatus, { label: string; color: string }> = {
-  INVITED: {
-    label: "Invited",
-    color: "bg-orange-500 text-white",
-  },
-  BANNER_CLICKED: {
-    label: "Banner Clicked",
-    color: "bg-yellow-300 text-white",
-  },
-  INVITATION_INFO_COMPLETED: {
-    label: "Invitation Info Completed",
-    color: "bg-lime-300 text-white",
-  },
-  KYC_INITIATED: {
-    label: "KYC Initiated",
-    color: "bg-lime-500 text-white",
-  },
-  KYC_PASSED: {
-    label: "KYC Passed",
-    color: "bg-green-500 text-white",
-  },
-  CARD_INFO_SUBMITTED: {
-    label: "Card Info Submitted",
-    color: "bg-sky-500 text-white",
-  },
-  CARD_APPROVED: {
-    label: "Card Approved",
-    color: "bg-violet-800 text-white",
-  },
-  INVITE_WITHDRAWN: {
-    label: "Invite Withdraw",
-    color: "bg-neutral-400 text-white",
-  },
-  KYC_FAILED: {
-    label: "KYC Fail",
-    color: "bg-red-500 text-white",
-  },
-  CARD_DENIED: {
-    label: "Card Denied",
-    color: "bg-red-600 text-white",
-  },
-} as const
-
-const formatDate = (date: Date | string) => {
-  const d = new Date(date)
-  return d.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  })
-}
-
-const formatDateTime = (date: Date | string) => {
-  const d = new Date(date)
-  return d.toLocaleDateString("en-US", {
+  return d.toLocaleString("en-US", {
     year: "numeric",
     month: "short",
     day: "numeric",
@@ -92,106 +31,75 @@ const formatDateTime = (date: Date | string) => {
 export default function InvitationDetailPage() {
   const params = useParams()
   const router = useRouter()
-  const invitationUsername = params.username as string
+  const invitationUsername = params.id as string
 
   const [invitation, setInvitation] = useState<InvitationRow | null>(null)
   const [userData, setUserData] = useState<AuditedAccountMainValues | null>(null)
   const [invitationData, setInvitationData] = useState<NotificationMessagesQuery>()
-  const [templates, setTemplates] = useState<TemplateRow[]>([])
 
   const [loading, setLoading] = useState<boolean>(true)
-  const [events, setEvents] = useState<NotificationMessageHistoryQuery | null>(null)
+  const [events, setEvents] = useState<NotificationMessageHistoryQuery>()
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedStatus, setSelectedStatus] = useState<InvitationStatus | null>(null)
-  const [selectedTemplate, setSelectedTemplate] = useState<string>("")
 
-  const fetchTemplates = async () => {
+  const loadAllData = async () => {
+    setLoading(true)
+
     try {
-      const data = await getTemplates()
+      const userDataRes = await accountSearchInvitation(invitationUsername)
+      setUserData(userDataRes)
 
-      const mapped: TemplateRow[] =
-        data.notificationTemplates?.map((template) => ({
-          id: template.id,
-          name: template.name,
-          language: template.languageCode,
-          icon: template.iconName as NotificationIcon,
-          title: template.title,
-          body: template.body,
-          sendPush: template.shouldSendPush,
-          addHistory: template.shouldAddToHistory,
-          addBulletin: template.shouldAddToBulletin,
-        })) ?? []
+      const invResult = await getInvitations(invitationUsername)
+      if (invResult.notificationMessages && invResult.notificationMessages.length > 0) {
+        setInvitationData(invResult)
 
-      setTemplates(mapped)
+        const messageId = invResult.notificationMessages[0].id
+        const historyResult = await getHistory(messageId)
+        setEvents(historyResult)
+
+        const currentStatus = invResult.notificationMessages[0].status as InvitationStatus
+
+        setInvitation({
+          id: invResult.notificationMessages[0].id,
+          status: invResult.notificationMessages[0].status as InvitationStatus,
+          lastActivity: invResult.notificationMessages[0].updatedAt.toString(),
+          sentBy: invResult.notificationMessages[0].sentBy,
+          username: invResult.notificationMessages[0].username,
+        })
+        setSelectedStatus(currentStatus)
+      }
     } catch (error) {
-      console.error("Error fetching templates", error)
-      setTemplates([])
+      console.error("Error loading data:", error)
     } finally {
       setLoading(false)
     }
   }
 
-  const handleChangeStatus = useCallback(async (invitationStatus: InvitationStatus) => {
-    if (!userData) return
-    try {
-      await changeInvitationStatus({
-        id: userData.id,
-        status: invitationStatus,
-      })
-    } catch (error) {
-      console.error("Error changing invitation:", error)
-    }
-  }, [])
-
   useEffect(() => {
-    fetchTemplates()
-    const loadAllData = async () => {
-      setLoading(true)
-
-      try {
-        const userDataRes = await accountSearchInvitation(invitationUsername)
-        setUserData(userDataRes)
-
-        const invResult = await getInvitations(invitationUsername)
-        if (invResult.notificationMessages && invResult.notificationMessages.length > 0) {
-          setInvitationData(invResult)
-
-          const messageId = invResult.notificationMessages[0].id
-          const historyResult = await getHistory(messageId)
-          setEvents(historyResult)
-
-          setInvitation({
-            id: invResult.notificationMessages[0].id,
-            status: invResult.notificationMessages[0].status as InvitationStatus,
-            lastActivity: invResult.notificationMessages[0].updatedAt.toString(),
-            sentBy: invResult.notificationMessages[0].sentBy,
-            username: invResult.notificationMessages[0].username,
-          })
-        }
-      } catch (error) {
-        console.error("Error loading data:", error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
     loadAllData()
   }, [invitationUsername])
 
-  const handleStatusChange = (newStatus: InvitationStatus) => {
-    if (!invitation) return
-  }
+  const handleChangeStatus = useCallback(
+    async (invitationStatus: InvitationStatus) => {
+      if (!invitation) return
+      try {
+        await changeInvitationStatus({
+          id: invitation.id,
+          status: invitationStatus,
+        })
+      } catch (error) {
+        console.error("Error changing invitation:", error)
+      }
+    },
+    [invitation],
+  )
 
   const handleSaveStatus = () => {
     if (selectedStatus) {
-      handleStatusChange(selectedStatus)
+      handleChangeStatus(selectedStatus)
+      loadAllData()
       setIsModalOpen(false)
-      setSelectedTemplate("")
     }
-  }
-
-  const getActor = (event: Event) => {
-    return event.sentBy || "System"
   }
 
   if (!userData && !loading) {
@@ -221,16 +129,12 @@ export default function InvitationDetailPage() {
           </header>
 
           <div className="space-y-6">
-            <InvitationCard onChangeStatus={() => handleChangeStatus} />
+            <InvitationCard onChangeStatus={() => setIsModalOpen(true)} />
 
-            <div className="grid gap-6 lg:grid-cols-3">
+            <div className="grid gap-6 lg:grid-cols-3 lg:items-start">
               <ClientInfoCard invitation={invitationData} />
 
-              <StatusHistoryCard
-                events={events}
-                getActor={getActor}
-                formatDate={formatDate}
-              />
+              <StatusHistoryCard events={events} formatDateTime={formatDateTime} />
             </div>
           </div>
         </>
@@ -239,8 +143,6 @@ export default function InvitationDetailPage() {
       <ChangeStatusModal
         isOpen={isModalOpen}
         selectedStatus={selectedStatus}
-        selectedTemplate={selectedTemplate}
-        templates={visaTemplatesMock}
         onClose={() => setIsModalOpen(false)}
         onStatusChange={setSelectedStatus}
         onSave={handleSaveStatus}
