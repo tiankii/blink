@@ -1,4 +1,4 @@
-import { NotificationMessageStatus, NotificationIcon } from "../../generated"
+import { NotificationMessageStatus, NotificationIcon, DeepLinkScreen, DeepLinkAction } from "../../generated"
 
 export const InvitationStatusOptions = {
   All: "ALL",
@@ -36,8 +36,8 @@ export type TemplateRow = {
   sendPush: boolean
   addHistory: boolean
   addBulletin: boolean
-  deeplinkScreen?: string | null
-  deeplinkAction?: string | null
+  deeplinkScreen?: DeepLinkScreen | null
+  deeplinkAction?: DeepLinkAction | null
   externalUrl?: string | null
 }
 

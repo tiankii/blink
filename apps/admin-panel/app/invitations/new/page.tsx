@@ -21,6 +21,7 @@ import { DeepLinkAction, DeepLinkScreen, NotificationIcon } from "../../../gener
 import { FormStateMessage, SubmitState, TemplateRow } from "../types"
 import { SaveInvitation } from "./save-invitation"
 import { getTemplates } from "../../templates/getTemplates"
+import { sanitizeStringOrNull } from "@/app/utils"
 
 export default function NewInvitationPage() {
   const router = useRouter()
@@ -60,6 +61,9 @@ export default function NewInvitationPage() {
           sendPush: template.shouldSendPush,
           addHistory: template.shouldAddToHistory,
           addBulletin: template.shouldAddToBulletin,
+          deeplinkScreen: (template.deeplinkScreen as DeepLinkScreen | null) ?? null,
+          deeplinkAction: (template.deeplinkAction as DeepLinkAction | null) ?? null,
+          externalUrl: sanitizeStringOrNull(template.externalUrl ?? null),
         })) ?? []
 
       setTemplates(mapped)
@@ -71,42 +75,16 @@ export default function NewInvitationPage() {
     }
   }
 
-  const selectedTemplate = useMemo(
-    () => templates.find((template) => template.id === formState.templateId),
-    [formState.templateId],
-  )
-
-  const invitationTemplate = useMemo(() => {
-    if (!selectedTemplate) return undefined
-    return {
-      ...selectedTemplate,
-      localizedNotificationContents: [
-        {
-          title: formState.title,
-          body: formState.body,
-          language: selectedTemplate.language,
-        },
-      ],
-      shouldSendPush: formState.sendPush,
-      shouldAddToHistory: formState.addHistory,
-      shouldAddToBulletin: formState.addBulletin,
-      deeplinkScreen: {
-        action: selectedTemplate.deeplinkAction as DeepLinkAction,
-        screen: selectedTemplate.deeplinkScreen as DeepLinkScreen,
-      },
-    }
-  }, [
-    selectedTemplate,
-    formState.title,
-    formState.body,
-    formState.sendPush,
-    formState.addHistory,
-    formState.addBulletin,
-    selectedTemplate?.deeplinkScreen,
-  ])
-
   useEffect(() => {
     fetchTemplates()
+  }, [])
+
+  const selectedTemplate = useMemo(
+    () => templates.find((template) => template.id === formState.templateId),
+    [templates, formState.templateId],
+  )
+
+  useEffect(() => {
     if (!selectedTemplate) {
       setFormState((prev) => ({ ...prev, title: "", body: "" }))
       return
@@ -127,6 +105,40 @@ export default function NewInvitationPage() {
     [formState.userQuery, formState.templateId],
   )
 
+  const localizedNotificationContents = useMemo(() => {
+    if (!selectedTemplate) return []
+    return [
+      {
+        title: formState.title,
+        body: formState.body,
+        language: selectedTemplate.language,
+      },
+    ]
+  }, [selectedTemplate, formState.title, formState.body])
+
+  const openDeepLink = useMemo(() => {
+    if (!selectedTemplate) return undefined
+    if (!selectedTemplate.deeplinkScreen) return undefined
+  
+    const actionRaw = sanitizeStringOrNull(
+      (selectedTemplate.deeplinkAction ?? null) as string | null,
+    )
+  
+    return {
+      screen: selectedTemplate.deeplinkScreen ?? undefined,
+      action: actionRaw ? (actionRaw as DeepLinkAction) : undefined,
+    }
+  }, [selectedTemplate])
+
+  const openExternalUrl = useMemo(() => {
+    if (!selectedTemplate) return undefined
+    const url = sanitizeStringOrNull(selectedTemplate.externalUrl ?? null)
+    if (!url) return undefined
+    return {
+      url,
+    }
+  }, [selectedTemplate])
+
   const InvitationSender = async (e: React.FormEvent) => {
     e.preventDefault()
 
@@ -146,7 +158,7 @@ export default function NewInvitationPage() {
         return
       }
 
-      if (!invitationTemplate) {
+      if (!selectedTemplate) {
         setSubmitState({
           loading: false,
           success: false,
@@ -157,12 +169,13 @@ export default function NewInvitationPage() {
 
       const res = await triggerMarketingNotification({
         userIdsFilter: [userIdRes.userId],
-        openDeepLink: invitationTemplate?.deeplinkScreen,
-        icon: invitationTemplate.icon,
-        shouldSendPush: invitationTemplate.shouldSendPush,
-        shouldAddToBulletin: invitationTemplate.shouldAddToBulletin,
-        shouldAddToHistory: invitationTemplate.shouldAddToHistory,
-        localizedNotificationContents: invitationTemplate.localizedNotificationContents,
+        openDeepLink,
+        openExternalUrl,
+        icon: selectedTemplate.icon,
+        shouldSendPush: formState.sendPush,
+        shouldAddToBulletin: formState.addBulletin,
+        shouldAddToHistory: formState.addHistory,
+        localizedNotificationContents,
       })
 
       if (res.success) {
@@ -199,6 +212,14 @@ export default function NewInvitationPage() {
     value: FormStateMessage[K],
   ) => {
     setFormState((prev) => ({ ...prev, [key]: value }))
+  }
+
+  if (loading) {
+    return (
+      <div className="flex h-96 items-center justify-center">
+        <div className="text-lg text-gray-500">Loading templates...</div>
+      </div>
+    )
   }
 
   return (
