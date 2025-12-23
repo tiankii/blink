@@ -385,6 +385,7 @@ message MsgTemplate {
   optional string deeplink_action = 10;
   optional string deeplink_screen = 11;
   optional string external_url = 12;
+  optional string status = 13;
 }
 
 message MsgMessage {
@@ -392,7 +393,8 @@ message MsgMessage {
   string username = 2;
   string status = 3;
   string sent_by = 4;
-  int64 updated_at = 5;
+  optional string template_id = 5;
+  int64 updated_at = 6;
 }
 
 message MsgTemplateCreateRequest {
@@ -407,6 +409,7 @@ message MsgTemplateCreateRequest {
   optional string deeplink_action = 9;
   optional string deeplink_screen = 10;
   optional string external_url = 11;
+  optional string status = 12;
 }
 
 message MsgTemplateCreateResponse {
@@ -426,6 +429,7 @@ message MsgTemplateUpdateRequest {
   optional string deeplink_action = 10;
   optional string deeplink_screen = 11;
   optional string external_url = 12;
+  optional string status = 13;
 }
 
 message MsgTemplateUpdateResponse {
@@ -448,12 +452,14 @@ message MsgTemplatesListRequest {
 
 message MsgTemplatesListResponse {
   repeated MsgTemplate templates = 1;
+  int64 total = 2;
 }
 
 message MsgMessageCreateRequest {
   string username = 1;
   string status = 2;
   string sent_by = 3;
+  string template_id = 4;
 }
 
 message MsgMessageCreateResponse {
@@ -480,6 +486,7 @@ message MsgMessagesListRequest {
 
 message MsgMessagesListResponse {
   repeated MsgMessage messages = 1;
+  int64 total = 2;
 }
 
 message MsgMessageHistoryListRequest {

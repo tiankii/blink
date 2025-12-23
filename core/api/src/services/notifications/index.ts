@@ -720,6 +720,7 @@ export const NotificationsService = (): INotificationsService => {
     iconName,
     title,
     body,
+    status,
     shouldSendPush,
     shouldAddToHistory,
     shouldAddToBulletin,
@@ -732,6 +733,7 @@ export const NotificationsService = (): INotificationsService => {
     iconName: string
     title: string
     body: string
+    status: string
     shouldSendPush?: boolean
     shouldAddToHistory?: boolean
     shouldAddToBulletin?: boolean
@@ -746,6 +748,7 @@ export const NotificationsService = (): INotificationsService => {
       request.setIconName(iconName)
       request.setTitle(title)
       request.setBody(body)
+      request.setStatus(status)
       if (shouldSendPush) request.setShouldSendPush(shouldSendPush)
       if (shouldAddToHistory) request.setShouldAddToHistory(shouldAddToHistory)
       if (shouldAddToBulletin) request.setShouldAddToBulletin(shouldAddToBulletin)
@@ -771,6 +774,7 @@ export const NotificationsService = (): INotificationsService => {
     iconName,
     title,
     body,
+    status,
     shouldSendPush,
     shouldAddToHistory,
     shouldAddToBulletin,
@@ -784,6 +788,7 @@ export const NotificationsService = (): INotificationsService => {
     iconName: string
     title: string
     body: string
+    status: string
     shouldSendPush?: boolean
     shouldAddToHistory?: boolean
     shouldAddToBulletin?: boolean
@@ -799,6 +804,7 @@ export const NotificationsService = (): INotificationsService => {
       request.setIconName(iconName)
       request.setTitle(title)
       request.setBody(body)
+      request.setStatus(status)
       if (shouldSendPush) request.setShouldSendPush(shouldSendPush)
       if (shouldAddToHistory) request.setShouldAddToHistory(shouldAddToHistory)
       if (shouldAddToBulletin) request.setShouldAddToBulletin(shouldAddToBulletin)
@@ -861,6 +867,7 @@ export const NotificationsService = (): INotificationsService => {
         iconName: template.getIconName(),
         title: template.getTitle(),
         body: template.getBody(),
+        status: template.getStatus(),
         shouldSendPush: template.getShouldSendPush(),
         shouldAddToHistory: template.getShouldAddToHistory(),
         shouldAddToBulletin: template.getShouldAddToBulletin(),
@@ -877,7 +884,9 @@ export const NotificationsService = (): INotificationsService => {
     languageCode,
     limit,
     offset,
-  }: MsgTemplatesListArgs): Promise<MsgTemplate[] | NotificationsServiceError> => {
+  }: MsgTemplatesListArgs): Promise<
+    { total: number; items: MsgTemplate[] } | NotificationsServiceError
+  > => {
     try {
       const request = new MsgTemplatesListRequest()
       if (languageCode) request.setLanguageCode(languageCode)
@@ -889,13 +898,14 @@ export const NotificationsService = (): INotificationsService => {
         notificationsGrpc.notificationsMetadata,
       )
 
-      const templates = response.getTemplatesList().map<MsgTemplate>((template) => ({
+      const items = response.getTemplatesList().map<MsgTemplate>((template) => ({
         id: template.getId(),
         name: template.getName(),
         languageCode: template.getLanguageCode(),
         iconName: template.getIconName(),
         title: template.getTitle(),
         body: template.getBody(),
+        status: template.getStatus(),
         shouldSendPush: template.getShouldSendPush(),
         shouldAddToHistory: template.getShouldAddToHistory(),
         shouldAddToBulletin: template.getShouldAddToBulletin(),
@@ -904,7 +914,7 @@ export const NotificationsService = (): INotificationsService => {
         externalUrl: template.getExternalUrl(),
       }))
 
-      return templates
+      return { total: response.getTotal(), items }
     } catch (err) {
       return handleCommonNotificationErrors(err)
     }
@@ -914,11 +924,13 @@ export const NotificationsService = (): INotificationsService => {
     username,
     status,
     sentBy,
+    templateId,
   }: MsgMessageCreateArgs): Promise<true | NotificationsServiceError> => {
     try {
       const request = new MsgMessageCreateRequest()
       request.setUsername(username)
       request.setSentBy(sentBy)
+      request.setTemplateId(templateId)
       if (status) request.setStatus(status)
 
       await notificationsGrpc.msgMessageCreate(
@@ -959,7 +971,9 @@ export const NotificationsService = (): INotificationsService => {
     updatedAtTo,
     limit,
     offset,
-  }: MsgMessagesListArgs): Promise<MsgMessage[] | NotificationsServiceError> => {
+  }: MsgMessagesListArgs): Promise<
+    { total: number; items: MsgMessage[] } | NotificationsServiceError
+  > => {
     try {
       const request = new MsgMessagesListRequest()
       if (username) request.setUsername(username)
@@ -974,15 +988,16 @@ export const NotificationsService = (): INotificationsService => {
         notificationsGrpc.notificationsMetadata,
       )
 
-      const messages = response.getMessagesList().map<MsgMessage>((message) => ({
+      const items = response.getMessagesList().map<MsgMessage>((message) => ({
         id: message.getId(),
         username: message.getUsername(),
+        templateId: message.getTemplateId(),
         status: message.getStatus() as MsgMessageStatus,
         sentBy: message.getSentBy(),
         updatedAt: message.getUpdatedAt(),
       }))
 
-      return messages
+      return { total: response.getTotal(), items }
     } catch (err) {
       return handleCommonNotificationErrors(err)
     }

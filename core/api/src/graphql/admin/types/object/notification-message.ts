@@ -5,6 +5,7 @@ import NotificationMessageStatus from "@/graphql/admin/types/scalar/notification
 const NotificationMessage = GT.Object<{
   id: string
   username: string
+  templateId: string
   status: MsgMessageStatus
   sentBy: string
   updatedAt: number
@@ -22,6 +23,9 @@ const NotificationMessage = GT.Object<{
     },
     sentBy: {
       type: GT.NonNull(GT.String),
+    },
+    templateId: {
+      type: GT.NonNullID,
     },
     updatedAt: {
       type: GT.NonNull(Timestamp),

@@ -4,6 +4,24 @@ import NotificationMessage from "@/graphql/admin/types/object/notification-messa
 import NotificationMessageStatus from "@/graphql/admin/types/scalar/notification-message-status"
 import { NotificationsService } from "@/services/notifications"
 
+const NotificationMessagesResult = GT.Object<{
+  total: number
+  items: {
+    id: string
+    username: string
+    templateId: string
+    status: MsgMessageStatus
+    sentBy: string
+    updatedAt: number
+  }[]
+}>({
+  name: "NotificationMessagesResult",
+  fields: () => ({
+    total: { type: GT.NonNull(GT.Int) },
+    items: { type: GT.NonNullList(NotificationMessage) },
+  }),
+})
+
 const NotificationMessagesQuery = GT.Field<
   null,
   GraphQLAdminContext,
@@ -16,7 +34,7 @@ const NotificationMessagesQuery = GT.Field<
     offset?: number | Error
   }
 >({
-  type: GT.NonNullList(NotificationMessage),
+  type: GT.NonNull(NotificationMessagesResult),
   args: {
     username: { type: GT.String },
     status: { type: NotificationMessageStatus },

@@ -4,6 +4,31 @@ import NotificationTemplate from "@/graphql/admin/types/object/notification-temp
 import { NotificationsService } from "@/services/notifications"
 import { mapAndParseErrorForGqlResponse } from "@/graphql/error-map"
 
+const NotificationTemplatesResult = GT.Object<{
+  total: number
+  items: {
+    id: string
+    name: string
+    languageCode: string
+    iconName: string
+    title: string
+    body: string
+    status: MsgMessageStatus
+    shouldSendPush: boolean
+    shouldAddToHistory: boolean
+    shouldAddToBulletin: boolean
+    deeplinkAction?: string
+    deeplinkScreen?: string
+    externalUrl?: string
+  }[]
+}>({
+  name: "NotificationTemplatesResult",
+  fields: () => ({
+    total: { type: GT.NonNull(GT.Int) },
+    items: { type: GT.NonNullList(NotificationTemplate) },
+  }),
+})
+
 const NotificationTemplatesQuery = GT.Field<
   null,
   GraphQLAdminContext,
@@ -13,7 +38,7 @@ const NotificationTemplatesQuery = GT.Field<
     offset?: number | Error
   }
 >({
-  type: GT.NonNullList(NotificationTemplate),
+  type: GT.NonNull(NotificationTemplatesResult),
   args: {
     languageCode: { type: Language },
     limit: { type: GT.Int },

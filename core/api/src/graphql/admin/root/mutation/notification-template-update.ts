@@ -5,6 +5,7 @@ import { mapAndParseErrorForGqlResponse } from "@/graphql/error-map"
 import SuccessPayload from "@/graphql/shared/types/payload/success-payload"
 import DeepLinkActionTemplate from "@/graphql/admin/types/scalar/deep-link-action-template"
 import DeepLinkScreenTemplate from "@/graphql/admin/types/scalar/deep-link-screen-template"
+import NotificationMessageStatus from "@/graphql/admin/types/scalar/notification-message-status"
 import { NotificationsService } from "@/services/notifications"
 
 const NotificationTemplateUpdateInput = GT.Input({
@@ -19,6 +20,7 @@ const NotificationTemplateUpdateInput = GT.Input({
     shouldSendPush: { type: GT.NonNull(GT.Boolean) },
     shouldAddToHistory: { type: GT.NonNull(GT.Boolean) },
     shouldAddToBulletin: { type: GT.NonNull(GT.Boolean) },
+    status: { type: NotificationMessageStatus },
     deeplinkAction: { type: DeepLinkActionTemplate },
     deeplinkScreen: { type: DeepLinkScreenTemplate },
     externalUrl: { type: ExternalUrl },
@@ -39,6 +41,7 @@ const NotificationTemplateUpdateMutation = GT.Field<
       shouldSendPush: boolean
       shouldAddToHistory: boolean
       shouldAddToBulletin: boolean
+      status: MsgMessageStatus
       deeplinkAction?: string
       deeplinkScreen?: string
       externalUrl?: string
@@ -60,6 +63,7 @@ const NotificationTemplateUpdateMutation = GT.Field<
       iconName,
       title,
       body,
+      status,
       shouldSendPush,
       shouldAddToHistory,
       shouldAddToBulletin,
@@ -85,6 +89,7 @@ const NotificationTemplateUpdateMutation = GT.Field<
       iconName,
       title,
       body,
+      status,
       shouldSendPush,
       shouldAddToHistory,
       shouldAddToBulletin,

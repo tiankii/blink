@@ -1063,6 +1063,11 @@ export class MsgTemplate extends jspb.Message {
     getExternalUrl(): string | undefined;
     setExternalUrl(value: string): MsgTemplate;
 
+    hasStatus(): boolean;
+    clearStatus(): void;
+    getStatus(): string | undefined;
+    setStatus(value: string): MsgTemplate;
+
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): MsgTemplate.AsObject;
     static toObject(includeInstance: boolean, msg: MsgTemplate): MsgTemplate.AsObject;
@@ -1087,6 +1092,7 @@ export namespace MsgTemplate {
         deeplinkAction?: string,
         deeplinkScreen?: string,
         externalUrl?: string,
+        status?: string,
     }
 }
 
@@ -1099,6 +1105,11 @@ export class MsgMessage extends jspb.Message {
     setStatus(value: string): MsgMessage;
     getSentBy(): string;
     setSentBy(value: string): MsgMessage;
+
+    hasTemplateId(): boolean;
+    clearTemplateId(): void;
+    getTemplateId(): string | undefined;
+    setTemplateId(value: string): MsgMessage;
     getUpdatedAt(): number;
     setUpdatedAt(value: number): MsgMessage;
 
@@ -1118,6 +1129,7 @@ export namespace MsgMessage {
         username: string,
         status: string,
         sentBy: string,
+        templateId?: string,
         updatedAt: number,
     }
 }
@@ -1155,6 +1167,11 @@ export class MsgTemplateCreateRequest extends jspb.Message {
     getExternalUrl(): string | undefined;
     setExternalUrl(value: string): MsgTemplateCreateRequest;
 
+    hasStatus(): boolean;
+    clearStatus(): void;
+    getStatus(): string | undefined;
+    setStatus(value: string): MsgTemplateCreateRequest;
+
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): MsgTemplateCreateRequest.AsObject;
     static toObject(includeInstance: boolean, msg: MsgTemplateCreateRequest): MsgTemplateCreateRequest.AsObject;
@@ -1178,6 +1195,7 @@ export namespace MsgTemplateCreateRequest {
         deeplinkAction?: string,
         deeplinkScreen?: string,
         externalUrl?: string,
+        status?: string,
     }
 }
 
@@ -1239,6 +1257,11 @@ export class MsgTemplateUpdateRequest extends jspb.Message {
     getExternalUrl(): string | undefined;
     setExternalUrl(value: string): MsgTemplateUpdateRequest;
 
+    hasStatus(): boolean;
+    clearStatus(): void;
+    getStatus(): string | undefined;
+    setStatus(value: string): MsgTemplateUpdateRequest;
+
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): MsgTemplateUpdateRequest.AsObject;
     static toObject(includeInstance: boolean, msg: MsgTemplateUpdateRequest): MsgTemplateUpdateRequest.AsObject;
@@ -1263,6 +1286,7 @@ export namespace MsgTemplateUpdateRequest {
         deeplinkAction?: string,
         deeplinkScreen?: string,
         externalUrl?: string,
+        status?: string,
     }
 }
 
@@ -1360,6 +1384,8 @@ export class MsgTemplatesListResponse extends jspb.Message {
     getTemplatesList(): Array<MsgTemplate>;
     setTemplatesList(value: Array<MsgTemplate>): MsgTemplatesListResponse;
     addTemplates(value?: MsgTemplate, index?: number): MsgTemplate;
+    getTotal(): number;
+    setTotal(value: number): MsgTemplatesListResponse;
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): MsgTemplatesListResponse.AsObject;
@@ -1374,6 +1400,7 @@ export class MsgTemplatesListResponse extends jspb.Message {
 export namespace MsgTemplatesListResponse {
     export type AsObject = {
         templatesList: Array<MsgTemplate.AsObject>,
+        total: number,
     }
 }
 
@@ -1384,6 +1411,8 @@ export class MsgMessageCreateRequest extends jspb.Message {
     setStatus(value: string): MsgMessageCreateRequest;
     getSentBy(): string;
     setSentBy(value: string): MsgMessageCreateRequest;
+    getTemplateId(): string;
+    setTemplateId(value: string): MsgMessageCreateRequest;
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): MsgMessageCreateRequest.AsObject;
@@ -1400,6 +1429,7 @@ export namespace MsgMessageCreateRequest {
         username: string,
         status: string,
         sentBy: string,
+        templateId: string,
     }
 }
 
@@ -1512,6 +1542,8 @@ export class MsgMessagesListResponse extends jspb.Message {
     getMessagesList(): Array<MsgMessage>;
     setMessagesList(value: Array<MsgMessage>): MsgMessagesListResponse;
     addMessages(value?: MsgMessage, index?: number): MsgMessage;
+    getTotal(): number;
+    setTotal(value: number): MsgMessagesListResponse;
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): MsgMessagesListResponse.AsObject;
@@ -1526,6 +1558,7 @@ export class MsgMessagesListResponse extends jspb.Message {
 export namespace MsgMessagesListResponse {
     export type AsObject = {
         messagesList: Array<MsgMessage.AsObject>,
+        total: number,
     }
 }
 

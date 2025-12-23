@@ -1,5 +1,6 @@
 import { GT } from "@/graphql/index"
 import Language from "@/graphql/shared/types/scalar/language"
+import NotificationMessageStatus from "@/graphql/admin/types/scalar/notification-message-status"
 
 const NotificationTemplate = GT.Object<{
   id: string
@@ -8,6 +9,7 @@ const NotificationTemplate = GT.Object<{
   iconName: string
   title: string
   body: string
+  status: MsgMessageStatus
   shouldSendPush: boolean
   shouldAddToHistory: boolean
   shouldAddToBulletin: boolean
@@ -52,6 +54,9 @@ const NotificationTemplate = GT.Object<{
     },
     externalUrl: {
       type: GT.String,
+    },
+    status: {
+      type: GT.NonNull(NotificationMessageStatus),
     },
   }),
 })

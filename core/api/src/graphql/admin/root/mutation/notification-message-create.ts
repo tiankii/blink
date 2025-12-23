@@ -10,6 +10,7 @@ const NotificationMessageCreateInput = GT.Input({
     username: { type: GT.NonNull(GT.String) },
     status: { type: NotificationMessageStatus },
     sentBy: { type: GT.NonNull(GT.String) },
+    templateId: { type: GT.NonNullID },
   }),
 })
 
@@ -21,6 +22,7 @@ const NotificationMessageCreateMutation = GT.Field<
       username: string
       status?: MsgMessageStatus
       sentBy: string
+      templateId: string | Error
     }
   }
 >({
@@ -34,13 +36,19 @@ const NotificationMessageCreateMutation = GT.Field<
     },
   },
   resolve: async (_, args) => {
-    const { username, status, sentBy } = args.input
+    const { username, status, sentBy, templateId } = args.input
+
+    if (templateId instanceof Error) {
+      return { errors: [{ message: templateId.message }], success: false }
+    }
+
     const notificationsService = NotificationsService()
 
     const res = await notificationsService.msgMessageCreate({
       username,
       status,
       sentBy,
+      templateId,
     })
     if (res instanceof Error) {
       return { errors: [mapAndParseErrorForGqlResponse(res)], success: false }

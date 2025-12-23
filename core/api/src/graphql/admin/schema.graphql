@@ -466,6 +466,7 @@ type NotificationMessage {
   id: ID!
   sentBy: String!
   status: NotificationMessageStatus!
+  templateId: ID!
   updatedAt: Timestamp!
   username: String!
 }
@@ -473,6 +474,7 @@ type NotificationMessage {
 input NotificationMessageCreateInput {
   sentBy: String!
   status: NotificationMessageStatus
+  templateId: ID!
   username: String!
 }
 
@@ -500,6 +502,11 @@ input NotificationMessageUpdateStatusInput {
   status: NotificationMessageStatus!
 }
 
+type NotificationMessagesResult {
+  items: [NotificationMessage!]!
+  total: Int!
+}
+
 type NotificationTemplate {
   body: String!
   deeplinkAction: String
@@ -512,6 +519,7 @@ type NotificationTemplate {
   shouldAddToBulletin: Boolean!
   shouldAddToHistory: Boolean!
   shouldSendPush: Boolean!
+  status: NotificationMessageStatus!
   title: String!
 }
 
@@ -526,6 +534,7 @@ input NotificationTemplateCreateInput {
   shouldAddToBulletin: Boolean!
   shouldAddToHistory: Boolean!
   shouldSendPush: Boolean!
+  status: NotificationMessageStatus
   title: String!
 }
 
@@ -545,7 +554,13 @@ input NotificationTemplateUpdateInput {
   shouldAddToBulletin: Boolean!
   shouldAddToHistory: Boolean!
   shouldSendPush: Boolean!
+  status: NotificationMessageStatus
   title: String!
+}
+
+type NotificationTemplatesResult {
+  items: [NotificationTemplate!]!
+  total: Int!
 }
 
 """An address for an on-chain bitcoin destination"""
@@ -612,8 +627,8 @@ type Query {
   merchantsPendingApproval: [Merchant!]!
   notificationByTemplateId(id: ID!): NotificationTemplate
   notificationMessageHistory(id: ID!): [NotificationMessageHistoryItem!]!
-  notificationMessages(limit: Int, offset: Int, status: NotificationMessageStatus, updatedAtFrom: Int, updatedAtTo: Int, username: String): [NotificationMessage!]!
-  notificationTemplates(languageCode: Language, limit: Int, offset: Int): [NotificationTemplate!]!
+  notificationMessages(limit: Int, offset: Int, status: NotificationMessageStatus, updatedAtFrom: Int, updatedAtTo: Int, username: String): NotificationMessagesResult!
+  notificationTemplates(languageCode: Language, limit: Int, offset: Int): NotificationTemplatesResult!
   transactionById(id: ID!): Transaction
   transactionsByHash(hash: PaymentHash!): [Transaction]
   transactionsByPaymentRequest(paymentRequest: LnPaymentRequest!): [Transaction]

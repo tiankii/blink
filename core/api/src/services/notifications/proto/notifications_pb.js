@@ -8445,7 +8445,8 @@ shouldAddToHistory: jspb.Message.getBooleanFieldWithDefault(msg, 8, false),
 shouldAddToBulletin: jspb.Message.getBooleanFieldWithDefault(msg, 9, false),
 deeplinkAction: (f = jspb.Message.getField(msg, 10)) == null ? undefined : f,
 deeplinkScreen: (f = jspb.Message.getField(msg, 11)) == null ? undefined : f,
-externalUrl: (f = jspb.Message.getField(msg, 12)) == null ? undefined : f
+externalUrl: (f = jspb.Message.getField(msg, 12)) == null ? undefined : f,
+status: (f = jspb.Message.getField(msg, 13)) == null ? undefined : f
   };
 
   if (includeInstance) {
@@ -8529,6 +8530,10 @@ proto.services.notifications.v1.MsgTemplate.deserializeBinaryFromReader = functi
     case 12:
       var value = /** @type {string} */ (reader.readString());
       msg.setExternalUrl(value);
+      break;
+    case 13:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setStatus(value);
       break;
     default:
       reader.skipField();
@@ -8640,6 +8645,13 @@ proto.services.notifications.v1.MsgTemplate.serializeBinaryToWriter = function(m
   if (f != null) {
     writer.writeString(
       12,
+      f
+    );
+  }
+  f = /** @type {string} */ (jspb.Message.getField(message, 13));
+  if (f != null) {
+    writer.writeString(
+      13,
       f
     );
   }
@@ -8916,6 +8928,42 @@ proto.services.notifications.v1.MsgTemplate.prototype.hasExternalUrl = function(
 };
 
 
+/**
+ * optional string status = 13;
+ * @return {string}
+ */
+proto.services.notifications.v1.MsgTemplate.prototype.getStatus = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 13, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.services.notifications.v1.MsgTemplate} returns this
+ */
+proto.services.notifications.v1.MsgTemplate.prototype.setStatus = function(value) {
+  return jspb.Message.setField(this, 13, value);
+};
+
+
+/**
+ * Clears the field making it undefined.
+ * @return {!proto.services.notifications.v1.MsgTemplate} returns this
+ */
+proto.services.notifications.v1.MsgTemplate.prototype.clearStatus = function() {
+  return jspb.Message.setField(this, 13, undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.services.notifications.v1.MsgTemplate.prototype.hasStatus = function() {
+  return jspb.Message.getField(this, 13) != null;
+};
+
+
 
 
 
@@ -8952,7 +9000,8 @@ id: jspb.Message.getFieldWithDefault(msg, 1, ""),
 username: jspb.Message.getFieldWithDefault(msg, 2, ""),
 status: jspb.Message.getFieldWithDefault(msg, 3, ""),
 sentBy: jspb.Message.getFieldWithDefault(msg, 4, ""),
-updatedAt: jspb.Message.getFieldWithDefault(msg, 5, 0)
+templateId: (f = jspb.Message.getField(msg, 5)) == null ? undefined : f,
+updatedAt: jspb.Message.getFieldWithDefault(msg, 6, 0)
   };
 
   if (includeInstance) {
@@ -9006,6 +9055,10 @@ proto.services.notifications.v1.MsgMessage.deserializeBinaryFromReader = functio
       msg.setSentBy(value);
       break;
     case 5:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setTemplateId(value);
+      break;
+    case 6:
       var value = /** @type {number} */ (reader.readInt64());
       msg.setUpdatedAt(value);
       break;
@@ -9066,10 +9119,17 @@ proto.services.notifications.v1.MsgMessage.serializeBinaryToWriter = function(me
       f
     );
   }
+  f = /** @type {string} */ (jspb.Message.getField(message, 5));
+  if (f != null) {
+    writer.writeString(
+      5,
+      f
+    );
+  }
   f = message.getUpdatedAt();
   if (f !== 0) {
     writer.writeInt64(
-      5,
+      6,
       f
     );
   }
@@ -9149,11 +9209,47 @@ proto.services.notifications.v1.MsgMessage.prototype.setSentBy = function(value)
 
 
 /**
- * optional int64 updated_at = 5;
+ * optional string template_id = 5;
+ * @return {string}
+ */
+proto.services.notifications.v1.MsgMessage.prototype.getTemplateId = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 5, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.services.notifications.v1.MsgMessage} returns this
+ */
+proto.services.notifications.v1.MsgMessage.prototype.setTemplateId = function(value) {
+  return jspb.Message.setField(this, 5, value);
+};
+
+
+/**
+ * Clears the field making it undefined.
+ * @return {!proto.services.notifications.v1.MsgMessage} returns this
+ */
+proto.services.notifications.v1.MsgMessage.prototype.clearTemplateId = function() {
+  return jspb.Message.setField(this, 5, undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.services.notifications.v1.MsgMessage.prototype.hasTemplateId = function() {
+  return jspb.Message.getField(this, 5) != null;
+};
+
+
+/**
+ * optional int64 updated_at = 6;
  * @return {number}
  */
 proto.services.notifications.v1.MsgMessage.prototype.getUpdatedAt = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 5, 0));
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 6, 0));
 };
 
 
@@ -9162,7 +9258,7 @@ proto.services.notifications.v1.MsgMessage.prototype.getUpdatedAt = function() {
  * @return {!proto.services.notifications.v1.MsgMessage} returns this
  */
 proto.services.notifications.v1.MsgMessage.prototype.setUpdatedAt = function(value) {
-  return jspb.Message.setProto3IntField(this, 5, value);
+  return jspb.Message.setProto3IntField(this, 6, value);
 };
 
 
@@ -9208,7 +9304,8 @@ shouldAddToHistory: jspb.Message.getBooleanFieldWithDefault(msg, 7, false),
 shouldAddToBulletin: jspb.Message.getBooleanFieldWithDefault(msg, 8, false),
 deeplinkAction: (f = jspb.Message.getField(msg, 9)) == null ? undefined : f,
 deeplinkScreen: (f = jspb.Message.getField(msg, 10)) == null ? undefined : f,
-externalUrl: (f = jspb.Message.getField(msg, 11)) == null ? undefined : f
+externalUrl: (f = jspb.Message.getField(msg, 11)) == null ? undefined : f,
+status: (f = jspb.Message.getField(msg, 12)) == null ? undefined : f
   };
 
   if (includeInstance) {
@@ -9288,6 +9385,10 @@ proto.services.notifications.v1.MsgTemplateCreateRequest.deserializeBinaryFromRe
     case 11:
       var value = /** @type {string} */ (reader.readString());
       msg.setExternalUrl(value);
+      break;
+    case 12:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setStatus(value);
       break;
     default:
       reader.skipField();
@@ -9392,6 +9493,13 @@ proto.services.notifications.v1.MsgTemplateCreateRequest.serializeBinaryToWriter
   if (f != null) {
     writer.writeString(
       11,
+      f
+    );
+  }
+  f = /** @type {string} */ (jspb.Message.getField(message, 12));
+  if (f != null) {
+    writer.writeString(
+      12,
       f
     );
   }
@@ -9650,6 +9758,42 @@ proto.services.notifications.v1.MsgTemplateCreateRequest.prototype.hasExternalUr
 };
 
 
+/**
+ * optional string status = 12;
+ * @return {string}
+ */
+proto.services.notifications.v1.MsgTemplateCreateRequest.prototype.getStatus = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 12, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.services.notifications.v1.MsgTemplateCreateRequest} returns this
+ */
+proto.services.notifications.v1.MsgTemplateCreateRequest.prototype.setStatus = function(value) {
+  return jspb.Message.setField(this, 12, value);
+};
+
+
+/**
+ * Clears the field making it undefined.
+ * @return {!proto.services.notifications.v1.MsgTemplateCreateRequest} returns this
+ */
+proto.services.notifications.v1.MsgTemplateCreateRequest.prototype.clearStatus = function() {
+  return jspb.Message.setField(this, 12, undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.services.notifications.v1.MsgTemplateCreateRequest.prototype.hasStatus = function() {
+  return jspb.Message.getField(this, 12) != null;
+};
+
+
 
 
 
@@ -9844,7 +9988,8 @@ shouldAddToHistory: jspb.Message.getBooleanFieldWithDefault(msg, 8, false),
 shouldAddToBulletin: jspb.Message.getBooleanFieldWithDefault(msg, 9, false),
 deeplinkAction: (f = jspb.Message.getField(msg, 10)) == null ? undefined : f,
 deeplinkScreen: (f = jspb.Message.getField(msg, 11)) == null ? undefined : f,
-externalUrl: (f = jspb.Message.getField(msg, 12)) == null ? undefined : f
+externalUrl: (f = jspb.Message.getField(msg, 12)) == null ? undefined : f,
+status: (f = jspb.Message.getField(msg, 13)) == null ? undefined : f
   };
 
   if (includeInstance) {
@@ -9928,6 +10073,10 @@ proto.services.notifications.v1.MsgTemplateUpdateRequest.deserializeBinaryFromRe
     case 12:
       var value = /** @type {string} */ (reader.readString());
       msg.setExternalUrl(value);
+      break;
+    case 13:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setStatus(value);
       break;
     default:
       reader.skipField();
@@ -10039,6 +10188,13 @@ proto.services.notifications.v1.MsgTemplateUpdateRequest.serializeBinaryToWriter
   if (f != null) {
     writer.writeString(
       12,
+      f
+    );
+  }
+  f = /** @type {string} */ (jspb.Message.getField(message, 13));
+  if (f != null) {
+    writer.writeString(
+      13,
       f
     );
   }
@@ -10312,6 +10468,42 @@ proto.services.notifications.v1.MsgTemplateUpdateRequest.prototype.clearExternal
  */
 proto.services.notifications.v1.MsgTemplateUpdateRequest.prototype.hasExternalUrl = function() {
   return jspb.Message.getField(this, 12) != null;
+};
+
+
+/**
+ * optional string status = 13;
+ * @return {string}
+ */
+proto.services.notifications.v1.MsgTemplateUpdateRequest.prototype.getStatus = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 13, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.services.notifications.v1.MsgTemplateUpdateRequest} returns this
+ */
+proto.services.notifications.v1.MsgTemplateUpdateRequest.prototype.setStatus = function(value) {
+  return jspb.Message.setField(this, 13, value);
+};
+
+
+/**
+ * Clears the field making it undefined.
+ * @return {!proto.services.notifications.v1.MsgTemplateUpdateRequest} returns this
+ */
+proto.services.notifications.v1.MsgTemplateUpdateRequest.prototype.clearStatus = function() {
+  return jspb.Message.setField(this, 13, undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.services.notifications.v1.MsgTemplateUpdateRequest.prototype.hasStatus = function() {
+  return jspb.Message.getField(this, 13) != null;
 };
 
 
@@ -10956,7 +11148,8 @@ proto.services.notifications.v1.MsgTemplatesListResponse.prototype.toObject = fu
 proto.services.notifications.v1.MsgTemplatesListResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
 templatesList: jspb.Message.toObjectList(msg.getTemplatesList(),
-    proto.services.notifications.v1.MsgTemplate.toObject, includeInstance)
+    proto.services.notifications.v1.MsgTemplate.toObject, includeInstance),
+total: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -10998,6 +11191,10 @@ proto.services.notifications.v1.MsgTemplatesListResponse.deserializeBinaryFromRe
       reader.readMessage(value,proto.services.notifications.v1.MsgTemplate.deserializeBinaryFromReader);
       msg.addTemplates(value);
       break;
+    case 2:
+      var value = /** @type {number} */ (reader.readInt64());
+      msg.setTotal(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -11033,6 +11230,13 @@ proto.services.notifications.v1.MsgTemplatesListResponse.serializeBinaryToWriter
       1,
       f,
       proto.services.notifications.v1.MsgTemplate.serializeBinaryToWriter
+    );
+  }
+  f = message.getTotal();
+  if (f !== 0) {
+    writer.writeInt64(
+      2,
+      f
     );
   }
 };
@@ -11076,6 +11280,24 @@ proto.services.notifications.v1.MsgTemplatesListResponse.prototype.clearTemplate
 };
 
 
+/**
+ * optional int64 total = 2;
+ * @return {number}
+ */
+proto.services.notifications.v1.MsgTemplatesListResponse.prototype.getTotal = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.services.notifications.v1.MsgTemplatesListResponse} returns this
+ */
+proto.services.notifications.v1.MsgTemplatesListResponse.prototype.setTotal = function(value) {
+  return jspb.Message.setProto3IntField(this, 2, value);
+};
+
+
 
 
 
@@ -11110,7 +11332,8 @@ proto.services.notifications.v1.MsgMessageCreateRequest.toObject = function(incl
   var f, obj = {
 username: jspb.Message.getFieldWithDefault(msg, 1, ""),
 status: jspb.Message.getFieldWithDefault(msg, 2, ""),
-sentBy: jspb.Message.getFieldWithDefault(msg, 3, "")
+sentBy: jspb.Message.getFieldWithDefault(msg, 3, ""),
+templateId: jspb.Message.getFieldWithDefault(msg, 4, "")
   };
 
   if (includeInstance) {
@@ -11159,6 +11382,10 @@ proto.services.notifications.v1.MsgMessageCreateRequest.deserializeBinaryFromRea
       var value = /** @type {string} */ (reader.readString());
       msg.setSentBy(value);
       break;
+    case 4:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setTemplateId(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -11206,6 +11433,13 @@ proto.services.notifications.v1.MsgMessageCreateRequest.serializeBinaryToWriter 
   if (f.length > 0) {
     writer.writeString(
       3,
+      f
+    );
+  }
+  f = message.getTemplateId();
+  if (f.length > 0) {
+    writer.writeString(
+      4,
       f
     );
   }
@@ -11263,6 +11497,24 @@ proto.services.notifications.v1.MsgMessageCreateRequest.prototype.getSentBy = fu
  */
 proto.services.notifications.v1.MsgMessageCreateRequest.prototype.setSentBy = function(value) {
   return jspb.Message.setProto3StringField(this, 3, value);
+};
+
+
+/**
+ * optional string template_id = 4;
+ * @return {string}
+ */
+proto.services.notifications.v1.MsgMessageCreateRequest.prototype.getTemplateId = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.services.notifications.v1.MsgMessageCreateRequest} returns this
+ */
+proto.services.notifications.v1.MsgMessageCreateRequest.prototype.setTemplateId = function(value) {
+  return jspb.Message.setProto3StringField(this, 4, value);
 };
 
 
@@ -12048,7 +12300,8 @@ proto.services.notifications.v1.MsgMessagesListResponse.prototype.toObject = fun
 proto.services.notifications.v1.MsgMessagesListResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
 messagesList: jspb.Message.toObjectList(msg.getMessagesList(),
-    proto.services.notifications.v1.MsgMessage.toObject, includeInstance)
+    proto.services.notifications.v1.MsgMessage.toObject, includeInstance),
+total: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -12090,6 +12343,10 @@ proto.services.notifications.v1.MsgMessagesListResponse.deserializeBinaryFromRea
       reader.readMessage(value,proto.services.notifications.v1.MsgMessage.deserializeBinaryFromReader);
       msg.addMessages(value);
       break;
+    case 2:
+      var value = /** @type {number} */ (reader.readInt64());
+      msg.setTotal(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -12125,6 +12382,13 @@ proto.services.notifications.v1.MsgMessagesListResponse.serializeBinaryToWriter 
       1,
       f,
       proto.services.notifications.v1.MsgMessage.serializeBinaryToWriter
+    );
+  }
+  f = message.getTotal();
+  if (f !== 0) {
+    writer.writeInt64(
+      2,
+      f
     );
   }
 };
@@ -12165,6 +12429,24 @@ proto.services.notifications.v1.MsgMessagesListResponse.prototype.addMessages = 
  */
 proto.services.notifications.v1.MsgMessagesListResponse.prototype.clearMessagesList = function() {
   return this.setMessagesList([]);
+};
+
+
+/**
+ * optional int64 total = 2;
+ * @return {number}
+ */
+proto.services.notifications.v1.MsgMessagesListResponse.prototype.getTotal = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.services.notifications.v1.MsgMessagesListResponse} returns this
+ */
+proto.services.notifications.v1.MsgMessagesListResponse.prototype.setTotal = function(value) {
+  return jspb.Message.setProto3IntField(this, 2, value);
 };
 
 

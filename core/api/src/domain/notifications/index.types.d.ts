@@ -100,6 +100,7 @@ type MsgTemplate = {
   iconName: string
   title: string
   body: string
+  status?: string
   shouldSendPush: boolean
   shouldAddToHistory: boolean
   shouldAddToBulletin: boolean
@@ -111,6 +112,7 @@ type MsgTemplate = {
 type MsgMessage = {
   id: string
   username: string
+  templateId?: string
   status: MsgMessageStatus
   sentBy: string
   updatedAt: number
@@ -186,6 +188,7 @@ interface INotificationsService {
     iconName: string
     title: string
     body: string
+    status: string
     shouldSendPush?: boolean
     shouldAddToHistory?: boolean
     shouldAddToBulletin?: boolean
@@ -201,6 +204,7 @@ interface INotificationsService {
     iconName: string
     title: string
     body: string
+    status: string
     shouldSendPush?: boolean
     shouldAddToHistory?: boolean
     shouldAddToBulletin?: boolean
@@ -215,7 +219,7 @@ interface INotificationsService {
     languageCode?: string
     limit?: number
     offset?: number
-  }): Promise<MsgTemplate[] | NotificationsServiceError>
+  }): Promise<{ total: number; items: MsgTemplate[] } | NotificationsServiceError>
 
   msgTemplateById(args: {
     id: string
@@ -225,6 +229,7 @@ interface INotificationsService {
     username: string
     status?: MsgMessageStatus
     sentBy: string
+    templateId: string
   }): Promise<true | NotificationsServiceError>
 
   msgMessageUpdateStatus(args: {
@@ -239,7 +244,7 @@ interface INotificationsService {
     updatedAtTo?: number
     limit?: number
     offset?: number
-  }): Promise<MsgMessage[] | NotificationsServiceError>
+  }): Promise<{ total: number; items: MsgMessage[] } | NotificationsServiceError>
 
   msgMessageHistoryList(args: {
     id: string
@@ -272,6 +277,7 @@ type BaseMsgTemplateArgs = {
   iconName: string
   title: string
   body: string
+  status: string
   shouldSendPush?: boolean
   shouldAddToHistory?: boolean
   shouldAddToBulletin?: boolean
@@ -296,6 +302,7 @@ type MsgMessageCreateArgs = {
   username: string
   status?: MsgMessageStatus
   sentBy: string
+  templateId: string
 }
 
 type MsgMessageUpdateStatusArgs = {
