@@ -115,6 +115,8 @@ impl NotificationsService for Notifications {
         grpc::extract_tracing(&request);
         let request = request.into_inner();
 
+        let status = request.status.and_then(|s| (!s.is_empty()).then_some(s));
+
         let template = self
             .app
             .msg_template_create(
@@ -129,6 +131,7 @@ impl NotificationsService for Notifications {
                 request.deeplink_action,
                 request.deeplink_screen,
                 request.external_url,
+                status,
             )
             .await
             .map_err(Status::from)?;
@@ -151,6 +154,8 @@ impl NotificationsService for Notifications {
         let id = Uuid::parse_str(&request.id)
             .map_err(|_| Status::invalid_argument("invalid template id"))?;
 
+        let status = request.status.and_then(|s| (!s.is_empty()).then_some(s));
+
         let template = self
             .app
             .msg_template_update(
@@ -166,6 +171,7 @@ impl NotificationsService for Notifications {
                 request.deeplink_action,
                 request.deeplink_screen,
                 request.external_url,
+                status,
             )
             .await
             .map_err(Status::from)?;
@@ -246,7 +252,7 @@ impl NotificationsService for Notifications {
         let limit = (request.limit > 0).then_some(request.limit);
         let offset = (request.offset > 0).then_some(request.offset);
 
-        let templates = self
+        let (templates, total) = self
             .app
             .list_msg_templates(language_code, limit, offset)
             .await
@@ -254,7 +260,7 @@ impl NotificationsService for Notifications {
 
         let templates = templates.into_iter().map(MsgTemplate::from).collect();
 
-        let response = MsgTemplatesListResponse { templates };
+        let response = MsgTemplatesListResponse { templates, total };
 
         Ok(Response::new(response))
     }
@@ -267,11 +273,18 @@ impl NotificationsService for Notifications {
         grpc::extract_tracing(&request);
         let request = request.into_inner();
 
+        if request.template_id.is_empty() {
+            return Err(Status::invalid_argument("template_id is required"));
+        }
+
+        let template_id = Uuid::parse_str(&request.template_id)
+            .map_err(|_| Status::invalid_argument("invalid template_id"))?;
+
         let status = normalize_msg_message_status_input(request.status);
 
         let message = self
             .app
-            .msg_message_create(request.username, status, request.sent_by)
+            .msg_message_create(request.username, status, request.sent_by, template_id)
             .await
             .map_err(Status::from)?;
 
@@ -348,7 +361,7 @@ impl NotificationsService for Notifications {
             Some(request.status)
         };
 
-        let messages = self
+        let (messages, total) = self
             .app
             .list_msg_messages(username, status, updated_at_from, updated_at_to, limit, offset)
             .await
@@ -356,7 +369,7 @@ impl NotificationsService for Notifications {
 
         let messages = messages.into_iter().map(MsgMessage::from).collect();
 
-        Ok(Response::new(MsgMessagesListResponse { messages }))
+        Ok(Response::new(MsgMessagesListResponse { messages, total }))
     }
 
     #[instrument(name = "notifications.msg_message_history_list", skip_all, err)]

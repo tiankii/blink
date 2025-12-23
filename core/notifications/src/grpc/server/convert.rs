@@ -374,6 +374,7 @@ impl From<crate::msg_templates::MsgTemplate> for proto::MsgTemplate {
             deeplink_action: template.deeplink_action,
             deeplink_screen: template.deeplink_screen,
             external_url: template.external_url,
+            status: template.status,
         }
     }
 }
@@ -385,6 +386,7 @@ impl From<crate::msg_messages::MsgMessage> for proto::MsgMessage {
             username: message.username,
             status: message.status,
             sent_by: message.sent_by,
+            template_id: message.template_id.map(|id| id.to_string()),
             updated_at: message.updated_at.timestamp(),
         }
     }

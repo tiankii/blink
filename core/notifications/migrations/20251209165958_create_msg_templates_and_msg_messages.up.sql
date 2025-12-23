@@ -13,6 +13,20 @@ CREATE TABLE msg_templates (
   deeplink_action TEXT,
   deeplink_screen TEXT,
   external_url TEXT,
+  status VARCHAR CHECK (
+    status IN (
+      'invited',
+      'banner_clicked',
+      'invitation_info_completed',
+      'kyc_initiated',
+      'kyc_passed',
+      'card_info_submitted',
+      'card_approved',
+      'invite_withdrawn',
+      'kyc_failed',
+      'card_denied'
+    )
+  ),
   UNIQUE (name, language_code)
 );
 
@@ -34,6 +48,7 @@ CREATE TABLE msg_messages (
     )
   ),
   sent_by VARCHAR NOT NULL,
+  template_id UUID REFERENCES msg_templates(id) ON DELETE SET NULL,
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   UNIQUE (username)
 );
@@ -69,6 +84,9 @@ CREATE INDEX idx_msg_messages_status
 
 CREATE INDEX idx_msg_messages_updated_at
   ON msg_messages (updated_at);
+
+CREATE INDEX idx_msg_messages_template_id
+  ON msg_messages (template_id);
 
 CREATE INDEX idx_msg_message_history_msg_message_id
   ON msg_message_history (msg_message_id);

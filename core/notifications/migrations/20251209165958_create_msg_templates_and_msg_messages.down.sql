@@ -2,6 +2,7 @@
 
 DROP INDEX IF EXISTS idx_msg_message_history_status;
 DROP INDEX IF EXISTS idx_msg_message_history_msg_message_id;
+DROP INDEX IF EXISTS idx_msg_messages_template_id;
 DROP INDEX IF EXISTS idx_msg_messages_updated_at;
 DROP INDEX IF EXISTS idx_msg_messages_status;
 DROP INDEX IF EXISTS idx_msg_messages_username;

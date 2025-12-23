@@ -407,6 +407,7 @@ impl NotificationsApp {
         deeplink_action: Option<String>,
         deeplink_screen: Option<String>,
         external_url: Option<String>,
+        status: Option<String>,
     ) -> Result<crate::msg_templates::MsgTemplate, ApplicationError> {
         let template = self
             .msg_template_repository
@@ -422,6 +423,7 @@ impl NotificationsApp {
                 deeplink_action,
                 deeplink_screen,
                 external_url,
+                status,
             )
             .await?;
         Ok(template)
@@ -442,6 +444,7 @@ impl NotificationsApp {
         deeplink_action: Option<String>,
         deeplink_screen: Option<String>,
         external_url: Option<String>,
+        status: Option<String>,
     ) -> Result<crate::msg_templates::MsgTemplate, ApplicationError> {
         let template = self
             .msg_template_repository
@@ -458,6 +461,7 @@ impl NotificationsApp {
                 deeplink_action,
                 deeplink_screen,
                 external_url,
+                status,
             )
             .await?;
         Ok(template)
@@ -487,12 +491,13 @@ impl NotificationsApp {
         _language_code: Option<String>,
         limit: Option<i64>,
         offset: Option<i64>,
-    ) -> Result<Vec<crate::msg_templates::MsgTemplate>, ApplicationError> {
+    ) -> Result<(Vec<crate::msg_templates::MsgTemplate>, i64), ApplicationError> {
         let templates = self
             .msg_template_repository
             .list_templates(limit, offset)
             .await?;
-        Ok(templates)
+        let total = self.msg_template_repository.count_templates().await?;
+        Ok((templates, total))
     }
 
     #[instrument(name = "app.msg_message_create", skip(self), err)]
@@ -501,6 +506,7 @@ impl NotificationsApp {
         username: String,
         status: String,
         sent_by: String,
+        template_id: uuid::Uuid,
     ) -> Result<crate::msg_messages::MsgMessage, ApplicationError> {
         let mut tx = self.pool.begin().await?;
 
@@ -512,7 +518,7 @@ impl NotificationsApp {
 
         let message = self
             .msg_message_repository
-            .create_message_in_tx(&mut tx, username, status.clone(), sent_by)
+            .create_message_in_tx(&mut tx, username, status.clone(), sent_by, template_id)
             .await?;
 
         self.msg_message_history_repository
@@ -553,12 +559,16 @@ impl NotificationsApp {
         updated_at_to: Option<chrono::DateTime<chrono::Utc>>,
         limit: Option<i64>,
         offset: Option<i64>,
-    ) -> Result<Vec<crate::msg_messages::MsgMessage>, ApplicationError> {
+    ) -> Result<(Vec<crate::msg_messages::MsgMessage>, i64), ApplicationError> {
         let messages = self
             .msg_message_repository
-            .list_messages(username, status, updated_at_from, updated_at_to, limit, offset)
+            .list_messages(username.clone(), status.clone(), updated_at_from, updated_at_to, limit, offset)
             .await?;
-        Ok(messages)
+        let total = self
+            .msg_message_repository
+            .count_messages(username, status, updated_at_from, updated_at_to)
+            .await?;
+        Ok((messages, total))
     }
 
     #[instrument(name = "app.msg_message_history_list_by_message_id", skip(self), err)]

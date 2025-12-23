@@ -17,6 +17,7 @@ pub struct MsgTemplate {
     pub deeplink_action: Option<String>,
     pub deeplink_screen: Option<String>,
     pub external_url: Option<String>,
+    pub status: Option<String>,
 }
 
 #[derive(Debug, Clone)]
@@ -46,6 +47,7 @@ impl MsgTemplateRepository {
         deeplink_action: Option<String>,
         deeplink_screen: Option<String>,
         external_url: Option<String>,
+        status: Option<String>,
     ) -> Result<MsgTemplate, sqlx::Error> {
         let template = sqlx::query_as::<_, MsgTemplate>(
             r#"
@@ -60,9 +62,10 @@ impl MsgTemplateRepository {
                 should_add_to_bulletin,
                 deeplink_action,
                 deeplink_screen,
-                external_url
+                external_url,
+                status
             )
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
             RETURNING
                 id,
                 name,
@@ -75,7 +78,8 @@ impl MsgTemplateRepository {
                 should_add_to_bulletin,
                 deeplink_action,
                 deeplink_screen,
-                external_url
+                external_url,
+                status
             "#,
         )
         .bind(name)
@@ -89,6 +93,7 @@ impl MsgTemplateRepository {
         .bind(deeplink_action)
         .bind(deeplink_screen)
         .bind(external_url)
+        .bind(status)
         .fetch_one(&self.pool)
         .await?;
         Ok(template)
@@ -108,6 +113,7 @@ impl MsgTemplateRepository {
         deeplink_action: Option<String>,
         deeplink_screen: Option<String>,
         external_url: Option<String>,
+        status: Option<String>,
     ) -> Result<MsgTemplate, sqlx::Error> {
         let template = sqlx::query_as::<_, MsgTemplate>(
             r#"
@@ -122,7 +128,8 @@ impl MsgTemplateRepository {
                 should_add_to_bulletin = $9,
                 deeplink_action = $10,
                 deeplink_screen = $11,
-                external_url = $12
+                external_url = $12,
+                status = $13
             WHERE id = $1
             RETURNING
                 id,
@@ -136,7 +143,8 @@ impl MsgTemplateRepository {
                 should_add_to_bulletin,
                 deeplink_action,
                 deeplink_screen,
-                external_url
+                external_url,
+                status
             "#,
         )
         .bind(id)
@@ -151,6 +159,7 @@ impl MsgTemplateRepository {
         .bind(deeplink_action)
         .bind(deeplink_screen)
         .bind(external_url)
+        .bind(status)
         .fetch_one(&self.pool)
         .await?;
         Ok(template)
@@ -185,7 +194,8 @@ impl MsgTemplateRepository {
                 should_add_to_bulletin,
                 deeplink_action,
                 deeplink_screen,
-                external_url
+                external_url,
+                status
             FROM msg_templates
             WHERE id = $1
             "#,
@@ -216,7 +226,8 @@ impl MsgTemplateRepository {
                 should_add_to_bulletin,
                 deeplink_action,
                 deeplink_screen,
-                external_url
+                external_url,
+                status
             FROM msg_templates
             ORDER BY name, language_code
             LIMIT COALESCE($1, 9223372036854775807)
@@ -228,5 +239,17 @@ impl MsgTemplateRepository {
         .fetch_all(self.read_pool.inner())
         .await?;
         Ok(templates)
+    }
+
+    pub async fn count_templates(&self) -> Result<i64, sqlx::Error> {
+        let row = sqlx::query_as::<_, (i64,)>(
+            r#"
+            SELECT COUNT(*)::bigint
+            FROM msg_templates
+            "#,
+        )
+        .fetch_one(self.read_pool.inner())
+        .await?;
+        Ok(row.0)
     }
 }
