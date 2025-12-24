@@ -5,7 +5,7 @@ import { mapAndParseErrorForGqlResponse } from "@/graphql/error-map"
 import SuccessPayload from "@/graphql/shared/types/payload/success-payload"
 import DeepLinkActionTemplate from "@/graphql/admin/types/scalar/deep-link-action-template"
 import DeepLinkScreenTemplate from "@/graphql/admin/types/scalar/deep-link-screen-template"
-import NotificationMessageStatus from "@/graphql/admin/types/scalar/notification-message-status"
+import NotificationStatus from "@/graphql/admin/types/scalar/notification-status"
 import { NotificationsService } from "@/services/notifications"
 
 const NotificationTemplateCreateInput = GT.Input({
@@ -16,7 +16,7 @@ const NotificationTemplateCreateInput = GT.Input({
     iconName: { type: GT.NonNull(GT.String) },
     title: { type: GT.NonNull(GT.String) },
     body: { type: GT.NonNull(GT.String) },
-    status: { type: NotificationMessageStatus },
+    status: { type: NotificationStatus },
     shouldSendPush: { type: GT.NonNull(GT.Boolean) },
     shouldAddToHistory: { type: GT.NonNull(GT.Boolean) },
     shouldAddToBulletin: { type: GT.NonNull(GT.Boolean) },

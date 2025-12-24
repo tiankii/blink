@@ -136,6 +136,19 @@ export const Icon = {
   Refresh: "Refresh",
 } as const
 
+export const NotificationStatus = {
+  Invited: "invited",
+  BannerClicked: "banner_clicked",
+  InvitationInfoCompleted: "invitation_info_completed",
+  KycInitiated: "kyc_initiated",
+  KycPassed: "kyc_passed",
+  CardInfoSubmitted: "card_info_submitted",
+  CardApproved: "card_approved",
+  InviteWithdrawn: "invite_withdrawn",
+  KycFailed: "kyc_failed",
+  CardDenied: "card_denied",
+} satisfies Record<string, MsgMessageStatus>
+
 export const checkedToLocalizedNotificationTitle = (
   title: string,
 ): LocalizedNotificationTitle | ValidationError => {

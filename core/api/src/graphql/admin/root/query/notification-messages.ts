@@ -1,7 +1,7 @@
 import { GT } from "@/graphql/index"
 import { mapAndParseErrorForGqlResponse } from "@/graphql/error-map"
 import NotificationMessage from "@/graphql/admin/types/object/notification-message"
-import NotificationMessageStatus from "@/graphql/admin/types/scalar/notification-message-status"
+import NotificationStatus from "@/graphql/admin/types/scalar/notification-status"
 import { NotificationsService } from "@/services/notifications"
 
 const NotificationMessagesResult = GT.Object<{
@@ -37,7 +37,7 @@ const NotificationMessagesQuery = GT.Field<
   type: GT.NonNull(NotificationMessagesResult),
   args: {
     username: { type: GT.String },
-    status: { type: NotificationMessageStatus },
+    status: { type: NotificationStatus },
     updatedAtFrom: { type: GT.Int },
     updatedAtTo: { type: GT.Int },
     limit: { type: GT.Int },

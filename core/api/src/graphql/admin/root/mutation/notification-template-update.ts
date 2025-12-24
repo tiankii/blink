@@ -3,9 +3,9 @@ import Language from "@/graphql/shared/types/scalar/language"
 import ExternalUrl from "@/graphql/admin/types/scalar/external-url"
 import { mapAndParseErrorForGqlResponse } from "@/graphql/error-map"
 import SuccessPayload from "@/graphql/shared/types/payload/success-payload"
+import NotificationStatus from "@/graphql/admin/types/scalar/notification-status"
 import DeepLinkActionTemplate from "@/graphql/admin/types/scalar/deep-link-action-template"
 import DeepLinkScreenTemplate from "@/graphql/admin/types/scalar/deep-link-screen-template"
-import NotificationMessageStatus from "@/graphql/admin/types/scalar/notification-message-status"
 import { NotificationsService } from "@/services/notifications"
 
 const NotificationTemplateUpdateInput = GT.Input({
@@ -20,7 +20,7 @@ const NotificationTemplateUpdateInput = GT.Input({
     shouldSendPush: { type: GT.NonNull(GT.Boolean) },
     shouldAddToHistory: { type: GT.NonNull(GT.Boolean) },
     shouldAddToBulletin: { type: GT.NonNull(GT.Boolean) },
-    status: { type: NotificationMessageStatus },
+    status: { type: NotificationStatus },
     deeplinkAction: { type: DeepLinkActionTemplate },
     deeplinkScreen: { type: DeepLinkScreenTemplate },
     externalUrl: { type: ExternalUrl },

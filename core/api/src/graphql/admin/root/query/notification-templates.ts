@@ -2,6 +2,7 @@ import { GT } from "@/graphql/index"
 import Language from "@/graphql/shared/types/scalar/language"
 import { mapAndParseErrorForGqlResponse } from "@/graphql/error-map"
 import NotificationTemplate from "@/graphql/admin/types/object/notification-template"
+import NotificationStatus from "@/graphql/admin/types/scalar/notification-status"
 import { NotificationsService } from "@/services/notifications"
 
 const NotificationTemplatesResult = GT.Object<{
@@ -42,7 +43,7 @@ const NotificationTemplatesQuery = GT.Field<
   type: GT.NonNull(NotificationTemplatesResult),
   args: {
     languageCode: { type: Language },
-    status: { type: GT.String },
+    status: { type: NotificationStatus },
     limit: { type: GT.Int },
     offset: { type: GT.Int },
   },

@@ -1,13 +1,13 @@
 import { GT } from "@/graphql/index"
 import { mapAndParseErrorForGqlResponse } from "@/graphql/error-map"
-import NotificationMessageStatus from "@/graphql/admin/types/scalar/notification-message-status"
+import NotificationStatus from "@/graphql/admin/types/scalar/notification-status"
 import { NotificationsService } from "@/services/notifications"
 
 const NotificationMessageHistoryItem = GT.Object({
   name: "NotificationMessageHistoryItem",
   fields: () => ({
     id: { type: GT.NonNullID },
-    status: { type: GT.NonNull(NotificationMessageStatus) },
+    status: { type: GT.NonNull(NotificationStatus) },
     createdAt: { type: GT.NonNull(GT.Int) },
   }),
 })

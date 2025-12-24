@@ -1,14 +1,14 @@
 import { GT } from "@/graphql/index"
 import { mapAndParseErrorForGqlResponse } from "@/graphql/error-map"
 import SuccessPayload from "@/graphql/shared/types/payload/success-payload"
-import NotificationMessageStatus from "@/graphql/admin/types/scalar/notification-message-status"
+import NotificationStatus from "@/graphql/admin/types/scalar/notification-status"
 import { NotificationsService } from "@/services/notifications"
 
 const NotificationMessageCreateInput = GT.Input({
   name: "NotificationMessageCreateInput",
   fields: () => ({
     username: { type: GT.NonNull(GT.String) },
-    status: { type: NotificationMessageStatus },
+    status: { type: NotificationStatus },
     sentBy: { type: GT.NonNull(GT.String) },
     templateId: { type: GT.NonNullID },
   }),

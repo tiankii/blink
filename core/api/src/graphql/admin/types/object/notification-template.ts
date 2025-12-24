@@ -1,6 +1,6 @@
 import { GT } from "@/graphql/index"
 import Language from "@/graphql/shared/types/scalar/language"
-import NotificationMessageStatus from "@/graphql/admin/types/scalar/notification-message-status"
+import NotificationStatus from "@/graphql/admin/types/scalar/notification-status"
 
 const NotificationTemplate = GT.Object<{
   id: string
@@ -56,7 +56,7 @@ const NotificationTemplate = GT.Object<{
       type: GT.String,
     },
     status: {
-      type: GT.NonNull(NotificationMessageStatus),
+      type: GT.NonNull(NotificationStatus),
     },
   }),
 })
