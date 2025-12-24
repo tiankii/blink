@@ -1,8 +1,8 @@
 import { GT } from "@/graphql/index"
 import Language from "@/graphql/shared/types/scalar/language"
+import { mapAndParseErrorForGqlResponse } from "@/graphql/error-map"
 import NotificationTemplate from "@/graphql/admin/types/object/notification-template"
 import { NotificationsService } from "@/services/notifications"
-import { mapAndParseErrorForGqlResponse } from "@/graphql/error-map"
 
 const NotificationTemplatesResult = GT.Object<{
   total: number
@@ -13,7 +13,7 @@ const NotificationTemplatesResult = GT.Object<{
     iconName: string
     title: string
     body: string
-    status: MsgMessageStatus
+    status: string
     shouldSendPush: boolean
     shouldAddToHistory: boolean
     shouldAddToBulletin: boolean
@@ -34,6 +34,7 @@ const NotificationTemplatesQuery = GT.Field<
   GraphQLAdminContext,
   {
     languageCode?: string | Error
+    status?: string | Error
     limit?: number | Error
     offset?: number | Error
   }
@@ -41,6 +42,7 @@ const NotificationTemplatesQuery = GT.Field<
   type: GT.NonNull(NotificationTemplatesResult),
   args: {
     languageCode: { type: Language },
+    status: { type: GT.String },
     limit: { type: GT.Int },
     offset: { type: GT.Int },
   },
@@ -49,6 +51,10 @@ const NotificationTemplatesQuery = GT.Field<
 
     if (args.languageCode instanceof Error) {
       throw mapAndParseErrorForGqlResponse(args.languageCode)
+    }
+
+    if (args.status instanceof Error) {
+      throw mapAndParseErrorForGqlResponse(args.status)
     }
 
     if (args.limit instanceof Error) {
@@ -61,6 +67,7 @@ const NotificationTemplatesQuery = GT.Field<
 
     const res = await notificationsService.msgTemplatesList({
       languageCode: args.languageCode,
+      status: args.status,
       limit: args.limit,
       offset: args.offset,
     })

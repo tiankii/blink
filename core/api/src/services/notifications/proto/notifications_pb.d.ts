@@ -1360,6 +1360,8 @@ export class MsgTemplatesListRequest extends jspb.Message {
     setLimit(value: number): MsgTemplatesListRequest;
     getOffset(): number;
     setOffset(value: number): MsgTemplatesListRequest;
+    getStatus(): string;
+    setStatus(value: string): MsgTemplatesListRequest;
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): MsgTemplatesListRequest.AsObject;
@@ -1376,6 +1378,7 @@ export namespace MsgTemplatesListRequest {
         languageCode: string,
         limit: number,
         offset: number,
+        status: string,
     }
 }
 

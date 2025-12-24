@@ -10952,7 +10952,8 @@ proto.services.notifications.v1.MsgTemplatesListRequest.toObject = function(incl
   var f, obj = {
 languageCode: jspb.Message.getFieldWithDefault(msg, 1, ""),
 limit: jspb.Message.getFieldWithDefault(msg, 2, 0),
-offset: jspb.Message.getFieldWithDefault(msg, 3, 0)
+offset: jspb.Message.getFieldWithDefault(msg, 3, 0),
+status: jspb.Message.getFieldWithDefault(msg, 4, "")
   };
 
   if (includeInstance) {
@@ -11001,6 +11002,10 @@ proto.services.notifications.v1.MsgTemplatesListRequest.deserializeBinaryFromRea
       var value = /** @type {number} */ (reader.readInt64());
       msg.setOffset(value);
       break;
+    case 4:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setStatus(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -11048,6 +11053,13 @@ proto.services.notifications.v1.MsgTemplatesListRequest.serializeBinaryToWriter 
   if (f !== 0) {
     writer.writeInt64(
       3,
+      f
+    );
+  }
+  f = message.getStatus();
+  if (f.length > 0) {
+    writer.writeString(
+      4,
       f
     );
   }
@@ -11105,6 +11117,24 @@ proto.services.notifications.v1.MsgTemplatesListRequest.prototype.getOffset = fu
  */
 proto.services.notifications.v1.MsgTemplatesListRequest.prototype.setOffset = function(value) {
   return jspb.Message.setProto3IntField(this, 3, value);
+};
+
+
+/**
+ * optional string status = 4;
+ * @return {string}
+ */
+proto.services.notifications.v1.MsgTemplatesListRequest.prototype.getStatus = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.services.notifications.v1.MsgTemplatesListRequest} returns this
+ */
+proto.services.notifications.v1.MsgTemplatesListRequest.prototype.setStatus = function(value) {
+  return jspb.Message.setProto3StringField(this, 4, value);
 };
 
 

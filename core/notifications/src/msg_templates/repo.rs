@@ -209,6 +209,8 @@ impl MsgTemplateRepository {
 
     pub async fn list_templates(
         &self,
+        language_code: Option<String>,
+        status: Option<String>,
         limit: Option<i64>,
         offset: Option<i64>,
     ) -> Result<Vec<MsgTemplate>, sqlx::Error> {
@@ -229,11 +231,15 @@ impl MsgTemplateRepository {
                 external_url,
                 status
             FROM msg_templates
+            WHERE ($1::text IS NULL OR language_code = $1)
+                AND ($2::text IS NULL OR status = $2)
             ORDER BY name, language_code
-            LIMIT COALESCE($1, 9223372036854775807)
-            OFFSET COALESCE($2, 0)
+            LIMIT COALESCE($3, 9223372036854775807)
+            OFFSET COALESCE($4, 0)
             "#,
         )
+        .bind(language_code)
+        .bind(status)
         .bind(limit)
         .bind(offset)
         .fetch_all(self.read_pool.inner())
@@ -241,13 +247,21 @@ impl MsgTemplateRepository {
         Ok(templates)
     }
 
-    pub async fn count_templates(&self) -> Result<i64, sqlx::Error> {
+    pub async fn count_templates(
+        &self,
+        language_code: Option<String>,
+        status: Option<String>,
+    ) -> Result<i64, sqlx::Error> {
         let row = sqlx::query_as::<_, (i64,)>(
             r#"
             SELECT COUNT(*)::bigint
             FROM msg_templates
+            WHERE ($1::text IS NULL OR language_code = $1)
+                AND ($2::text IS NULL OR status = $2)
             "#,
         )
+        .bind(language_code)
+        .bind(status)
         .fetch_one(self.read_pool.inner())
         .await?;
         Ok(row.0)

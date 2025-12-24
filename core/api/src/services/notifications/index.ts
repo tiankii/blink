@@ -882,14 +882,16 @@ export const NotificationsService = (): INotificationsService => {
 
   const msgTemplatesList = async ({
     languageCode,
+    status,
     limit,
     offset,
-  }: MsgTemplatesListArgs): Promise<
+  }: MsgTemplatesListArgs & { status?: string }): Promise<
     { total: number; items: MsgTemplate[] } | NotificationsServiceError
   > => {
     try {
       const request = new MsgTemplatesListRequest()
       if (languageCode) request.setLanguageCode(languageCode)
+      if (status) request.setStatus(status)
       if (limit) request.setLimit(limit)
       if (offset) request.setOffset(offset)
 

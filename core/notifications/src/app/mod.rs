@@ -488,15 +488,16 @@ impl NotificationsApp {
     #[instrument(name = "app.msg_templates_list", skip(self), err)]
     pub async fn list_msg_templates(
         &self,
-        _language_code: Option<String>,
+        language_code: Option<String>,
+        status: Option<String>,
         limit: Option<i64>,
         offset: Option<i64>,
     ) -> Result<(Vec<crate::msg_templates::MsgTemplate>, i64), ApplicationError> {
         let templates = self
             .msg_template_repository
-            .list_templates(limit, offset)
+            .list_templates(language_code.clone(), status.clone(), limit, offset)
             .await?;
-        let total = self.msg_template_repository.count_templates().await?;
+        let total = self.msg_template_repository.count_templates(language_code, status).await?;
         Ok((templates, total))
     }
 

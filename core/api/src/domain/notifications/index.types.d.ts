@@ -217,6 +217,7 @@ interface INotificationsService {
 
   msgTemplatesList(args: {
     languageCode?: string
+    status?: string
     limit?: number
     offset?: number
   }): Promise<{ total: number; items: MsgTemplate[] } | NotificationsServiceError>
@@ -294,6 +295,7 @@ type MsgTemplateUpdateArgs = BaseMsgTemplateArgs & {
 
 type MsgTemplatesListArgs = {
   languageCode?: string
+  status?: string
   limit?: number
   offset?: number
 }

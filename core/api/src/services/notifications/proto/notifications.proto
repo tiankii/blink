@@ -448,6 +448,7 @@ message MsgTemplatesListRequest {
   string language_code = 1;
   int64 limit = 2;
   int64 offset = 3;
+  string status = 4;
 }
 
 message MsgTemplatesListResponse {
@@ -510,3 +511,4 @@ message MsgTemplateByIdRequest {
 message MsgTemplateByIdResponse {
   optional MsgTemplate template = 1;
 }
+ 

@@ -249,12 +249,18 @@ impl NotificationsService for Notifications {
             Some(request.language_code)
         };
 
+        let status = if request.status.is_empty() {
+            None
+        } else {
+            Some(request.status)
+        };
+
         let limit = (request.limit > 0).then_some(request.limit);
         let offset = (request.offset > 0).then_some(request.offset);
 
         let (templates, total) = self
             .app
-            .list_msg_templates(language_code, limit, offset)
+            .list_msg_templates(language_code, status, limit, offset)
             .await
             .map_err(Status::from)?;
 
