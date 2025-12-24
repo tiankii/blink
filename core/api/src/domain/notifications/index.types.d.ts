@@ -252,19 +252,19 @@ interface INotificationsService {
   }): Promise<MsgMessageHistoryItem[] | NotificationsServiceError>
 }
 
+type OpenDeepLink = {
+  screen: DeepLinkScreen | undefined
+  action: DeepLinkAction | undefined
+}
+
+type OpenExternalUrl = {
+  url: string
+}
+
 type TriggerMarketingNotificationArgs = {
   userIds: UserId[]
-  openDeepLink:
-    | {
-        screen: DeepLinkScreen | undefined
-        action: DeepLinkAction | undefined
-      }
-    | undefined
-  openExternalUrl:
-    | {
-        url: string
-      }
-    | undefined
+  openDeepLink: OpenDeepLink | undefined
+  openExternalUrl: OpenExternalUrl | undefined
   shouldSendPush: boolean
   shouldAddToHistory: boolean
   shouldAddToBulletin: boolean

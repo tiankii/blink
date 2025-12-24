@@ -9,6 +9,7 @@ import AccountUpdateStatusMutation from "./root/mutation/account-update-status"
 import AccountForceDeleteMutation from "./root/mutation/account-force-delete"
 
 import TriggerMarketingNotificationMutation from "./root/mutation/marketing-notification-trigger"
+import TriggerNotificationTemplatedMutation from "./root/mutation/notification-templated-trigger"
 import NotificationTemplateCreateMutation from "./root/mutation/notification-template-create"
 import NotificationTemplateUpdateMutation from "./root/mutation/notification-template-update"
 import NotificationTemplateDeleteMutation from "./root/mutation/notification-template-delete"
@@ -28,6 +29,7 @@ export const mutationFields = {
     merchantMapValidate: MerchantMapValidateMutation,
     merchantMapDelete: MerchantMapDeleteMutation,
     marketingNotificationTrigger: TriggerMarketingNotificationMutation,
+    notificationTemplatedTrigger: TriggerNotificationTemplatedMutation,
     notificationTemplateCreate: NotificationTemplateCreateMutation,
     notificationTemplateUpdate: NotificationTemplateUpdateMutation,
     notificationTemplateDelete: NotificationTemplateDeleteMutation,

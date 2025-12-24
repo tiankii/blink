@@ -404,6 +404,7 @@ type Mutation {
   notificationTemplateCreate(input: NotificationTemplateCreateInput!): SuccessPayload!
   notificationTemplateDelete(input: NotificationTemplateDeleteInput!): SuccessPayload!
   notificationTemplateUpdate(input: NotificationTemplateUpdateInput!): SuccessPayload!
+  notificationTemplatedTrigger(input: NotificationTemplatedTriggerInput!): SuccessPayload!
   userUpdateEmail(input: UserUpdateEmailInput!): AccountDetailPayload!
   userUpdatePhone(input: UserUpdatePhoneInput!): AccountDetailPayload!
 }
@@ -484,6 +485,16 @@ type NotificationMessageHistoryItem {
   status: NotificationStatus!
 }
 
+input NotificationMessageUpdateStatusInput {
+  id: ID!
+  status: NotificationStatus!
+}
+
+type NotificationMessagesResult {
+  items: [NotificationMessage!]!
+  total: Int!
+}
+
 enum NotificationStatus {
   BANNER_CLICKED
   CARD_APPROVED
@@ -495,16 +506,6 @@ enum NotificationStatus {
   KYC_FAILED
   KYC_INITIATED
   KYC_PASSED
-}
-
-input NotificationMessageUpdateStatusInput {
-  id: ID!
-  status: NotificationStatus!
-}
-
-type NotificationMessagesResult {
-  items: [NotificationMessage!]!
-  total: Int!
 }
 
 type NotificationTemplate {
@@ -556,6 +557,12 @@ input NotificationTemplateUpdateInput {
   shouldSendPush: Boolean!
   status: NotificationStatus
   title: String!
+}
+
+input NotificationTemplatedTriggerInput {
+  handle: String!
+  language: String
+  status: NotificationStatus!
 }
 
 type NotificationTemplatesResult {
@@ -628,7 +635,7 @@ type Query {
   notificationByTemplateId(id: ID!): NotificationTemplate
   notificationMessageHistory(id: ID!): [NotificationMessageHistoryItem!]!
   notificationMessages(limit: Int, offset: Int, status: NotificationStatus, updatedAtFrom: Int, updatedAtTo: Int, username: String): NotificationMessagesResult!
-  notificationTemplates(languageCode: Language, limit: Int, offset: Int): NotificationTemplatesResult!
+  notificationTemplates(languageCode: Language, limit: Int, offset: Int, status: NotificationStatus): NotificationTemplatesResult!
   transactionById(id: ID!): Transaction
   transactionsByHash(hash: PaymentHash!): [Transaction]
   transactionsByPaymentRequest(paymentRequest: LnPaymentRequest!): [Transaction]
