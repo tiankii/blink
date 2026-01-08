@@ -1104,8 +1104,8 @@ importers:
         specifier: ^0.7.15
         version: 0.7.15
       '@ip1sms/disposable-phone-numbers':
-        specifier: ^2.1.1403
-        version: 2.1.1403
+        specifier: ^2.1.1404
+        version: 2.1.1404
       '@merqva/telegram-passport':
         specifier: ^1.0.2
         version: 1.0.2
@@ -7235,8 +7235,8 @@ packages:
     resolution: {integrity: sha512-Sx1pU8EM64o2BrqNpEO1CNLtKQwyhuXuqyfH7oGKCk+1a33d2r5saW8zNwm3j6BTExtjrv2BxTgzzkMwts6vGg==}
     dev: false
 
-  /@ip1sms/disposable-phone-numbers@2.1.1403:
-    resolution: {integrity: sha512-wa779l4Mri7t8OK/s9v4oWtWo6UF9RiWeRymKnSOKEx2GS9HmDRoawATHEh5TmuxJ1+NwScMCmQdn0zGqq9IkA==}
+  /@ip1sms/disposable-phone-numbers@2.1.1404:
+    resolution: {integrity: sha512-XxrijS75Crhz/VTbWd/sClIkqrSztVcrtS2qz1qCDz0ji9wgC0DkaLWnd4MeD3V01A+KcMQaG4kkaICJtoLLxw==}
     dev: false
 
   /@isaacs/cliui@8.0.2:
@@ -16133,8 +16133,8 @@ packages:
     engines: {node: '>=6.0.0'}
     dev: true
 
-  /baseline-browser-mapping@2.9.11:
-    resolution: {integrity: sha512-Sg0xJUNDU1sJNGdfGWhVHX0kkZ+HWcvmVymJbj6NSgZZmW/8S9Y2HQ5euytnIgakgxN6papOAWiwDo1ctFDcoQ==}
+  /baseline-browser-mapping@2.9.12:
+    resolution: {integrity: sha512-Mij6Lij93pTAIsSYy5cyBQ975Qh9uLEc5rwGTpomiZeXZL9yIS6uORJakb3ScHgfs0serMMfIbXzokPMuEiRyw==}
     hasBin: true
     dev: true
 
@@ -16468,8 +16468,8 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      baseline-browser-mapping: 2.9.11
-      caniuse-lite: 1.0.30001762
+      baseline-browser-mapping: 2.9.12
+      caniuse-lite: 1.0.30001763
       electron-to-chromium: 1.5.267
       node-releases: 2.0.27
       update-browserslist-db: 1.2.3(browserslist@4.28.1)
@@ -16629,8 +16629,8 @@ packages:
   /caniuse-lite@1.0.30001726:
     resolution: {integrity: sha512-VQAUIUzBiZ/UnlM28fSp2CRF3ivUn1BWEvxMcVTNwpw91Py1pGbPIyIKtd+tzct9C3ouceCVdGAXxZOpZAsgdw==}
 
-  /caniuse-lite@1.0.30001762:
-    resolution: {integrity: sha512-PxZwGNvH7Ak8WX5iXzoK1KPZttBXNPuaOvI2ZYU7NrlM+d9Ov+TUvlLOBNGzVXAntMSMMlJPd+jY6ovrVjSmUw==}
+  /caniuse-lite@1.0.30001763:
+    resolution: {integrity: sha512-mh/dGtq56uN98LlNX9qdbKnzINhX0QzhiWBFEkFfsFO4QyCvL8YegrJAazCwXIeqkIob8BlZPGM3xdnY+sgmvQ==}
     dev: true
 
   /capital-case@1.0.4:
