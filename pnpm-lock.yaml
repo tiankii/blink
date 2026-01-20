@@ -1104,8 +1104,8 @@ importers:
         specifier: ^0.7.15
         version: 0.7.15
       '@ip1sms/disposable-phone-numbers':
-        specifier: ^2.1.1415
-        version: 2.1.1415
+        specifier: ^2.1.1417
+        version: 2.1.1417
       '@merqva/telegram-passport':
         specifier: ^1.0.2
         version: 1.0.2
@@ -7279,8 +7279,8 @@ packages:
     resolution: {integrity: sha512-Sx1pU8EM64o2BrqNpEO1CNLtKQwyhuXuqyfH7oGKCk+1a33d2r5saW8zNwm3j6BTExtjrv2BxTgzzkMwts6vGg==}
     dev: false
 
-  /@ip1sms/disposable-phone-numbers@2.1.1415:
-    resolution: {integrity: sha512-acWxtzZ4wIIVL5RDScLt2Mnf37o7elX+in0Z6YqE3meFYByeWXnKGdY3mVcBSUojwwiUVrLXI1M8vtJB/SHsgw==}
+  /@ip1sms/disposable-phone-numbers@2.1.1417:
+    resolution: {integrity: sha512-FkHLeCWxoeyTt7XZslGKkx8QuyCDazqIRpW3OmDRn5mXiEM1axZwEcmeXAIFckxeHk1z6JbKgBrmBDVlv3NPew==}
     dev: false
 
   /@isaacs/cliui@8.0.2:
@@ -7640,8 +7640,8 @@ packages:
     dependencies:
       sparse-bitfield: 3.0.3
 
-  /@mongodb-js/saslprep@1.4.4:
-    resolution: {integrity: sha512-p7X/ytJDIdwUfFL/CLOhKgdfJe1Fa8uw9seJYvdOmnP9JBWGWHW69HkOixXS6Wy9yvGf1MbhcS6lVmrhy4jm2g==}
+  /@mongodb-js/saslprep@1.4.5:
+    resolution: {integrity: sha512-k64Lbyb7ycCSXHSLzxVdb2xsKGPMvYZfCICXvDsI8Z65CeWQzTEKS4YmGbnqw+U9RBvLPTsB6UCmwkgsDTGWIw==}
     dependencies:
       sparse-bitfield: 3.0.3
     dev: true
@@ -25014,7 +25014,7 @@ packages:
       socks:
         optional: true
     dependencies:
-      '@mongodb-js/saslprep': 1.4.4
+      '@mongodb-js/saslprep': 1.4.5
       bson: 6.10.4
       mongodb-connection-string-url: 3.0.2
       snappy: 7.2.2
