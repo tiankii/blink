@@ -1104,8 +1104,8 @@ importers:
         specifier: ^0.7.15
         version: 0.7.15
       '@ip1sms/disposable-phone-numbers':
-        specifier: ^2.1.1417
-        version: 2.1.1417
+        specifier: ^2.1.1418
+        version: 2.1.1418
       '@merqva/telegram-passport':
         specifier: ^1.0.2
         version: 1.0.2
@@ -7279,8 +7279,8 @@ packages:
     resolution: {integrity: sha512-Sx1pU8EM64o2BrqNpEO1CNLtKQwyhuXuqyfH7oGKCk+1a33d2r5saW8zNwm3j6BTExtjrv2BxTgzzkMwts6vGg==}
     dev: false
 
-  /@ip1sms/disposable-phone-numbers@2.1.1417:
-    resolution: {integrity: sha512-FkHLeCWxoeyTt7XZslGKkx8QuyCDazqIRpW3OmDRn5mXiEM1axZwEcmeXAIFckxeHk1z6JbKgBrmBDVlv3NPew==}
+  /@ip1sms/disposable-phone-numbers@2.1.1418:
+    resolution: {integrity: sha512-p7P3wGaesAC8jdHbQD9Jr9q+vs1CYFtnTHkYy9kq/B3hDIfgZjiUCWB56/1FF2b1VXOazFbFaHjBJG/YOHsxdg==}
     dev: false
 
   /@isaacs/cliui@8.0.2:
@@ -16177,8 +16177,8 @@ packages:
     engines: {node: '>=6.0.0'}
     dev: true
 
-  /baseline-browser-mapping@2.9.15:
-    resolution: {integrity: sha512-kX8h7K2srmDyYnXRIppo4AH/wYgzWVCs+eKr3RusRSQ5PvRYoEFmR/I0PbdTjKFAoKqp5+kbxnNTFO9jOfSVJg==}
+  /baseline-browser-mapping@2.9.16:
+    resolution: {integrity: sha512-KeUZdBuxngy825i8xvzaK1Ncnkx0tBmb3k8DkEuqjKRkmtvNTjey2ZsNeh8Dw4lfKvbCOu9oeNx2TKm2vHqcRw==}
     hasBin: true
 
   /basic-auth@2.0.1:
@@ -16511,7 +16511,7 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      baseline-browser-mapping: 2.9.15
+      baseline-browser-mapping: 2.9.16
       caniuse-lite: 1.0.30001765
       electron-to-chromium: 1.5.267
       node-releases: 2.0.27
