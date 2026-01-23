@@ -76,8 +76,7 @@ impl UserNotificationSettings {
                     category,
                 }),
         );
-        Self::try_from(EntityEvents::init(id, events))
-            .expect("Could not create default")
+        Self::try_from(EntityEvents::init(id, events)).expect("Could not create default")
     }
 
     fn default_disabled_push_categories() -> [UserNotificationCategory; 4] {
