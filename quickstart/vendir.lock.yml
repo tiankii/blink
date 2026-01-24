@@ -2,27 +2,27 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'revert: "feat(core): add test_accounts_captcha for staging CAPTCHA
-        bypass (#417)" (#424)...'
-      sha: f28e63bd47def892fe7f80bed55b0feafb19bf29
+      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1419
+        (#422)...'
+      sha: 59d51a859dcf5891d35ec5d269553ffb41fe6851
       tags:
-      - 0.21.129-2-gf28e63bd4
+      - 0.21.130
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'revert: "feat(core): add test_accounts_captcha for staging CAPTCHA
-        bypass (#417)" (#424)...'
-      sha: f28e63bd47def892fe7f80bed55b0feafb19bf29
+      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1419
+        (#422)...'
+      sha: 59d51a859dcf5891d35ec5d269553ffb41fe6851
       tags:
-      - 0.21.129-2-gf28e63bd4
+      - 0.21.130
     path: schemas
   - git:
-      commitTitle: 'revert: "feat(core): add test_accounts_captcha for staging CAPTCHA
-        bypass (#417)" (#424)...'
-      sha: f28e63bd47def892fe7f80bed55b0feafb19bf29
+      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1419
+        (#422)...'
+      sha: 59d51a859dcf5891d35ec5d269553ffb41fe6851
       tags:
-      - 0.21.129-2-gf28e63bd4
+      - 0.21.130
     path: gql
   path: graphql
 kind: LockConfig
