@@ -2,27 +2,27 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1423
-        (#428)...'
-      sha: 0a74fbc018908adb8598b2651c36353685383dd9
+      commitTitle: 'fix(core): add unassigned_phone_number to known prelude errors
+        (#429)'
+      sha: 6ba476ffd08a3054448936dd5272b287f2b84ba3
       tags:
-      - 0.21.130-2-g0a74fbc01
+      - 0.21.132-1-g6ba476ffd
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1423
-        (#428)...'
-      sha: 0a74fbc018908adb8598b2651c36353685383dd9
+      commitTitle: 'fix(core): add unassigned_phone_number to known prelude errors
+        (#429)'
+      sha: 6ba476ffd08a3054448936dd5272b287f2b84ba3
       tags:
-      - 0.21.130-2-g0a74fbc01
+      - 0.21.132-1-g6ba476ffd
     path: schemas
   - git:
-      commitTitle: 'chore(deps): update @ip1sms/disposable-phone-numbers to v2.1.1423
-        (#428)...'
-      sha: 0a74fbc018908adb8598b2651c36353685383dd9
+      commitTitle: 'fix(core): add unassigned_phone_number to known prelude errors
+        (#429)'
+      sha: 6ba476ffd08a3054448936dd5272b287f2b84ba3
       tags:
-      - 0.21.130-2-g0a74fbc01
+      - 0.21.132-1-g6ba476ffd
     path: gql
   path: graphql
 kind: LockConfig
