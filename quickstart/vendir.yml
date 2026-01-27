@@ -6,7 +6,7 @@ directories:
   - path: ./
     git:
       url: https://github.com/blinkbitcoin/blink.git
-      ref: 59d51a859dcf5891d35ec5d269553ffb41fe6851
+      ref: 0a74fbc018908adb8598b2651c36353685383dd9
     includePaths:
     - dev/**/*
     excludePaths:
@@ -18,7 +18,7 @@ directories:
   - path: schemas/
     git:
       url: https://github.com/blinkbitcoin/blink.git
-      ref: 59d51a859dcf5891d35ec5d269553ffb41fe6851
+      ref: 0a74fbc018908adb8598b2651c36353685383dd9
     includePaths:
     - core/api/src/graphql/public/schema.graphql
     - core/api/src/graphql/admin/schema.graphql
@@ -26,7 +26,7 @@ directories:
   - path: gql/
     git:
       url: https://github.com/blinkbitcoin/blink.git
-      ref: 59d51a859dcf5891d35ec5d269553ffb41fe6851
+      ref: 0a74fbc018908adb8598b2651c36353685383dd9
     includePaths:
     - bats/gql/**/*
     newRootPath: bats/gql
