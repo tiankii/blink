@@ -2,24 +2,27 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'fix(security): pin nodejs to 20.20.0 (CVE async_hooks DoS) (#430)...'
-      sha: 81e8db18c6db50f8158b7b46aef9cd44545706a1
+      commitTitle: 'fix(core): prevent false alerts for rebalances between historical
+        nodes (#440)...'
+      sha: 21a85cef08faecda62870d07e6b5242768d9aa51
       tags:
-      - 0.21.133-1-g81e8db18c
+      - 0.21.134-2-g21a85cef0
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'fix(security): pin nodejs to 20.20.0 (CVE async_hooks DoS) (#430)...'
-      sha: 81e8db18c6db50f8158b7b46aef9cd44545706a1
+      commitTitle: 'fix(core): prevent false alerts for rebalances between historical
+        nodes (#440)...'
+      sha: 21a85cef08faecda62870d07e6b5242768d9aa51
       tags:
-      - 0.21.133-1-g81e8db18c
+      - 0.21.134-2-g21a85cef0
     path: schemas
   - git:
-      commitTitle: 'fix(security): pin nodejs to 20.20.0 (CVE async_hooks DoS) (#430)...'
-      sha: 81e8db18c6db50f8158b7b46aef9cd44545706a1
+      commitTitle: 'fix(core): prevent false alerts for rebalances between historical
+        nodes (#440)...'
+      sha: 21a85cef08faecda62870d07e6b5242768d9aa51
       tags:
-      - 0.21.133-1-g81e8db18c
+      - 0.21.135
     path: gql
   path: graphql
 kind: LockConfig
