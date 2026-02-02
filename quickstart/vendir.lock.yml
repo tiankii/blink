@@ -2,27 +2,24 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - git:
-      commitTitle: 'fix(core): add unassigned_phone_number to known prelude errors
-        (#429)'
-      sha: 6ba476ffd08a3054448936dd5272b287f2b84ba3
+      commitTitle: 'fix(security): pin nodejs to 20.20.0 (CVE async_hooks DoS) (#430)...'
+      sha: 81e8db18c6db50f8158b7b46aef9cd44545706a1
       tags:
-      - 0.21.132-1-g6ba476ffd
+      - 0.21.133-1-g81e8db18c
     path: .
   path: dev
 - contents:
   - git:
-      commitTitle: 'fix(core): add unassigned_phone_number to known prelude errors
-        (#429)'
-      sha: 6ba476ffd08a3054448936dd5272b287f2b84ba3
+      commitTitle: 'fix(security): pin nodejs to 20.20.0 (CVE async_hooks DoS) (#430)...'
+      sha: 81e8db18c6db50f8158b7b46aef9cd44545706a1
       tags:
-      - 0.21.132-1-g6ba476ffd
+      - 0.21.133-1-g81e8db18c
     path: schemas
   - git:
-      commitTitle: 'fix(core): add unassigned_phone_number to known prelude errors
-        (#429)'
-      sha: 6ba476ffd08a3054448936dd5272b287f2b84ba3
+      commitTitle: 'fix(security): pin nodejs to 20.20.0 (CVE async_hooks DoS) (#430)...'
+      sha: 81e8db18c6db50f8158b7b46aef9cd44545706a1
       tags:
-      - 0.21.132-1-g6ba476ffd
+      - 0.21.133-1-g81e8db18c
     path: gql
   path: graphql
 kind: LockConfig
